@@ -4,21 +4,22 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import android.util.Log;
 import android.util.Patterns;
 
-import com.quang.daapp.data.LoginRepository;
-import com.quang.daapp.data.Result;
-import com.quang.daapp.data.model.LoggedInUser;
+import com.quang.daapp.data.repository.AccountRepository;
 import com.quang.daapp.R;
+
+import java.io.IOException;
 
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    private AccountRepository accountRepository;
 
-    LoginViewModel(LoginRepository loginRepository) {
-        this.loginRepository = loginRepository;
+    public LoginViewModel() {
+        this.accountRepository = AccountRepository.getInstance();
     }
 
     LiveData<LoginFormState> getLoginFormState() {
@@ -31,15 +32,9 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
 
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
     }
+
 
     public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {

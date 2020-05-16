@@ -3,10 +3,25 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_confirm">Confirm password and password must be the same</string>
+    <string name="invalid_firstname">Please fill in your firstname</string>
+    <string name="invalid_lastname">Please fill in your lastname</string>
+    <string name="invalid_address">Please fill in your address</string>
+    <string name="invalid_city">Please choose your city</string>
+    <string name="invalid_dob">Please choose your date of birth</string>
+    <string name="invalid_primary_language">Please specify your primary language</string>
     <string name="login_failed">"Login failed"</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="field_hint_confirm_password">Re-type password</string>
+    <string name="field_hint_address">Address</string>
+    <string name="field_hint_last_name">Last Name</string>
+    <string name="field_hint_first_name">First Name</string>
 </resources>

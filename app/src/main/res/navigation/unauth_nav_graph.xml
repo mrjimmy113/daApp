@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/unauth_nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.quang.daapp.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerChooserFragment"
+            app:destination="@id/registerChooserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerChooserFragment"
+        android:name="com.quang.daapp.RegisterChooserFragment"
+        android:label="fragment_register_chooser"
+        tools:layout="@layout/fragment_register_chooser" >
+        <action
+            android:id="@+id/action_registerChooserFragment_to_registerCustomerFragment"
+            app:destination="@id/registerCustomerFragment" />
+        <action
+            android:id="@+id/action_registerChooserFragment_to_registerExpertFragment"
+            app:destination="@id/registerExpertFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerCustomerFragment"
+        android:name="com.quang.daapp.ui.customerReg.RegisterCustomerFragment"
+        android:label="fragment_register_customer"
+        tools:layout="@layout/fragment_register_customer" />
+    <fragment
+        android:id="@+id/registerExpertFragment"
+        android:name="com.quang.daapp.RegisterExpertFragment"
+        android:label="fragment_register_expert"
+        tools:layout="@layout/fragment_register_expert" />
+</navigation>
