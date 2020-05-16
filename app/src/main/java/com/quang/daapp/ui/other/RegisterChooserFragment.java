@@ -1,4 +1,4 @@
-package com.quang.daapp;
+package com.quang.daapp.ui.other;
 
 import android.os.Bundle;
 
@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.quang.daapp.R;
 
 
 /**

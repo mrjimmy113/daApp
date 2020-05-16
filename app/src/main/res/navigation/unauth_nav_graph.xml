@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerChooserFragment"
-        android:name="com.quang.daapp.RegisterChooserFragment"
+        android:name="com.quang.daapp.ui.other.RegisterChooserFragment"
         android:label="fragment_register_chooser"
         tools:layout="@layout/fragment_register_chooser" >
         <action
@@ -33,7 +33,7 @@
         tools:layout="@layout/fragment_register_customer" />
     <fragment
         android:id="@+id/registerExpertFragment"
-        android:name="com.quang.daapp.RegisterExpertFragment"
+        android:name="com.quang.daapp.ui.expertReg.RegisterExpertFragment"
         android:label="fragment_register_expert"
         tools:layout="@layout/fragment_register_expert" />
 </navigation>
