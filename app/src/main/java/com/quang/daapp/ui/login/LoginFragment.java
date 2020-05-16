@@ -1,4 +1,4 @@
-package com.quang.daapp;
+package com.quang.daapp.ui.login;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.quang.daapp.R;
 import com.quang.daapp.ui.login.LoggedInUserView;
 import com.quang.daapp.ui.login.LoginFormState;
 import com.quang.daapp.ui.login.LoginResult;
@@ -35,7 +36,7 @@ import com.quang.daapp.ui.login.LoginViewModel;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends Fragment implements View.OnClickListener {
+public class LoginFragment extends Fragment {
 
     NavController navController = null;
     private LoginViewModel loginViewModel;
@@ -56,19 +57,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
 
-        }
         loginViewModel = ViewModelProviders.of(this)
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        final EditText usernameEditText = view.findViewById(R.id.username);
+        final EditText passwordEditText = view.findViewById(R.id.password);
+        final Button loginButton = view.findViewById(R.id.btnLogin);
+        final Button registerButton = view.findViewById(R.id.btnRegister);
+        final ProgressBar loadingProgressBar = view.findViewById(R.id.loading);
+        loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
             @Override
             public void onChanged(@Nullable LoginFormState loginFormState) {
                 if (loginFormState == null) {
@@ -84,7 +82,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
                 if (loginResult == null) {
@@ -97,10 +95,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
                 }
-                setResult(Activity.RESULT_OK);
 
-                //Complete and destroy login activity once successful
-                finish();
             }
         });
 
@@ -143,20 +138,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         passwordEditText.getText().toString());
             }
         });
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_loginFragment_to_registerChooserFragment);
+            }
+        });
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), welcome, Toast.LENGTH_LONG).show();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 }
