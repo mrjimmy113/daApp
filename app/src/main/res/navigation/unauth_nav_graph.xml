@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/unauth_nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/startingFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -36,4 +36,13 @@
         android:name="com.quang.daapp.ui.expertReg.RegisterExpertFragment"
         android:label="fragment_register_expert"
         tools:layout="@layout/fragment_register_expert" />
+    <fragment
+        android:id="@+id/startingFragment"
+        android:name="com.quang.daapp.ui.other.StartingFragment"
+        android:label="fragment_starting"
+        tools:layout="@layout/fragment_starting" />
+    <activity
+        android:id="@+id/authActivity"
+        android:name="com.quang.daapp.ui.other.AuthActivity"
+        android:label="AuthActivity" />
 </navigation>

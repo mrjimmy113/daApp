@@ -1,6 +1,5 @@
 package com.quang.daapp.ui.login;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,9 +11,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quang.daapp.R;
-import com.quang.daapp.ui.login.LoggedInUserView;
-import com.quang.daapp.ui.login.LoginFormState;
-import com.quang.daapp.ui.login.LoginResult;
-import com.quang.daapp.ui.login.LoginViewModel;
+import com.quang.daapp.ultis.AuthTokenManager;
 
 
 /**
@@ -54,7 +50,7 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
@@ -82,22 +78,7 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
 
-            }
-        });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
@@ -136,6 +117,21 @@ public class LoginFragment extends Fragment {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+                loginViewModel.getLoginResult().observe(getViewLifecycleOwner(), new Observer<String>() {
+                    @Override
+                    public void onChanged(String token) {
+                        if (token == null) {
+                            return;
+                        }
+                        loadingProgressBar.setVisibility(View.GONE);
+                        if(!token.equals("")) {
+                            AuthTokenManager.putToken(getContext(),token);
+                            navController.navigate(R.id.startingFragment);
+                        }else {
+                            Toast.makeText(view.getContext(), "Login failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -146,14 +142,6 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        Toast.makeText(getActivity(), welcome, Toast.LENGTH_LONG).show();
-    }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getActivity(), errorString, Toast.LENGTH_SHORT).show();
-    }
 
 }

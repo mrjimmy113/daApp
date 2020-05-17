@@ -5,9 +5,11 @@ import android.util.Log;
 import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.service.AccountService;
 import com.quang.daapp.data.service.RetrofitClient;
+import com.quang.daapp.ultis.AuthTokenManager;
 
 import java.io.IOException;
 
+import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,11 +23,6 @@ public class AccountRepository {
     private static volatile AccountRepository instance;
     private AccountService service;
 
-    // If user credentials will be cached in local storage, it is recommended it be encrypted
-    // @see https://developer.android.com/training/articles/keystore
-    private Object user = null;
-
-    // private constructor : singleton access
     private AccountRepository() {
 
     }
@@ -37,28 +34,41 @@ public class AccountRepository {
         return instance;
     }
 
-    public boolean isLoggedIn() {
-        return user != null;
+    public MutableLiveData<Customer> getProfile(String token) {
+        CreateService();
+        final MutableLiveData<Customer> result = new MutableLiveData<>();
+        service.getCustomerProfile(token).enqueue(new Callback<Customer>() {
+            @Override
+            public void onResponse(Call<Customer> call, Response<Customer> response) {
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Customer> call, Throwable t) {
+                Log.e("Error:",t.getMessage());
+            }
+        });
+
+        return result;
     }
 
-    public void logout() {
-        user = null;
 
-    }
-
-    private void setLoggedInUser(Object user) {
-        this.user = user;
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
-    }
-
-    public  String test() throws IOException {
-        return "a";
-    }
-
-    public Object login(String username, String password) {
+    public MutableLiveData<String> login(String username, String password) {
         // handle login
-        Object result = null;
+        CreateService();
+        final MutableLiveData<String> result = new MutableLiveData<>();
+        service.login(username,password).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("Error:",t.getMessage());
+            }
+        });
 
         return result;
     }
