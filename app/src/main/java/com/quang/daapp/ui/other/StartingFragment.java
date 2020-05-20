@@ -48,6 +48,7 @@ public class StartingFragment extends Fragment {
         navController = Navigation.findNavController(view);
         if(token == null || token.isEmpty()) {
             navController.navigate(R.id.loginFragment);
+            return;
         }
         RetrofitClient.getRetrofitInstance().create(AccountService.class).check(token).enqueue(new Callback<Boolean>() {
             @Override

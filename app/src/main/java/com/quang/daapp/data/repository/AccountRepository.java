@@ -52,6 +52,22 @@ public class AccountRepository {
         return result;
     }
 
+    public MutableLiveData<Number> changePassword(String token, String currentPassword, String newPassword) {
+        CreateService();
+        final MutableLiveData<Number> result = new MutableLiveData<>();
+        service.changePassword(token,currentPassword,newPassword).enqueue(new Callback<Number>() {
+            @Override
+            public void onResponse(Call<Number> call, Response<Number> response) {
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Number> call, Throwable t) {
+                Log.e("Error:",t.getMessage());
+            }
+        });
+        return result;
+    }
 
     public MutableLiveData<String> login(String username, String password) {
         // handle login
@@ -60,7 +76,6 @@ public class AccountRepository {
         service.login(username,password).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-
                 result.setValue(response.body());
             }
 

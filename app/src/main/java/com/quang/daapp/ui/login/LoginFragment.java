@@ -124,7 +124,7 @@ public class LoginFragment extends Fragment {
                             return;
                         }
                         loadingProgressBar.setVisibility(View.GONE);
-                        if(!token.equals("")) {
+                        if(token.trim().length() > 2) {
                             AuthTokenManager.putToken(getContext(),token);
                             navController.navigate(R.id.startingFragment);
                         }else {

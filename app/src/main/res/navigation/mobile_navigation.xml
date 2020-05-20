@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.quang.daapp.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_newRequestFragment"
+            app:destination="@id/newRequestFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -39,4 +43,9 @@
         android:name="com.quang.daapp.ui.customerProfileEdit.EditCustomerProfileFragment"
         android:label="fragment_edit_customer_profile"
         tools:layout="@layout/fragment_edit_customer_profile" />
+    <fragment
+        android:id="@+id/newRequestFragment"
+        android:name="com.quang.daapp.NewRequestFragment"
+        android:label="fragment_new_request"
+        tools:layout="@layout/fragment_new_request" />
 </navigation>

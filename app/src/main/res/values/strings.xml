@@ -16,6 +16,7 @@
     <string name="invalid_city">Please choose your city</string>
     <string name="invalid_dob">Please choose your date of birth</string>
     <string name="invalid_primary_language">Please specify your primary language</string>
+    <string name="invalid_requried_field">This field is required</string>
     <string name="login_failed">"Login failed"</string>
 
     <!-- TODO: Remove or change this placeholder text -->

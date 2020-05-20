@@ -30,4 +30,10 @@ public interface AccountService {
     @GET("/account/cus")
     Call<Customer> getCustomerProfile(@Header("authorization") String token);
 
+    @FormUrlEncoded
+    @POST("/account/changePassword")
+    Call<Number> changePassword(@Header("authorization") String token,
+                                @Field("currentPassword") String currentPassword,
+                                @Field("newPassword") String newPassword);
+
 }
