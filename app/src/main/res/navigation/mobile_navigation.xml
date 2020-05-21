@@ -45,7 +45,7 @@
         tools:layout="@layout/fragment_edit_customer_profile" />
     <fragment
         android:id="@+id/newRequestFragment"
-        android:name="com.quang.daapp.NewRequestFragment"
+        android:name="com.quang.daapp.ui.newRequest.NewRequestFragment"
         android:label="fragment_new_request"
         tools:layout="@layout/fragment_new_request" />
 </navigation>
