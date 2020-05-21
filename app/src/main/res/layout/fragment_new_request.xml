@@ -65,94 +65,128 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:paddingHorizontal="20dp"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_marginTop="20dp"
             android:orientation="vertical"
+            android:paddingHorizontal="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Request title: "
-                android:textSize="18sp"
-                android:textStyle="bold" />
-            <EditText
-                android:background="@drawable/edt_text_box"
-                android:layout_marginTop="5dp"
-                android:id="@+id/edtTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="20dp"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Description:"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-            <EditText
-                android:layout_marginTop="5dp"
-                android:textSize="20sp"
-                android:id="@+id/edtDescription"
-                android:gravity="top"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:lines="8"
-                android:maxLines="10"
-                android:minLines="6"
-                android:background="@drawable/edt_text_box"
-                android:scrollbars="vertical" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:textSize="18sp"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="End Date: "
-                android:textStyle="bold" />
-
             <LinearLayout
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/txtEnđate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Request title: "
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <EditText
+                    android:background="@drawable/edt_text_box"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/edtTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description:"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <EditText
+                    android:layout_marginTop="5dp"
+                    android:textSize="20sp"
+                    android:id="@+id/edtDescription"
+                    android:gravity="top"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:lines="8"
+                    android:maxLines="10"
+                    android:minLines="6"
+                    android:background="@drawable/edt_text_box"
+                    android:scrollbars="vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:textSize="18sp"
                     android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="04/03/2020"
-                    android:paddingHorizontal="10dp"
-                    android:textSize="20sp" />
+                    android:text="End Date: "
+                    android:textStyle="bold" />
 
-                <ImageButton
-                    android:id="@+id/btnChooseDate"
-                    android:background="@null"
-                    android:src="@drawable/ic_insert_invitation_black_24dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/txtEnđate"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="04/03/2020"
+                        android:paddingHorizontal="10dp"
+                        android:textSize="20sp" />
+
+                    <ImageButton
+                        android:id="@+id/btnChooseDate"
+                        android:background="@null"
+                        android:src="@drawable/ic_insert_invitation_black_24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/btnChooseImg"
+                    android:text="ADD"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-
+                <Button
+                    android:id="@+id/btnDelImg"
+                    android:text="DEL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <LinearLayout
+                    android:gravity="end"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:textSize="20sp"
+                        android:gravity="center"
+                        android:text="MB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
+                </LinearLayout>
             </LinearLayout>
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
+    </ScrollView>
 
-    </LinearLayout>
 
 
 </LinearLayout>
