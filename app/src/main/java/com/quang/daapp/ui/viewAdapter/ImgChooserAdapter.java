@@ -1,6 +1,7 @@
 package com.quang.daapp.ui.viewAdapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,10 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ImgChooserAdapter extends RecyclerView.Adapter<ImgChooserAdapter.ViewHolder> {
 
     Context mContext;
-    ArrayList<String> imgURL;
+    ArrayList<Uri> imgURL;
     OnItemRemove onItemRemove;
 
-    public ImgChooserAdapter(Context mContext, ArrayList<String> imgURL, OnItemRemove onItemRemove) {
+    public ImgChooserAdapter(Context mContext, ArrayList<Uri> imgURL, OnItemRemove onItemRemove) {
         this.mContext = mContext;
         this.imgURL = imgURL;
         this.onItemRemove = onItemRemove;

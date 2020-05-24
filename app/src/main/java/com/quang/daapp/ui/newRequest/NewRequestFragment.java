@@ -17,8 +17,13 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -33,14 +38,18 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.quang.daapp.R;
+import com.quang.daapp.ui.dialog.MessageDialogFragment;
+import com.quang.daapp.ui.other.AuthActivity;
 import com.quang.daapp.ui.viewAdapter.ImgChooserAdapter;
 
 import java.io.File;
-import java.sql.Date;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 /**
@@ -49,20 +58,19 @@ import java.util.Calendar;
 public class NewRequestFragment extends Fragment {
 
     private static final int GALLERY_REQUEST_CODE = 0;
-    DatePickerDialog picker;
-    TextView txtEndDate;
-    Date choosenDate;
+    private TextView txtEndDate;
+    private Date choosenDate;
 
-    Button btnChooseImg;
-    RecyclerView recyclerView;
+    private Button btnChooseImg;
+    private RecyclerView recyclerView;
 
-    TextView txtTotalLength;
+    private TextView txtTotalLength;
     private long totalImageLength = 0;
 
-    ArrayList<String> imgURL = new ArrayList<>();
-    ImgChooserAdapter adapter;
+    private ArrayList<Uri> imgURL = new ArrayList<>();
+    private ImgChooserAdapter adapter;
 
-    NewRequestViewModel viewModel;
+    private NewRequestViewModel viewModel;
 
     public NewRequestFragment() {
         // Required empty public constructor
@@ -70,7 +78,7 @@ public class NewRequestFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkPermissions();
@@ -86,10 +94,8 @@ public class NewRequestFragment extends Fragment {
 
         Calendar cldr = Calendar.getInstance();
         cldr.add(Calendar.DATE,2);
-        int day = cldr.get(Calendar.DAY_OF_MONTH);
-        int month = cldr.get(Calendar.MONTH);
-        int year = cldr.get(Calendar.YEAR);
-        choosenDate = new Date(cldr.getTimeInMillis());
+        txtEndDate = view.findViewById(R.id.txtEndDate);
+        changeDateDisplay(new Date(cldr.getTimeInMillis()));
 
 
         viewModel = ViewModelProviders.of(this)
@@ -98,15 +104,16 @@ public class NewRequestFragment extends Fragment {
         final EditText edtTitle = view.findViewById(R.id.edtTitle);
         final EditText edtDescription = view.findViewById(R.id.edtDescription);
 
+
         viewModel.getNewRequestFormState().observe(getViewLifecycleOwner(), new Observer<NewRequestFormState>() {
             @Override
             public void onChanged(NewRequestFormState newRequestFormState) {
                 if(newRequestFormState == null) return;
                 if(newRequestFormState.getTitleError() != null) {
-                    edtTitle.setError(newRequestFormState.getTitleError().toString());
+                    edtTitle.setError(getString(newRequestFormState.getTitleError()));
                 }
                 if(newRequestFormState.getDescriptionError() != null) {
-                    edtDescription.setError(newRequestFormState.getDescriptionError().toString());
+                    edtDescription.setError(getString(newRequestFormState.getDescriptionError()));
                 }
             }
         });
@@ -128,10 +135,50 @@ public class NewRequestFragment extends Fragment {
             }
         };
 
+        edtTitle.addTextChangedListener(afterTextChangedListener);
+        edtDescription.addTextChangedListener(afterTextChangedListener);
+
         txtTotalLength = view.findViewById(R.id.txtTotalLength);
         final ImageButton btnChooseDate = view.findViewById(R.id.btnChooseDate);
-        txtEndDate = view.findViewById(R.id.txtEnđate);
-        changeDateDisplay(new Date(Calendar.getInstance().getTimeInMillis()));
+
+
+
+        final ImageButton btnCreateReq = view.findViewById(R.id.btnCreateRequest);
+        btnCreateReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((AuthActivity)getActivity()).activateLoader();
+                viewModel.createNewRequest(getFilesRealPath(imgURL),
+                        choosenDate,edtTitle.getText().toString(),edtDescription.getText().toString());
+                viewModel.getNewRequestResult().observe(getViewLifecycleOwner(), new Observer<Number>() {
+                    @Override
+                    public void onChanged(Number number) {
+                        ((AuthActivity)getActivity()).deactivateLoad();
+                        if(number == null) {
+                            MessageDialogFragment dialog = new MessageDialogFragment("There is something went wrong, Please try again", R.color.colorDanger,R.drawable.ic_error);
+                            dialog.show(getActivity().getSupportFragmentManager(),"");
+                            return;
+                        }
+
+                        if(number.intValue() == 201) {
+                            final NavController navController = Navigation.findNavController(view);
+                            MessageDialogFragment dialog = new MessageDialogFragment("You request has been created",
+                                    R.color.colorSuccess, R.drawable.ic_success, new MessageDialogFragment.OnMyDialogListener() {
+                                @Override
+                                public void OnOKListener() {
+                                    navController.navigate(R.id.navigation_home);
+                                }
+                            });
+                            dialog.show(getActivity().getSupportFragmentManager(),"");
+                        }else if(number.intValue() == 400) {
+                            MessageDialogFragment dialog = new MessageDialogFragment("There is something went wrong, Please try again", R.color.colorDanger,R.drawable.ic_error);
+                            dialog.show(getActivity().getSupportFragmentManager(),"");
+                        }
+                    }
+                });
+            }
+        });
+
 
         btnChooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,17 +212,17 @@ public class NewRequestFragment extends Fragment {
     private void openDatePicker() {
         final Calendar cldr = Calendar.getInstance();
         cldr.setTime(choosenDate);
-        picker = new DatePickerDialog(getActivity(),
+        DatePickerDialog picker = new DatePickerDialog(getActivity(),
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        cldr.set(Calendar.YEAR,year);
-                        cldr.set(Calendar.MONTH,month);
-                        cldr.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                        cldr.set(Calendar.YEAR, year);
+                        cldr.set(Calendar.MONTH, month);
+                        cldr.set(Calendar.DAY_OF_MONTH, dayOfMonth);
                         Date d = new Date(cldr.getTimeInMillis());
-                        if(viewModel.isValidEndDate(d)) {
+                        if (viewModel.isValidEndDate(d)) {
                             changeDateDisplay(d);
-                        }else {
+                        } else {
                             Toast.makeText(getActivity(), R.string.invalid_end_date, Toast.LENGTH_SHORT).show();
                         }
 
@@ -230,9 +277,10 @@ public class NewRequestFragment extends Fragment {
     private void changeDateDisplay(Date date) {
         choosenDate = date;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        format.format(date);
-        txtEndDate.setText(date.toString());
+        txtEndDate.setText(format.format(choosenDate).toString());
     }
+
+
 
     private void pickFromGallery(){
         //Create an Intent with action as ACTION_PICK
@@ -255,40 +303,51 @@ public class NewRequestFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK)
             switch (requestCode){
                 case GALLERY_REQUEST_CODE:
-                    //data.getData returns the content URI for the selected Image
-                    Uri selectedImage = data.getData();
-                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                    Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String picturePath = cursor.getString(columnIndex);
-                    cursor.close();
-
-                    addFileToList(picturePath, true);
+                    addFileToList(data.getData(), true);
                     break;
             }
     }
 
-    private void addFileToList(String path, boolean isAdd) {
+    private void addFileToList(Uri uri, boolean isAdd) {
 
-        File file = new File(path);
+        File file = new File(getPathFromURI(uri));
 
         if(!isAdd) {
             totalImageLength -= file.length();
             txtTotalLength.setText((double)(totalImageLength / 1024) + "");
             recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
-        }
-
-        if(totalImageLength + file.length() < 5 * 1024 * 1024 && isAdd) {
-            imgURL.add(path);
-            adapter.notifyItemInserted(imgURL.size() - 1);
-            totalImageLength += file.length();
-            txtTotalLength.setText((double)(totalImageLength / 1024) + "");
-            recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
         }else {
-            Toast.makeText(getActivity(), R.string.invalid_img_over, Toast.LENGTH_SHORT).show();
+            if(totalImageLength + file.length() < 5 * 1024 * 1024) {
+                imgURL.add(uri);
+                adapter.notifyItemInserted(imgURL.size() - 1);
+                totalImageLength += file.length();
+                txtTotalLength.setText((double)(totalImageLength / 1024) + "");
+                recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount() - 1);
+            }else {
+                Toast.makeText(getActivity(), R.string.invalid_img_over, Toast.LENGTH_SHORT).show();
+            }
         }
 
+
+
+    }
+
+    private String getPathFromURI(Uri uri) {
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getActivity().getContentResolver().query(uri,filePathColumn, null, null, null);
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
+        return picturePath;
+    }
+
+    private String[] getFilesRealPath(List<Uri> souceList) {
+        String[] result = new String[souceList.size()];
+        for(int i = 0 ; i < result.length;i++) {
+            result[i] = getPathFromURI(souceList.get(i));
+        }
+        return result;
     }
 
 

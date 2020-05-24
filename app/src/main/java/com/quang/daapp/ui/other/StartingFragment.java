@@ -44,34 +44,36 @@ public class StartingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        String token = AuthTokenManager.getToken(getContext());
+        final String token = AuthTokenManager.getToken(getContext());
         navController = Navigation.findNavController(view);
         if(token == null || token.isEmpty()) {
             navController.navigate(R.id.loginFragment);
-            return;
-        }
-        RetrofitClient.getRetrofitInstance().create(AccountService.class).check(token).enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if(response.code() == 200) {
 
-                    if(response.body()) {
-                        //Move expert
-                    }else {
-                        //Move customer
-                        navController.navigate(R.id.authActivity);
-                        getActivity().finish();
+        }else {
+            RetrofitClient.getRetrofitInstance().create(AccountService.class).check(token).enqueue(new Callback<Boolean>() {
+                @Override
+                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                    if(response.code() == 200) {
+                        RetrofitClient.setToken(token);
+                        if(response.body()) {
+                            //Move expert
+                        }else {
+                            //Move customer
+                            navController.navigate(R.id.authActivity);
+                            getActivity().finish();
+                        }
+
+                    }else if(response.code() == 202) {
+                        navController.navigate(R.id.loginFragment);
                     }
-
-                }else if(response.code() == 202) {
-                    //Relog
                 }
-            }
 
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
+                @Override
+                public void onFailure(Call<Boolean> call, Throwable t) {
 
-            }
-        });
+                }
+            });
+        }
+
     }
 }

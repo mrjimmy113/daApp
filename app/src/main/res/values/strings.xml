@@ -32,4 +32,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_profile">Profile</string>
+
+    <!--Bundle Key-->
+    <string name="key_request_id">requestId</string>
 </resources>

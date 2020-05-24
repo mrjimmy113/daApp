@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
@@ -12,21 +13,39 @@
         android:background="@color/colorPrimaryDark"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:gravity="end"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/btnNewRequest"
+            <TextView
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="Your problem request"
+                android:gravity="center"
                 android:textColor="@color/colorWhite"
-                android:background="@null"
-                android:layout_width="53dp"
-                android:textSize="40sp"
-                android:layout_height="wrap_content"
-                android:text="+"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/btnNewRequest"
+                    android:textColor="@color/colorWhite"
+                    android:background="@null"
+                    android:layout_width="53dp"
+                    android:textSize="40sp"
+                    android:layout_height="wrap_content"
+                    android:text="+"/>
 
 
+            </LinearLayout>
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_problem_request"
+        android:layout_marginBottom="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+    </androidx.recyclerview.widget.RecyclerView>
 </LinearLayout>

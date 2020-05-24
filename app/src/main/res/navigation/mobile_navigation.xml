@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_newRequestFragment"
             app:destination="@id/newRequestFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_problemRequestDetail"
+            app:destination="@id/problemRequestDetail" />
     </fragment>
 
     <fragment
@@ -48,4 +51,9 @@
         android:name="com.quang.daapp.ui.newRequest.NewRequestFragment"
         android:label="fragment_new_request"
         tools:layout="@layout/fragment_new_request" />
+    <fragment
+        android:id="@+id/problemRequestDetail"
+        android:name="com.quang.daapp.ui.requestDetail.ProblemRequestDetail"
+        android:label="fragment_problem_request_detail"
+        tools:layout="@layout/fragment_problem_request_detail" />
 </navigation>
