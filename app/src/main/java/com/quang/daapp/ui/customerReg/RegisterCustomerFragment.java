@@ -7,6 +7,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,10 +16,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import com.quang.daapp.R;
+import com.quang.daapp.ui.dialog.LoaderDialogFragment;
+import com.quang.daapp.ui.dialog.MessageDialogFragment;
 
 import java.sql.Date;
 
@@ -51,92 +58,80 @@ public class RegisterCustomerFragment extends Fragment {
         final EditText edtEmail = view.findViewById(R.id.edtUsername);
         final EditText edtPassword = view.findViewById(R.id.edtPassword);
         final EditText edtConfirm = view.findViewById(R.id.edtConfirm);
-        final EditText edtFirstName = view.findViewById(R.id.edtFirstName);
-        final EditText edtLastName = view.findViewById(R.id.edtLastName);
-        final EditText edtAddress = view.findViewById(R.id.edtAddress);
-        final EditText edtCity = view.findViewById(R.id.edtCity);
-        final EditText edtDob = view.findViewById(R.id.edtDob);
-        final EditText edtPrimaryLanguage = view.findViewById(R.id.edtLanguage);
-        final Button btnRegister = view.findViewById(R.id.btnCustomerRegister);
+        final EditText edtFirstName = view.findViewById(R.id.edtFullName);
+        final Spinner spnAccountType = view.findViewById(R.id.spn_account_type);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.account_type_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnAccountType.setAdapter(adapter);
 
-        viewModel.getRegisterCustomerFormState().observe(getViewLifecycleOwner(), new Observer<RegisterCustomerFormState>() {
+        final ImageButton btnBack = view.findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(RegisterCustomerFormState registerCustomerFormState) {
-                if(registerCustomerFormState == null) return;
-
-                if(registerCustomerFormState.getUsernameError() != null ){
-                    edtEmail.setError(getString(registerCustomerFormState.getUsernameError()));
-                }
-                if(registerCustomerFormState.getPasswordError() != null ){
-                    edtPassword.setError(getString(registerCustomerFormState.getPasswordError()));
-                }
-                if(registerCustomerFormState.getPasswordConfirmError() != null ) {
-                    edtConfirm.setError(getString(registerCustomerFormState.getPasswordConfirmError()));
-                }
-                if(registerCustomerFormState.getFirstnameError() != null ){
-                    edtFirstName.setError(getString(registerCustomerFormState.getFirstnameError()));
-                }
-                if(registerCustomerFormState.getLastnameError() != null ){
-                    edtLastName.setError(getString(registerCustomerFormState.getLastnameError()));
-                }
-                if(registerCustomerFormState.getAddressError() != null ){
-                    edtAddress.setError(getString(registerCustomerFormState.getAddressError()));
-                }
-                if(registerCustomerFormState.getDobError() != null ){
-                    edtDob.setError(getString(registerCustomerFormState.getDobError()));
-                }
-                if(registerCustomerFormState.getCityError() != null ){
-                    edtCity.setError(getString(registerCustomerFormState.getCityError()));
-                }
-                if(registerCustomerFormState.getPrimaryLanguageError() != null){
-                    edtPrimaryLanguage.setError(getString(registerCustomerFormState.getPrimaryLanguageError()));
-                }
-                btnRegister.setEnabled(false);
-                if(registerCustomerFormState.isDataValid()) {
-                    btnRegister.setEnabled(true);
-                }
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(view);
+                navController.navigate(R.id.loginFragment);
             }
         });
 
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                viewModel.dataChange(edtEmail.getText().toString(),edtPassword.getText().toString(),
-                        edtConfirm.getText().toString(),edtFirstName.getText().toString(),
-                        edtLastName.getText().toString(), edtAddress.getText().toString(),
-                        edtCity.getText().toString(),edtDob.getText().toString(),
-                        edtPrimaryLanguage.getText().toString());
-            }
-        };
-
-        edtEmail.addTextChangedListener(afterTextChangedListener);
-        edtPassword.addTextChangedListener(afterTextChangedListener);
-        edtFirstName.addTextChangedListener(afterTextChangedListener);
-        edtLastName.addTextChangedListener(afterTextChangedListener);
-        edtAddress.addTextChangedListener(afterTextChangedListener);
-        edtCity.addTextChangedListener(afterTextChangedListener);
-        edtConfirm.addTextChangedListener(afterTextChangedListener);
-        edtDob.addTextChangedListener(afterTextChangedListener);
-        edtPrimaryLanguage.addTextChangedListener(afterTextChangedListener);
+        final Button btnRegister = view.findViewById(R.id.btnCustomerRegister);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.register(edtEmail.getText().toString(),edtPassword.getText().toString(),
-                        edtConfirm.getText().toString(),edtFirstName.getText().toString(),
-                        edtLastName.getText().toString(), edtAddress.getText().toString(),
-                        edtCity.getText().toString(),edtDob.getText().toString(),
-                        edtPrimaryLanguage.getText().toString());
+                RegisterCustomerFormState formState = viewModel.validate(edtEmail.getText().toString(), edtPassword.getText().toString(),
+                        edtConfirm.getText().toString(),edtFirstName.getText().toString());
+                if(!formState.isDataValid()) {
+                    MessageDialogFragment dialogMes = new MessageDialogFragment(getString(R.string.mes_error_validate),R.color.colorDanger,R.drawable.ic_error);
+                    dialogMes.show(getParentFragmentManager(),getTag());
+                    if(formState.getUsernameError() != null) edtEmail.setError(getString(formState.getUsernameError()));
+                    if(formState.getFullNameError() != null) edtFirstName.setError(getString(formState.getFullNameError()));
+                    if(formState.getPasswordError() != null) edtPassword.setError(getString(formState.getPasswordError()));
+                    if(formState.getPasswordConfirmError() != null) edtPassword.setError(getString(formState.getPasswordConfirmError()));
+
+                    return;
+                }
+
+
+                viewModel.register(edtEmail.getText().toString(), edtPassword.getText().toString(),
+                        edtFirstName.getText().toString(), spnAccountType.getSelectedItemPosition() != 0);
+                final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
+                loaderDialog.show(getParentFragmentManager(),loaderDialog.getTag());
+
+                if(viewModel.getRegisterResult() != null) {
+                    viewModel.getRegisterResult().observe(getViewLifecycleOwner(), new Observer<Number>() {
+                        @Override
+                        public void onChanged(Number number) {
+                            loaderDialog.dismiss();
+                            MessageDialogFragment dialogMes = null;
+                            if(number == null) {
+                                dialogMes = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
+                            }else {
+                                int result = number.intValue();
+                                if(result == 201) {
+                                    dialogMes = new MessageDialogFragment(getString(R.string.mes_register_success),
+                                            R.color.colorSuccess, R.drawable.ic_success, new MessageDialogFragment.OnMyDialogListener() {
+                                        @Override
+                                        public void OnOKListener() {
+                                            NavController navController = Navigation.findNavController(view);
+                                            navController.navigate(R.id.loginFragment);
+                                        }
+                                    });
+                                }else  if(result == 409) {
+                                    dialogMes = new MessageDialogFragment(getString(R.string.mes_register_email_exist),R.color.colorDanger,R.drawable.ic_error);
+                                }else if (result == 400) {
+                                    dialogMes = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
+                                }
+                            }
+
+                            if(dialogMes != null) dialogMes.show(getParentFragmentManager(),dialogMes.getTag());
+
+                        }
+                    });
+                }else {
+                    MessageDialogFragment dialogMes = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
+                    dialogMes.show(getParentFragmentManager(),getTag());
+                }
             }
         });
 

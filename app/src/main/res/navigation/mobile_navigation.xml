@@ -53,7 +53,7 @@
         tools:layout="@layout/fragment_new_request" />
     <fragment
         android:id="@+id/problemRequestDetail"
-        android:name="com.quang.daapp.ui.requestDetail.ProblemRequestDetail"
+        android:name="com.quang.daapp.ui.requestDetail.ProblemRequestDetailFragment"
         android:label="fragment_problem_request_detail"
         tools:layout="@layout/fragment_problem_request_detail" />
 </navigation>

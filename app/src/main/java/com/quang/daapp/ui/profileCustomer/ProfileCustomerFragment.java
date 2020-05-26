@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,16 +17,23 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
+import com.quang.daapp.data.service.RetrofitClient;
 import com.quang.daapp.databinding.FragmentProfileBinding;
 import com.quang.daapp.ultis.AuthTokenManager;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
+
 public class ProfileCustomerFragment extends Fragment {
 
     FragmentProfileBinding binding;
+    Customer data;
 
     private ProfileCustomerViewModel viewModel;
     NavController navigation;
@@ -44,12 +52,17 @@ public class ProfileCustomerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final Button btnEditProfile = view.findViewById(R.id.btnEditProfile);
         final Button btnChangePassword = view.findViewById(R.id.btnChangePassword);
+        final TextView txtDob = view.findViewById(R.id.txtDob);
+        final ImageView ivAvatar = view.findViewById(R.id.iv_avatar);
 
         navigation = Navigation.findNavController(view);
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navigation.navigate(R.id.action_navigation_profile_to_editCustomerProfileFragment);
+                Bundle bundle = new Bundle();
+                Gson gson = new GsonBuilder().create();
+                bundle.putSerializable("data", gson.toJson(data));
+                navigation.navigate(R.id.action_navigation_profile_to_editCustomerProfileFragment,bundle);
             }
         });
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +79,16 @@ public class ProfileCustomerFragment extends Fragment {
                 if(customer == null) return;
 
                 binding.setProfile(customer);
+                data = customer;
+                if(data.getDob() != null) {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    txtDob.setText(format.format(data.getDob()));
+                }
+                if(data.getImgName() != null && !data.getImgName().trim().isEmpty()) {
+                    Glide.with(getContext()).load(RetrofitClient.getImageUrl(data.getImgName())).into(ivAvatar);
+                }
+
+
 
 
             }

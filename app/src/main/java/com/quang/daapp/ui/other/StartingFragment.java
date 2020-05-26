@@ -12,6 +12,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.HTTP;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class StartingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final String token = AuthTokenManager.getToken(getContext());
         navController = Navigation.findNavController(view);
+
         if(token == null || token.isEmpty()) {
             navController.navigate(R.id.loginFragment);
 
@@ -53,6 +55,7 @@ public class StartingFragment extends Fragment {
             RetrofitClient.getRetrofitInstance().create(AccountService.class).check(token).enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+
                     if(response.code() == 200) {
                         RetrofitClient.setToken(token);
                         if(response.body()) {

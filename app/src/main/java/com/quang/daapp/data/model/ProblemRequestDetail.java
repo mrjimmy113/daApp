@@ -1,5 +1,6 @@
 package com.quang.daapp.data.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class ProblemRequestDetail {
 
     private Date deadlineDate;
 
-    private List<String> images;
+    private List<String> images = new ArrayList<>();
 
     public Integer getRequestId() {
         return requestId;
@@ -104,5 +105,21 @@ public class ProblemRequestDetail {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    @Override
+    public String toString() {
+        return "ProblemRequestDetail{" +
+                "requestId=" + requestId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
+                ", feedBack='" + feedBack + '\'' +
+                ", rating=" + rating +
+                ", createdDate=" + createdDate +
+                ", completedDate=" + completedDate +
+                ", deadlineDate=" + deadlineDate +
+                ", images=" + images +
+                '}';
     }
 }

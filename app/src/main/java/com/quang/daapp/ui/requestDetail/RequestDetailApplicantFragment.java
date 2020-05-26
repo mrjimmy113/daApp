@@ -1,4 +1,4 @@
-package com.quang.daapp.ui.expertReg;
+package com.quang.daapp.ui.requestDetail;
 
 import android.os.Bundle;
 
@@ -10,13 +10,12 @@ import android.view.ViewGroup;
 
 import com.quang.daapp.R;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RegisterExpertFragment extends Fragment {
+public class RequestDetailApplicantFragment extends Fragment {
 
-    public RegisterExpertFragment() {
+    public RequestDetailApplicantFragment() {
         // Required empty public constructor
     }
 
@@ -25,6 +24,6 @@ public class RegisterExpertFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register_expert, container, false);
+        return inflater.inflate(R.layout.fragment_request_detail_applicant, container, false);
     }
 }

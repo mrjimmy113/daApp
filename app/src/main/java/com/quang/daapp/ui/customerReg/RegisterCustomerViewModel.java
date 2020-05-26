@@ -6,6 +6,7 @@ import android.util.Patterns;
 
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
+import com.quang.daapp.data.model.RegisterModel;
 import com.quang.daapp.data.repository.AccountRepository;
 
 import java.sql.Date;
@@ -15,59 +16,40 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class RegisterCustomerViewModel extends ViewModel {
-    private MutableLiveData<RegisterCustomerFormState> registerCustomerFormState = new MutableLiveData<>();
+
+    private MutableLiveData<Number> registerResult;
+
+    LiveData<Number> getRegisterResult() {return registerResult;};
+
     private AccountRepository accountRepository;
 
     public  RegisterCustomerViewModel() {
         this.accountRepository = AccountRepository.getInstance();
     }
 
-    LiveData<RegisterCustomerFormState> getRegisterCustomerFormState() {
-        return registerCustomerFormState;
-    }
 
-    public void dataChange(String username, String password, String confirm, String firstName, String lastName, String address, String city, String dob, String primaryLanguage) {
+    public RegisterCustomerFormState validate(String username, String password, String confirm, String fullName) {
         RegisterCustomerFormState newState = new RegisterCustomerFormState();
+        boolean isValid = true;
         if (!isUserNameValid(username)) {
             newState.setUsernameError(R.string.invalid_username);
-            registerCustomerFormState.setValue(newState);
-        } else if (!isPasswordValid(password)) {
-
-            newState.setPasswordError(R.string.invalid_password);
-            registerCustomerFormState.setValue(newState);
-        } else if(!isConfirmValid(password,confirm)) {
-
-            newState.setPasswordConfirmError(R.string.invalid_confirm);
-            registerCustomerFormState.setValue(newState);
-        } else if(firstName.trim().isEmpty()) {
-
-            newState.setFirstnameError(R.string.invalid_firstname);
-            registerCustomerFormState.setValue(newState);
-        } else if(lastName.trim().isEmpty()) {
-
-            newState.setLastnameError(R.string.invalid_lastname);
-            registerCustomerFormState.setValue(newState);
-        } else if(address.trim().isEmpty()) {
-
-            newState.setAddressError(R.string.invalid_address);
-            registerCustomerFormState.setValue(newState);
-        } else if(city.trim().isEmpty()) {
-
-            newState.setCityError(R.string.invalid_city);
-            registerCustomerFormState.setValue(newState);
-        } else if(dob.trim().isEmpty()) {
-
-            newState.setDobError(R.string.invalid_dob);
-            registerCustomerFormState.setValue(newState);
-        } else if(primaryLanguage.trim().isEmpty()) {
-
-            newState.setPrimaryLanguageError(R.string.invalid_primary_language);
-            registerCustomerFormState.setValue(newState);
-        } else {
-            newState.setDataValid(true);
-            registerCustomerFormState.setValue(newState);
+            isValid = false;
         }
+        if (!isPasswordValid(password)) {
+            newState.setPasswordError(R.string.invalid_password);
+            isValid = false;
+        }
+        if(!isConfirmValid(password,confirm)) {
+            newState.setPasswordConfirmError(R.string.invalid_confirm);
+            isValid = false;
+        }
+        if(fullName.trim().isEmpty()) {
+            newState.setFullNameError(R.string.invalid_fullName);
+            isValid = false;
+        }
+        newState.setDataValid(isValid);
 
+        return  newState;
     }
 
     private boolean isUserNameValid(String username) {
@@ -90,10 +72,8 @@ public class RegisterCustomerViewModel extends ViewModel {
         return password.equals(confirm);
     }
 
-    public void register(String username, String password, String confirm, String firstName, String lastName, String address, String city, String dob, String primaryLanguage) {
-
-        Customer c = new Customer(username,password,firstName,lastName,address,city,dob,primaryLanguage);
-        accountRepository.registerCustomer(c);
+    public void register(String username, String password,String fullName, boolean isExpert) {
+        registerResult = accountRepository.register(new RegisterModel(username,password,fullName,isExpert));
     }
 
 }

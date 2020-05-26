@@ -11,31 +11,14 @@
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
-            android:id="@+id/action_loginFragment_to_registerChooserFragment"
-            app:destination="@id/registerChooserFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/registerChooserFragment"
-        android:name="com.quang.daapp.ui.other.RegisterChooserFragment"
-        android:label="fragment_register_chooser"
-        tools:layout="@layout/fragment_register_chooser" >
-        <action
-            android:id="@+id/action_registerChooserFragment_to_registerCustomerFragment"
+            android:id="@+id/action_loginFragment_to_registerCustomerFragment"
             app:destination="@id/registerCustomerFragment" />
-        <action
-            android:id="@+id/action_registerChooserFragment_to_registerExpertFragment"
-            app:destination="@id/registerExpertFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerCustomerFragment"
         android:name="com.quang.daapp.ui.customerReg.RegisterCustomerFragment"
         android:label="fragment_register_customer"
         tools:layout="@layout/fragment_register_customer" />
-    <fragment
-        android:id="@+id/registerExpertFragment"
-        android:name="com.quang.daapp.ui.expertReg.RegisterExpertFragment"
-        android:label="fragment_register_expert"
-        tools:layout="@layout/fragment_register_expert" />
     <fragment
         android:id="@+id/startingFragment"
         android:name="com.quang.daapp.ui.other.StartingFragment"

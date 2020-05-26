@@ -15,26 +15,37 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="30dp"
             android:id="@+id/upper_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <androidx.cardview.widget.CardView
+                android:layout_marginTop="30dp"
+                android:layout_width="100dp"
                 android:id="@+id/ivAvatar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_launcher_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:cardCornerRadius="50dp"
+                android:layout_height="100dp">
+                <ImageView
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:id="@+id/iv_avatar"
+                    android:src="@drawable/ic_fullname"/>
+            </androidx.cardview.widget.CardView>
+
+
+
 
             <TextView
                 android:id="@+id/txtFullName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@{profile.firstname + ' ' + profile.lastname}"
+                android:text="@{profile.fullName}"
                 android:textSize="25sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,6 +67,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/my_button"
                 android:id="@+id/btnEditProfile"
                 android:layout_marginHorizontal="10dp"
                 android:text="Edit profile"
@@ -63,6 +76,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
             <Button
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/my_button"
                 android:id="@+id/btnChangePassword"
                 android:layout_marginHorizontal="10dp"
                 android:text="Change password"
@@ -146,7 +161,6 @@
                             android:id="@+id/txtDob"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{profile.dob}"
                             android:textSize="20dp" />
                     </LinearLayout>
 

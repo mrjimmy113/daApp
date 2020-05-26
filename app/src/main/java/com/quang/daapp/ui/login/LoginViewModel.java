@@ -14,16 +14,11 @@ import java.io.IOException;
 
 public class LoginViewModel extends ViewModel {
 
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<String> loginResult = new MutableLiveData<>();
     private AccountRepository accountRepository;
 
     public LoginViewModel() {
         this.accountRepository = AccountRepository.getInstance();
-    }
-
-    LiveData<LoginFormState> getLoginFormState() {
-        return loginFormState;
     }
 
     LiveData<String> getLoginResult() {
@@ -35,14 +30,19 @@ public class LoginViewModel extends ViewModel {
     }
 
 
-    public void loginDataChanged(String username, String password) {
+    public LoginFormState loginDataChanged(String username, String password) {
+        LoginFormState state = new LoginFormState();
+        boolean isValue = true;
         if (!isUserNameValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
-        } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
-        } else {
-            loginFormState.setValue(new LoginFormState(true));
+            state.setUsernameError(R.string.invalid_username);
+            isValue = false;
         }
+        if (!isPasswordValid(password)) {
+            state.setPasswordError(R.string.invalid_password);
+            isValue = false;
+        }
+        state.setDataValid(isValue);
+        return  state;
     }
 
     // A placeholder username validation check

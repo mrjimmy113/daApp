@@ -18,6 +18,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ProblemRequestService {
     @Multipart
@@ -28,6 +29,6 @@ public interface ProblemRequestService {
     @GET("/request")
     Call<List<ProblemRequest>> getCurrentProblemRequest();
 
-    @GET("/request/detail?id={id}")
-    Call<ProblemRequestDetail> getRequestDetail(@Path("id") int requestId);
+    @GET("/request/detail")
+    Call<ProblemRequestDetail> getRequestDetail(@Query("id") int requestId);
 }

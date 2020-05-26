@@ -10,7 +10,7 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="invalid_confirm">Confirm password and password must be the same</string>
-    <string name="invalid_firstname">Please fill in your firstname</string>
+    <string name="invalid_fullName">Please fill in your FullName</string>
     <string name="invalid_lastname">Please fill in your lastname</string>
     <string name="invalid_address">Please fill in your address</string>
     <string name="invalid_city">Please choose your city</string>
@@ -26,7 +26,7 @@
     <string name="field_hint_confirm_password">Re-type password</string>
     <string name="field_hint_address">Address</string>
     <string name="field_hint_last_name">Last Name</string>
-    <string name="field_hint_first_name">First Name</string>
+    <string name="field_hint_full_name">Full Name</string>
     <string name="title_activity_auth">AuthActivity</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -35,4 +35,35 @@
 
     <!--Bundle Key-->
     <string name="key_request_id">requestId</string>
+    <string name="action_sign_up">Sign up</string>
+
+    <!--Message Common-->
+    <string name="mes_error_400">There is something wrong happen, please try again</string>
+    <string name="mes_error_validate">Your form is not valid</string>
+
+    <!--Login-->
+    <string name="mes_error_login_fail">Email or password is not correct</string>
+
+    <!--Message Register-->
+    <string name="mes_register_success">You have signed up successfully</string>
+    <string name="mes_register_email_exist">This email is already existed</string>
+
+    <!--Edit Profile-->
+    <string name="mes_edit_profile_success">Your profile has been updated</string>
+
+
+    <string-array name="account_type_array">
+        <item>Customer</item>
+        <item>Computer Expert</item>
+    </string-array>
+
+    <string-array name="language_arrays">
+        <item>Vietnamese</item>
+        <item>English</item>
+    </string-array>
+
+    <string-array name="city_arrays">
+        <item>TP.HCM</item>
+        <item>Hà Nội</item>
+    </string-array>
 </resources>

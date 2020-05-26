@@ -24,17 +24,32 @@ class LoginFormState {
         this.isDataValid = isDataValid;
     }
 
+    public LoginFormState() {
+    }
+
     @Nullable
-    Integer getUsernameError() {
+    public Integer getUsernameError() {
         return usernameError;
     }
 
+    public void setUsernameError(@Nullable Integer usernameError) {
+        this.usernameError = usernameError;
+    }
+
     @Nullable
-    Integer getPasswordError() {
+    public Integer getPasswordError() {
         return passwordError;
     }
 
-    boolean isDataValid() {
+    public void setPasswordError(@Nullable Integer passwordError) {
+        this.passwordError = passwordError;
+    }
+
+    public boolean isDataValid() {
         return isDataValid;
+    }
+
+    public void setDataValid(boolean dataValid) {
+        isDataValid = dataValid;
     }
 }

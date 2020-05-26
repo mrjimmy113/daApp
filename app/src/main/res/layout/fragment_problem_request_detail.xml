@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".ui.requestDetail.ProblemRequestDetail">
+    tools:context=".ui.requestDetail.ProblemRequestDetailFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tool_bar"
@@ -64,9 +65,14 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.viewpager2.widget.ViewPager2
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:background="@color/colorPrimaryDark"
+        app:tabTextColor="@color/colorWhite"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        
-    </androidx.viewpager2.widget.ViewPager2>
+        android:layout_height="wrap_content"/>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>

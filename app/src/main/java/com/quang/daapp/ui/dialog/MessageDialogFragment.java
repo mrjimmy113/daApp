@@ -2,7 +2,6 @@ package com.quang.daapp.ui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +42,7 @@ public class MessageDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.message_dialog,null);
+        View view = inflater.inflate(R.layout.dialog_message,null);
 
 
         final Button btnOK = view.findViewById(R.id.btnOK);
@@ -51,7 +50,7 @@ public class MessageDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 dismiss();
-                myDialogListener.OnOKListener();
+                if(myDialogListener != null) myDialogListener.OnOKListener();
             }
         });
 

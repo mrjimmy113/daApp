@@ -2,14 +2,21 @@ package com.quang.daapp.data.repository;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.quang.daapp.data.model.Customer;
+import com.quang.daapp.data.model.RegisterModel;
 import com.quang.daapp.data.service.AccountService;
 import com.quang.daapp.data.service.RetrofitClient;
 import com.quang.daapp.ultis.AuthTokenManager;
 
+import java.io.File;
 import java.io.IOException;
 
 import androidx.lifecycle.MutableLiveData;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,12 +95,13 @@ public class AccountRepository {
         return result;
     }
 
-    public void registerCustomer(Customer customer) {
+    public MutableLiveData<Number> register(RegisterModel model) {
         CreateService();
-        service.registerCustomer(customer).enqueue(new Callback<Number>() {
+        final  MutableLiveData<Number> result = new MutableLiveData<>();
+        service.registerCustomer(model).enqueue(new Callback<Number>() {
             @Override
             public void onResponse(Call<Number> call, Response<Number> response) {
-                Log.e("Hello", response.code() + "");
+                result.setValue(response.code());
             }
 
             @Override
@@ -101,6 +109,36 @@ public class AccountRepository {
                 Log.e("Error:", t.getMessage());
             }
         });
+
+        return result;
+    }
+
+    public  MutableLiveData<Number> update(String filePath, Customer customer) {
+        CreateService();
+        final  MutableLiveData<Number> result = new MutableLiveData<>();
+        MultipartBody.Part f = null;
+        if(filePath != null) {
+            File file = new File(filePath);
+            RequestBody filePart = RequestBody.create(MediaType.parse("image/jpeg"),file);
+            f = MultipartBody.Part.createFormData("file", file.getName(),filePart);
+        }
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .setDateFormat("yyyy-MM-dd")
+                .create();
+
+        service.updateCustomer(f,RequestBody.create(MediaType.parse("application/json"), gson.toJson(customer))).enqueue(new Callback<Number>() {
+            @Override
+            public void onResponse(Call<Number> call, Response<Number> response) {
+                result.setValue(response.code());
+            }
+
+            @Override
+            public void onFailure(Call<Number> call, Throwable t) {
+
+            }
+        });
+        return  result;
     }
 
     private void CreateService() {

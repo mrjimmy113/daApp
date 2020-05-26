@@ -43,6 +43,7 @@ import com.quang.daapp.R;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ui.other.AuthActivity;
 import com.quang.daapp.ui.viewAdapter.ImgChooserAdapter;
+import com.quang.daapp.ultis.FileUltis;
 
 import java.io.File;
 import java.util.Date;
@@ -57,7 +58,6 @@ import java.util.List;
  */
 public class NewRequestFragment extends Fragment {
 
-    private static final int GALLERY_REQUEST_CODE = 0;
     private TextView txtEndDate;
     private Date choosenDate;
 
@@ -292,7 +292,7 @@ public class NewRequestFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         // Launching the Intent
-        startActivityForResult(intent,GALLERY_REQUEST_CODE);
+        startActivityForResult(intent, FileUltis.GALLERY_REQUEST_CODE);
 
 
     }
@@ -302,7 +302,7 @@ public class NewRequestFragment extends Fragment {
         // Result code is RESULT_OK only if the user selects an Image
         if (resultCode == Activity.RESULT_OK)
             switch (requestCode){
-                case GALLERY_REQUEST_CODE:
+                case FileUltis.GALLERY_REQUEST_CODE:
                     addFileToList(data.getData(), true);
                     break;
             }
@@ -310,7 +310,7 @@ public class NewRequestFragment extends Fragment {
 
     private void addFileToList(Uri uri, boolean isAdd) {
 
-        File file = new File(getPathFromURI(uri));
+        File file = new File(FileUltis.getPathFromURI(uri,getActivity()));
 
         if(!isAdd) {
             totalImageLength -= file.length();
@@ -332,20 +332,12 @@ public class NewRequestFragment extends Fragment {
 
     }
 
-    private String getPathFromURI(Uri uri) {
-        String[] filePathColumn = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getActivity().getContentResolver().query(uri,filePathColumn, null, null, null);
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String picturePath = cursor.getString(columnIndex);
-        cursor.close();
-        return picturePath;
-    }
+
 
     private String[] getFilesRealPath(List<Uri> souceList) {
         String[] result = new String[souceList.size()];
         for(int i = 0 ; i < result.length;i++) {
-            result[i] = getPathFromURI(souceList.get(i));
+            result[i] = FileUltis.getPathFromURI(souceList.get(i), getActivity());
         }
         return result;
     }
