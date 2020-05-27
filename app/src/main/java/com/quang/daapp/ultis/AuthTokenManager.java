@@ -22,4 +22,12 @@ public class AuthTokenManager {
                 FILENAME, Context.MODE_PRIVATE);
         return sharedPref.getString(TOKEN,"");
     }
+
+    public static void removeToken(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                FILENAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove(TOKEN);
+        editor.commit();
+    }
 }

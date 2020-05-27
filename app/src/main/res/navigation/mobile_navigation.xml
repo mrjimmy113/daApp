@@ -56,4 +56,9 @@
         android:name="com.quang.daapp.ui.requestDetail.ProblemRequestDetailFragment"
         android:label="fragment_problem_request_detail"
         tools:layout="@layout/fragment_problem_request_detail" />
+    <activity
+        android:id="@+id/unAuthActivity"
+        android:name="com.quang.daapp.ui.other.UnAuthActivity"
+        android:label="activity_un_auth"
+        tools:layout="@layout/activity_un_auth" />
 </navigation>

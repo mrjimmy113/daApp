@@ -10,12 +10,10 @@ import androidx.lifecycle.ViewModel;
 public class ChangePasswordViewModel extends ViewModel {
 
     private MutableLiveData<Number> mutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<ChangePasswordFormState> formState = new MutableLiveData<>();
+
 
     public LiveData<Number> getResultLiveData() {return mutableLiveData;}
-    public LiveData<ChangePasswordFormState> getFormState() {
-        return formState;
-    }
+
 
     private AccountRepository accountRepository;
 
@@ -39,19 +37,22 @@ public class ChangePasswordViewModel extends ViewModel {
         return s == null || s.trim().isEmpty();
     }
 
-    public void dataChange(String currentPassword, String newPassword, String retypeNewPassword) {
+    public ChangePasswordFormState validateData(String currentPassword, String newPassword, String retypeNewPassword) {
         ChangePasswordFormState state = new ChangePasswordFormState();
+        boolean isValid = true;
         if(isFieldRequired(currentPassword)) {
             state.setCurrentPasswordError(R.string.invalid_requried_field);
-        }else if(!isPasswordValid(newPassword)) {
-            state.setNewPasswordError(R.string.invalid_password);
-
-        }else if(!isConfirmValid(newPassword,retypeNewPassword)) {
-            state.setRetypeNewPasswordError(R.string.invalid_confirm);
-        }else {
-            state.setDataValid(true);
+            isValid = false;
         }
-
-        formState.setValue(state);
+        if(!isPasswordValid(newPassword)) {
+            state.setNewPasswordError(R.string.invalid_password);
+            isValid = false;
+        }
+        if(!isConfirmValid(newPassword,retypeNewPassword)) {
+            state.setRetypeNewPasswordError(R.string.invalid_confirm);
+            isValid = false;
+        }
+        state.setDataValid(isValid);
+        return  state;
     }
 }

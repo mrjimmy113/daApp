@@ -65,7 +65,7 @@ public class AccountRepository {
         service.changePassword(token,currentPassword,newPassword).enqueue(new Callback<Number>() {
             @Override
             public void onResponse(Call<Number> call, Response<Number> response) {
-                result.setValue(response.body());
+                result.setValue(response.code());
             }
 
             @Override

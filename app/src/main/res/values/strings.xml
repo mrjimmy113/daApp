@@ -51,6 +51,10 @@
     <!--Edit Profile-->
     <string name="mes_edit_profile_success">Your profile has been updated</string>
 
+    <!--Change Password-->
+    <string name="mes_change_password_success">Your password has been updated</string>
+    <string name="mes_change_password_fail">Your current password is not correct</string>
+
 
     <string-array name="account_type_array">
         <item>Customer</item>
