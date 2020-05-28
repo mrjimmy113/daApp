@@ -1,4 +1,4 @@
-package com.quang.daapp.ui.dashboard;
+package com.quang.daapp.ui.customerDashboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,15 +14,15 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.quang.daapp.R;
 
-public class DashboardFragment extends Fragment {
+public class CustomerDashboardFragment extends Fragment {
 
-    private DashboardViewModel dashboardViewModel;
+    private CustomerDashboardViewModel dashboardViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+                ViewModelProviders.of(this).get(CustomerDashboardViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_dashboard_customer, container, false);
         final TextView textView = root.findViewById(R.id.text_dashboard);
         dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

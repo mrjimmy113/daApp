@@ -9,22 +9,17 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TableLayout;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.ProblemRequestDetail;
-import com.quang.daapp.ui.newRequest.NewRequestViewModel;
 
 
 /**
@@ -36,6 +31,7 @@ public class ProblemRequestDetailFragment extends Fragment {
     private NavController navController;
     ViewPager2 viewPager;
     TabLayout tabLayout;
+    private boolean isExpert = false;
     public ProblemRequestDetailFragment() {
         // Required empty public constructor
     }
@@ -52,33 +48,41 @@ public class ProblemRequestDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Integer requestId = getArguments().getInt(getString(R.string.key_request_id));
+        Boolean expert = getArguments().getBoolean(getString(R.string.isExpert));
+        isExpert = expert;
         viewModel = ViewModelProviders.of(this)
                 .get(ProblemRequestDetailViewModel.class);
         final RequestDetailInforFragment infor =  new RequestDetailInforFragment();
         final RequestDetailImageFragment image = new RequestDetailImageFragment();
-        RequestDetailApplicantFragment applicant =  new RequestDetailApplicantFragment();
-        if(requestId != null) {
-            viewModel.getProblemProquestDetail(requestId);
-            viewModel.getDetailLive().observe(getViewLifecycleOwner(), new Observer<ProblemRequestDetail>() {
-                @Override
-                public void onChanged(ProblemRequestDetail problemRequestDetail) {
-                    if(problemRequestDetail == null) return;
+        final ImageButton btnEdit = view.findViewById(R.id.btnEditRequest);
+        final ImageButton btnApply = view.findViewById(R.id.btnApply);
+        navController = Navigation.findNavController(view);
+        final ImageButton btnBack = view.findViewById(R.id.btnBack);
 
 
-                    infor.setData(problemRequestDetail);
-                    image.setDate(problemRequestDetail.getImages());
-
-
-                }
-            });
-        }
+        viewModel.getProblemProquestDetail(requestId);
+        viewModel.getDetailLive().observe(getViewLifecycleOwner(), new Observer<ProblemRequestDetail>() {
+            @Override
+            public void onChanged(ProblemRequestDetail problemRequestDetail) {
+                if(problemRequestDetail == null) return;
+                infor.setData(problemRequestDetail);
+                image.setDate(problemRequestDetail.getImages());
+            }
+        });
 
         tabLayout = view.findViewById(R.id.tab_layout);
         viewPager = view.findViewById(R.id.view_pager);
         final DetailPageAdapter adapter = new DetailPageAdapter(this);
         adapter.addFragment(infor,"Information");
         adapter.addFragment(image,"Image");
-        adapter.addFragment(applicant,"Applicant");
+        if(!isExpert) {
+            RequestDetailApplicantFragment applicant =  new RequestDetailApplicantFragment();
+            adapter.addFragment(applicant,"Applicant");
+
+        }else {
+            btnEdit.setVisibility(View.GONE);
+            btnApply.setVisibility(View.VISIBLE);
+        }
         viewPager.setAdapter(adapter);
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
@@ -88,17 +92,23 @@ public class ProblemRequestDetailFragment extends Fragment {
         });
         mediator.attach();
 
-        navController = Navigation.findNavController(view);
-        final ImageButton btnBack = view.findViewById(R.id.btnBack);
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.navigation_home);
+                navController.popBackStack();
             }
         });
 
-        final ImageButton btnEdit = view.findViewById(R.id.btnEditRequest);
+
         btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

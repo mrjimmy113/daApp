@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,29 +20,28 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.quang.daapp.R;
+import com.quang.daapp.data.model.Major;
+import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
-import com.quang.daapp.ui.other.AuthActivity;
 import com.quang.daapp.ui.viewAdapter.ImgChooserAdapter;
-import com.quang.daapp.ultis.FileUltis;
+import com.quang.daapp.ultis.CommonUltis;
 
 import java.io.File;
 import java.util.Date;
@@ -69,6 +67,7 @@ public class NewRequestFragment extends Fragment {
 
     private ArrayList<Uri> imgURL = new ArrayList<>();
     private ImgChooserAdapter adapter;
+    private List<Major> majorsResult;
 
     private NewRequestViewModel viewModel;
 
@@ -104,6 +103,24 @@ public class NewRequestFragment extends Fragment {
         final EditText edtTitle = view.findViewById(R.id.edtTitle);
         final EditText edtDescription = view.findViewById(R.id.edtDescription);
 
+        final Spinner spnMajor = view.findViewById(R.id.spn_major);
+
+        viewModel.getAllMajor();
+        viewModel.getAllMajorResult().observe(getViewLifecycleOwner(), new Observer<List<Major>>() {
+            @Override
+            public void onChanged(List<Major> majors) {
+                if(majors == null) return;
+
+                majorsResult = majors;
+                String[] majorArray = new String[majors.size()];
+                for (int i = 0 ; i< majorArray.length; i++) {
+                    majorArray[i] = majors.get(i).getMajor();
+                }
+                ArrayAdapter<String> adapterCity = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, majorArray);
+                adapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spnMajor.setAdapter(adapterCity);
+            }
+        });
 
         viewModel.getNewRequestFormState().observe(getViewLifecycleOwner(), new Observer<NewRequestFormState>() {
             @Override
@@ -147,13 +164,21 @@ public class NewRequestFragment extends Fragment {
         btnCreateReq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((AuthActivity)getActivity()).activateLoader();
+                final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
+                loaderDialog.show(getParentFragmentManager(),getTag());
+                int id = 0;
+                for (Major m: majorsResult) {
+                    if(m.getMajor().equals(spnMajor.getSelectedItem().toString())) {
+                        id = m.getId();
+                        break;
+                    }
+                }
                 viewModel.createNewRequest(getFilesRealPath(imgURL),
-                        choosenDate,edtTitle.getText().toString(),edtDescription.getText().toString());
+                        choosenDate,edtTitle.getText().toString(),edtDescription.getText().toString(),id);
                 viewModel.getNewRequestResult().observe(getViewLifecycleOwner(), new Observer<Number>() {
                     @Override
                     public void onChanged(Number number) {
-                        ((AuthActivity)getActivity()).deactivateLoad();
+                        loaderDialog.dismiss();
                         if(number == null) {
                             MessageDialogFragment dialog = new MessageDialogFragment("There is something went wrong, Please try again", R.color.colorDanger,R.drawable.ic_error);
                             dialog.show(getActivity().getSupportFragmentManager(),"");
@@ -166,7 +191,7 @@ public class NewRequestFragment extends Fragment {
                                     R.color.colorSuccess, R.drawable.ic_success, new MessageDialogFragment.OnMyDialogListener() {
                                 @Override
                                 public void OnOKListener() {
-                                    navController.navigate(R.id.navigation_home);
+                                    navController.navigate(R.id.navigation_home_customer);
                                 }
                             });
                             dialog.show(getActivity().getSupportFragmentManager(),"");
@@ -292,7 +317,7 @@ public class NewRequestFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         // Launching the Intent
-        startActivityForResult(intent, FileUltis.GALLERY_REQUEST_CODE);
+        startActivityForResult(intent, CommonUltis.GALLERY_REQUEST_CODE);
 
 
     }
@@ -302,7 +327,7 @@ public class NewRequestFragment extends Fragment {
         // Result code is RESULT_OK only if the user selects an Image
         if (resultCode == Activity.RESULT_OK)
             switch (requestCode){
-                case FileUltis.GALLERY_REQUEST_CODE:
+                case CommonUltis.GALLERY_REQUEST_CODE:
                     addFileToList(data.getData(), true);
                     break;
             }
@@ -310,7 +335,7 @@ public class NewRequestFragment extends Fragment {
 
     private void addFileToList(Uri uri, boolean isAdd) {
 
-        File file = new File(FileUltis.getPathFromURI(uri,getActivity()));
+        File file = new File(CommonUltis.getPathFromURI(uri,getActivity()));
 
         if(!isAdd) {
             totalImageLength -= file.length();
@@ -337,7 +362,7 @@ public class NewRequestFragment extends Fragment {
     private String[] getFilesRealPath(List<Uri> souceList) {
         String[] result = new String[souceList.size()];
         for(int i = 0 ; i < result.length;i++) {
-            result[i] = FileUltis.getPathFromURI(souceList.get(i), getActivity());
+            result[i] = CommonUltis.getPathFromURI(souceList.get(i), getActivity());
         }
         return result;
     }

@@ -77,13 +77,15 @@ public class ProblemRequestRepository {
         return  result;
     }
 
-    public MutableLiveData<Number> createNewRequest(String[] files, Date endDate, String title, String description) {
+    public MutableLiveData<Number> createNewRequest(String[] files, Date endDate, String title, String description, int id) {
         CreateService();
         final MutableLiveData<Number> result = new MutableLiveData<>();
         service.createNewRequest(getMultipartBodyPart(files),
                 RequestBody.create(MediaType.parse("text/plain"),(new SimpleDateFormat("yyyy-MM-dd")).format(endDate).toString()),
                 RequestBody.create(MediaType.parse("text/plain"),title),
-                RequestBody.create(MediaType.parse("text/plain"),description)).enqueue(new Callback<Number>() {
+                RequestBody.create(MediaType.parse("text/plain"),description),
+                id
+                ).enqueue(new Callback<Number>() {
             @Override
             public void onResponse(@NonNull Call<Number> call, @NonNull Response<Number> response) {
                 result.setValue(response.body());
@@ -95,6 +97,23 @@ public class ProblemRequestRepository {
             }
         });
 
+        return result;
+    }
+
+    public MutableLiveData<List<ProblemRequest>> expertSearch(int major, String city, String language, int time) {
+        CreateService();
+        final MutableLiveData<List<ProblemRequest>> result = new MutableLiveData<>();
+        service.expertSearch(major, city, language, time).enqueue(new Callback<List<ProblemRequest>>() {
+            @Override
+            public void onResponse(Call<List<ProblemRequest>> call, Response<List<ProblemRequest>> response) {
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProblemRequest>> call, Throwable t) {
+
+            }
+        });
         return result;
     }
 

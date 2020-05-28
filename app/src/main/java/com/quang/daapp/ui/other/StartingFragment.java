@@ -55,11 +55,12 @@ public class StartingFragment extends Fragment {
             RetrofitClient.getRetrofitInstance().create(AccountService.class).check(token).enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-
+                    Log.e("Status", response.code() + "");
                     if(response.code() == 200) {
                         RetrofitClient.setToken(token);
                         if(response.body()) {
-                            //Move expert
+                            navController.navigate(R.id.expertActivity);
+                            getActivity().finish();
                         }else {
                             //Move customer
                             navController.navigate(R.id.authActivity);

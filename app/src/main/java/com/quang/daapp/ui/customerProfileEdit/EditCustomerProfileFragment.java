@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.service.RetrofitClient;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
-import com.quang.daapp.ultis.FileUltis;
+import com.quang.daapp.ultis.CommonUltis;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -134,7 +133,6 @@ public class EditCustomerProfileFragment extends Fragment {
             }
 
             if(data.getImgName() != null && !data.getImgName().trim().isEmpty()) {
-                Log.e("IMage:", data.getImgName());
                 Glide.with(getContext()).load(RetrofitClient.getImageUrl(data.getImgName())).into(ivAvatar);
             }
         }
@@ -154,7 +152,7 @@ public class EditCustomerProfileFragment extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.navigation_profile);
+                navController.popBackStack();
             }
         });
 
@@ -193,7 +191,7 @@ public class EditCustomerProfileFragment extends Fragment {
                 customer.setDob(choosenDate);
                 String filePath = null;
                 if(choosenAvatar != null) {
-                    filePath = FileUltis.getPathFromURI(choosenAvatar,getActivity());
+                    filePath = CommonUltis.getPathFromURI(choosenAvatar,getActivity());
                 }
                 viewModel.editCustomer(filePath,customer);
                 final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
@@ -213,7 +211,7 @@ public class EditCustomerProfileFragment extends Fragment {
                                     R.color.colorSuccess, R.drawable.ic_success, new MessageDialogFragment.OnMyDialogListener() {
                                 @Override
                                 public void OnOKListener() {
-                                    navController.navigate(R.id.navigation_profile);
+                                    navController.navigate(R.id.navigation_profile_customer);
                                 }
                             });
                             mesDialog.show(getParentFragmentManager(),getTag());
@@ -235,14 +233,14 @@ public class EditCustomerProfileFragment extends Fragment {
         // Result code is RESULT_OK only if the user selects an Image
         if (resultCode == Activity.RESULT_OK)
             switch (requestCode){
-                case FileUltis.GALLERY_REQUEST_CODE:
+                case CommonUltis.GALLERY_REQUEST_CODE:
                     setAvatar(data.getData());
                     break;
             }
     }
 
     private void setAvatar(Uri uri) {
-        File file = new File(FileUltis.getPathFromURI(uri,getActivity()));
+        File file = new File(CommonUltis.getPathFromURI(uri,getActivity()));
         if(file.length() < 5 * 1024 * 1024) {
             choosenAvatar = uri;
             ivAvatar.setImageURI(uri);
@@ -276,7 +274,7 @@ public class EditCustomerProfileFragment extends Fragment {
         intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         // Launching the Intent
-        startActivityForResult(intent, FileUltis.GALLERY_REQUEST_CODE);
+        startActivityForResult(intent, CommonUltis.GALLERY_REQUEST_CODE);
 
 
     }

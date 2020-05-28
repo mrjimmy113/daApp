@@ -52,14 +52,27 @@
                 android:gravity="end"
                 android:layout_width="0dp"
                 android:layout_height="match_parent">
-                <ImageButton
-                    android:src="@drawable/ic_edit"
-                    android:id="@+id/btnEditRequest"
-                    android:textColor="@color/colorWhite"
-                    android:background="@null"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
+                    android:layout_height="match_parent">
+                    <ImageButton
+                        android:src="@drawable/ic_edit"
+                        android:id="@+id/btnEditRequest"
+                        android:textColor="@color/colorWhite"
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+                    <ImageButton
+                        android:visibility="gone"
+                        android:src="@drawable/ic_check_tool_bar"
+                        android:id="@+id/btnApply"
+                        android:textColor="@color/colorWhite"
+                        android:background="@null"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
 

@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-public class FileUltis {
+public class CommonUltis {
 
     public static final int GALLERY_REQUEST_CODE = 0;
 
@@ -18,4 +18,5 @@ public class FileUltis {
         cursor.close();
         return picturePath;
     }
+
 }

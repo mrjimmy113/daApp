@@ -2,7 +2,9 @@ package com.quang.daapp.ui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -40,17 +42,15 @@ public class MessageDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_message,null);
-
 
         final Button btnOK = view.findViewById(R.id.btnOK);
         btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
-                if(myDialogListener != null) myDialogListener.OnOKListener();
+
             }
         });
 
@@ -62,9 +62,20 @@ public class MessageDialogFragment extends DialogFragment {
         imageView.setImageResource(icon);
 
         builder.setView(view);
-        // Create the AlertDialog object and return it
-        return builder.create();
+
+        Dialog  dialog= builder.create();
+
+
+        return dialog;
     }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if(myDialogListener != null) myDialogListener.OnOKListener();
+    }
+
+
 
     public interface OnMyDialogListener {
         void OnOKListener();

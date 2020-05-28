@@ -1,5 +1,6 @@
 package com.quang.daapp.ui.customerReg;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,23 +11,25 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.quang.daapp.R;
+import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -34,6 +37,8 @@ import java.sql.Date;
  */
 public class RegisterCustomerFragment extends Fragment {
 
+    TextView txtEndDate;
+    private Date choosenDate;
     private RegisterCustomerViewModel viewModel;
 
     public RegisterCustomerFragment() {
@@ -59,28 +64,48 @@ public class RegisterCustomerFragment extends Fragment {
         final EditText edtPassword = view.findViewById(R.id.edtPassword);
         final EditText edtConfirm = view.findViewById(R.id.edtConfirm);
         final EditText edtFirstName = view.findViewById(R.id.edtFullName);
-        final Spinner spnAccountType = view.findViewById(R.id.spn_account_type);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.account_type_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnAccountType.setAdapter(adapter);
+        final EditText edtAddress= view.findViewById(R.id.edtAddress);
+        final Spinner spnCity = view.findViewById(R.id.spn_city);
+        final Spinner spnPrimaryLanguage = view.findViewById(R.id.spn_primary_language);
+        final ImageView btnChooseDate = view.findViewById(R.id.btnChooseDate);
+        txtEndDate = view.findViewById(R.id.txtEndDate);
+        Calendar cldr = Calendar.getInstance();
+        changeDateDisplay(new Date(cldr.getTimeInMillis()));
+        ArrayAdapter<CharSequence> adapterCity = ArrayAdapter.createFromResource(getContext(),
+                R.array.city_arrays, android.R.layout.simple_spinner_item);
+        adapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnCity.setAdapter(adapterCity);
 
-        final ImageButton btnBack = view.findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        ArrayAdapter<CharSequence> adapterLanguage = ArrayAdapter.createFromResource(getContext(),
+                R.array.language_arrays, android.R.layout.simple_spinner_item);
+        adapterLanguage.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnPrimaryLanguage.setAdapter(adapterLanguage);
+
+        final  NavController navController = Navigation.findNavController(view);
+
+        //Button Back
+        view.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavController navController = Navigation.findNavController(view);
-                navController.navigate(R.id.loginFragment);
+                navController.popBackStack();
             }
         });
 
-        final Button btnRegister = view.findViewById(R.id.btnCustomerRegister);
+        btnChooseDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDatePicker();
+            }
+        });
+
+
+        final ImageButton btnRegister = view.findViewById(R.id.btnCustomerRegister);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RegisterCustomerFormState formState = viewModel.validate(edtEmail.getText().toString(), edtPassword.getText().toString(),
-                        edtConfirm.getText().toString(),edtFirstName.getText().toString());
+                        edtConfirm.getText().toString(),edtFirstName.getText().toString(), edtAddress.getText().toString());
                 if(!formState.isDataValid()) {
                     MessageDialogFragment dialogMes = new MessageDialogFragment(getString(R.string.mes_error_validate),R.color.colorDanger,R.drawable.ic_error);
                     dialogMes.show(getParentFragmentManager(),getTag());
@@ -92,11 +117,21 @@ public class RegisterCustomerFragment extends Fragment {
                     return;
                 }
 
+                Customer customer = new Customer();
+                customer.setEmail(edtEmail.getText().toString());
+                customer.setFullName(edtFirstName.getText().toString());
+                customer.setAddress(edtAddress.getText().toString());
+                customer.setPrimaryLanguage(spnPrimaryLanguage.getSelectedItem().toString());
+                customer.setCity(spnCity.getSelectedItem().toString());
+                customer.setPassword(edtPassword.getText().toString());
+                customer.setDob(choosenDate);
 
-                viewModel.register(edtEmail.getText().toString(), edtPassword.getText().toString(),
-                        edtFirstName.getText().toString(), spnAccountType.getSelectedItemPosition() != 0);
+                viewModel.register(customer);
+
                 final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
                 loaderDialog.show(getParentFragmentManager(),loaderDialog.getTag());
+
+
 
                 if(viewModel.getRegisterResult() != null) {
                     viewModel.getRegisterResult().observe(getViewLifecycleOwner(), new Observer<Number>() {
@@ -135,5 +170,29 @@ public class RegisterCustomerFragment extends Fragment {
             }
         });
 
+    }
+
+    private void openDatePicker() {
+        final Calendar cldr = Calendar.getInstance();
+        cldr.setTime(choosenDate);
+        DatePickerDialog picker = new DatePickerDialog(getActivity(),
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        cldr.set(Calendar.YEAR, year);
+                        cldr.set(Calendar.MONTH, month);
+                        cldr.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        Date d = new Date(cldr.getTimeInMillis());
+                        changeDateDisplay(d);
+                    }
+                }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
+        picker.show();
+    }
+
+    private void changeDateDisplay(Date date) {
+        choosenDate = date;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String a = format.format(choosenDate);
+        txtEndDate.setText(a);
     }
 }

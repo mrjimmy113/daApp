@@ -21,10 +21,13 @@ public class LoaderDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_loader,null);
         builder.setView(view);
-        return builder.create();
+        builder.setCancelable(false);
+        Dialog  dialog= builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+
+        return dialog;
     }
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home_customer">
+
+    <fragment
+        android:id="@+id/navigation_home_customer"
+        android:name="com.quang.daapp.ui.customerHome.CustomerHomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home_customer" >
+        <action
+            android:id="@+id/action_navigation_home_to_newRequestFragment"
+            app:destination="@id/newRequestFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_problemRequestDetail"
+            app:destination="@id/problemRequestDetail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_dashboard_customer"
+        android:name="com.quang.daapp.ui.customerDashboard.CustomerDashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_dashboard_customer" />
+
+    <fragment
+        android:id="@+id/navigation_profile_customer"
+        android:name="com.quang.daapp.ui.profileCustomer.ProfileCustomerFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile_customer" >
+        <action
+            android:id="@+id/action_navigation_profile_to_editCustomerProfileFragment"
+            app:destination="@id/editCustomerProfileFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.quang.daapp.ui.changePassword.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/editCustomerProfileFragment"
+        android:name="com.quang.daapp.ui.customerProfileEdit.EditCustomerProfileFragment"
+        android:label="fragment_edit_customer_profile"
+        tools:layout="@layout/fragment_edit_customer_profile" />
+    <fragment
+        android:id="@+id/newRequestFragment"
+        android:name="com.quang.daapp.ui.newRequest.NewRequestFragment"
+        android:label="fragment_new_request"
+        tools:layout="@layout/fragment_new_request" />
+    <fragment
+        android:id="@+id/problemRequestDetail"
+        android:name="com.quang.daapp.ui.requestDetail.ProblemRequestDetailFragment"
+        android:label="fragment_problem_request_detail"
+        tools:layout="@layout/fragment_problem_request_detail" />
+    <activity
+        android:id="@+id/unAuthActivity"
+        android:name="com.quang.daapp.ui.other.UnAuthActivity"
+        android:label="activity_un_auth"
+        tools:layout="@layout/activity_un_auth" />
+</navigation>

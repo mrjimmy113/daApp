@@ -110,6 +110,7 @@ public class ChangePasswordFragment extends Fragment {
                                             NavController navController = Navigation.findNavController(view);
                                             AuthTokenManager.removeToken(getContext());
                                             navController.navigate(R.id.unAuthActivity);
+                                            getActivity().finish();
                                         }
                                     }
                             );

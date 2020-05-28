@@ -1,15 +1,11 @@
 package com.quang.daapp.ui.customerReg;
 
 
-import android.util.Log;
 import android.util.Patterns;
 
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
-import com.quang.daapp.data.model.RegisterModel;
 import com.quang.daapp.data.repository.AccountRepository;
-
-import java.sql.Date;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -28,7 +24,7 @@ public class RegisterCustomerViewModel extends ViewModel {
     }
 
 
-    public RegisterCustomerFormState validate(String username, String password, String confirm, String fullName) {
+    public RegisterCustomerFormState validate(String username, String password, String confirm, String fullName, String address) {
         RegisterCustomerFormState newState = new RegisterCustomerFormState();
         boolean isValid = true;
         if (!isUserNameValid(username)) {
@@ -45,6 +41,10 @@ public class RegisterCustomerViewModel extends ViewModel {
         }
         if(fullName.trim().isEmpty()) {
             newState.setFullNameError(R.string.invalid_fullName);
+            isValid = false;
+        }
+        if(address.trim().isEmpty()) {
+            newState.setAddressError(R.string.invalid_address);
             isValid = false;
         }
         newState.setDataValid(isValid);
@@ -72,8 +72,8 @@ public class RegisterCustomerViewModel extends ViewModel {
         return password.equals(confirm);
     }
 
-    public void register(String username, String password,String fullName, boolean isExpert) {
-        registerResult = accountRepository.register(new RegisterModel(username,password,fullName,isExpert));
+    public void register(Customer customer) {
+        registerResult = accountRepository.registerCustomer(customer);
     }
 
 }

@@ -23,16 +23,14 @@ import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.service.RetrofitClient;
-import com.quang.daapp.databinding.FragmentProfileBinding;
+import com.quang.daapp.databinding.FragmentProfileCustomerBinding;
 import com.quang.daapp.ultis.AuthTokenManager;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 
 public class ProfileCustomerFragment extends Fragment {
 
-    FragmentProfileBinding binding;
+    FragmentProfileCustomerBinding binding;
     Customer data;
 
     private ProfileCustomerViewModel viewModel;
@@ -41,8 +39,8 @@ public class ProfileCustomerFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         viewModel =
                 ViewModelProviders.of(this).get(ProfileCustomerViewModel.class);
-        //View root = inflater.inflate(R.layout.fragment_profile, container, false);
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_profile,container,false);
+        //View root = inflater.inflate(R.layout.fragment_profile_customer, container, false);
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_profile_customer,container,false);
         return binding.getRoot();
 
     }
@@ -54,6 +52,15 @@ public class ProfileCustomerFragment extends Fragment {
         final Button btnChangePassword = view.findViewById(R.id.btnChangePassword);
         final TextView txtDob = view.findViewById(R.id.txtDob);
         final ImageView ivAvatar = view.findViewById(R.id.iv_avatar);
+
+        view.findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AuthTokenManager.removeToken(getContext());
+                navigation.navigate(R.id.unAuthActivity);
+                getActivity().finish();
+            }
+        });
 
         navigation = Navigation.findNavController(view);
         btnEditProfile.setOnClickListener(new View.OnClickListener() {

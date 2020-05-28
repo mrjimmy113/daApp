@@ -24,11 +24,17 @@ public interface ProblemRequestService {
     @Multipart
     @POST("/request")
     Call<Number> createNewRequest(@Part MultipartBody.Part[] files, @Part("endDate") RequestBody date,
-                                  @Part("title") RequestBody title, @Part("description") RequestBody description);
+                                  @Part("title") RequestBody title, @Part("description") RequestBody description,
+                                  @Part("majorId") int id
+                                  );
 
     @GET("/request")
     Call<List<ProblemRequest>> getCurrentProblemRequest();
 
     @GET("/request/detail")
     Call<ProblemRequestDetail> getRequestDetail(@Query("id") int requestId);
+
+    @GET("/request/search")
+    Call<List<ProblemRequest>> expertSearch(@Query("major") int majorId, @Query("city") String city,
+                                            @Query("language") String language, @Query("time") int time);
 }

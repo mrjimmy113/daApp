@@ -30,6 +30,14 @@ public class ProblemRequestAdapter extends RecyclerView.Adapter<ProblemRequestAd
         this.event = event;
     }
 
+    public List<ProblemRequest> getRequestList() {
+        return requestList;
+    }
+
+    public void setRequestList(List<ProblemRequest> requestList) {
+        this.requestList = requestList;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

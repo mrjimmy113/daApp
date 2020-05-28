@@ -5,13 +5,11 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.data.model.Customer;
-import com.quang.daapp.data.model.RegisterModel;
+import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.service.AccountService;
 import com.quang.daapp.data.service.RetrofitClient;
-import com.quang.daapp.ultis.AuthTokenManager;
 
 import java.io.File;
-import java.io.IOException;
 
 import androidx.lifecycle.MutableLiveData;
 import okhttp3.MediaType;
@@ -95,7 +93,7 @@ public class AccountRepository {
         return result;
     }
 
-    public MutableLiveData<Number> register(RegisterModel model) {
+    public MutableLiveData<Number> registerCustomer(Customer model) {
         CreateService();
         final  MutableLiveData<Number> result = new MutableLiveData<>();
         service.registerCustomer(model).enqueue(new Callback<Number>() {
@@ -107,6 +105,24 @@ public class AccountRepository {
             @Override
             public void onFailure(Call<Number> call, Throwable t) {
                 Log.e("Error:", t.getMessage());
+            }
+        });
+
+        return result;
+    }
+
+    public MutableLiveData<Number> registerExpert(Expert model) {
+        CreateService();
+        final MutableLiveData<Number> result = new MutableLiveData<>();
+        service.registerExpert(model).enqueue(new Callback<Number>() {
+            @Override
+            public void onResponse(Call<Number> call, Response<Number> response) {
+                result.setValue(response.code());
+            }
+
+            @Override
+            public void onFailure(Call<Number> call, Throwable t) {
+
             }
         });
 
