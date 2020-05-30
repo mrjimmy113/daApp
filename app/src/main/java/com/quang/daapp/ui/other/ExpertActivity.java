@@ -1,8 +1,9 @@
-package com.quang.daapp;
+package com.quang.daapp.ui.other;
 
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.quang.daapp.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;

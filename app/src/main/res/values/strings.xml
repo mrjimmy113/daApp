@@ -58,6 +58,19 @@
     <string name="mes_change_password_success">Your password has been updated</string>
     <string name="mes_change_password_fail">Your current password is not correct</string>
 
+    <!--Expert Apply-->
+    <string name="mes_expert_apply_confirm">Do you really want to apply ?</string>
+    <string name="mes_expert_apply_success">Your application is submitted</string>
+    <string name="mes_expert_apply_fail">This problem request is unavailable</string>
+
+    <!--Expert Accept-->
+    <string name="mes_accept_expert_confirm">Do you really want to accept this expert ?</string>
+    <string name="mes_accept_expert_success">Expert has been accepted</string>
+    <string name="mes_accept_expert_fail"></string>
+
+    <!--Logout-->
+    <string name="mes_logout_confirm">Do you really want to logout</string>
+
 
     <string name="title_activity_expert">ExpertActivity</string>
     <string name="field_hint_fee">Fee per hour</string>

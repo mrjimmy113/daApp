@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ExpertActivity"
+            android:name=".ui.other.ExpertActivity"
             android:label="@string/title_activity_expert"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"

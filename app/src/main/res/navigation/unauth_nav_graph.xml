@@ -30,7 +30,7 @@
         android:label="AuthActivity" />
     <activity
         android:id="@+id/expertActivity"
-        android:name="com.quang.daapp.ExpertActivity"
+        android:name="com.quang.daapp.ui.other.ExpertActivity"
         android:label="ExpertActivity" />
     <fragment
         android:id="@+id/registerChooserFragment"

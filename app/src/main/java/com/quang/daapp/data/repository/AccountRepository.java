@@ -157,6 +157,51 @@ public class AccountRepository {
         return  result;
     }
 
+    public  MutableLiveData<Number> updateExpert(String filePath, Expert expert) {
+        CreateService();
+        final  MutableLiveData<Number> result = new MutableLiveData<>();
+        MultipartBody.Part f = null;
+        if(filePath != null) {
+            File file = new File(filePath);
+            RequestBody filePart = RequestBody.create(MediaType.parse("image/jpeg"),file);
+            f = MultipartBody.Part.createFormData("file", file.getName(),filePart);
+        }
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .setDateFormat("yyyy-MM-dd")
+                .create();
+
+        service.updateExpert(f,RequestBody.create(MediaType.parse("application/json"), gson.toJson(expert))).enqueue(new Callback<Number>() {
+            @Override
+            public void onResponse(Call<Number> call, Response<Number> response) {
+                result.setValue(response.code());
+            }
+
+            @Override
+            public void onFailure(Call<Number> call, Throwable t) {
+
+            }
+        });
+        return  result;
+    }
+
+    public MutableLiveData<Expert> getExpertProfile() {
+        CreateService();
+        final MutableLiveData<Expert> result = new MutableLiveData<>();
+        service.getExpertProfile().enqueue(new Callback<Expert>() {
+            @Override
+            public void onResponse(Call<Expert> call, Response<Expert> response) {
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Expert> call, Throwable t) {
+
+            }
+        });
+        return  result;
+    }
+
     private void CreateService() {
         if(service == null) {
             service = RetrofitClient.getRetrofitInstance().create(AccountService.class);

@@ -49,7 +49,7 @@
                     android:textSize="20sp"
                     android:id="@+id/txtDescription"
                     android:gravity="top"
-                    android:text="This is description This is description This is description This is description This is description This is description This is description This is description This is description This is description This is description This is description "
+
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:background="@drawable/edt_text_box"

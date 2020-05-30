@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.quang.daapp.ui.home.HomeFragment"
+        android:name="com.quang.daapp.ui.home.ExpertHomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home_expert" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -25,6 +25,34 @@
         android:name="com.quang.daapp.ui.requestDetail.ProblemRequestDetailFragment"
         android:label="fragment_problem_request_detail"
         tools:layout="@layout/fragment_problem_request_detail" />
+    <fragment
+        android:id="@+id/navigation_profile_expert"
+        android:name="com.quang.daapp.ui.profileExpert.ProfileExpertFragment"
+        android:label="ProfileExpertFragment"
+        tools:layout="@layout/fragment_profile_expert"
+        >
+        <action
+            android:id="@+id/action_navigation_profile_expert_to_changePasswordFragment2"
+            app:destination="@id/changePasswordFragment2" />
+        <action
+            android:id="@+id/action_navigation_profile_expert_to_editExpertProfileFragment"
+            app:destination="@id/editExpertProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changePasswordFragment2"
+        android:name="com.quang.daapp.ui.changePassword.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
+    <activity
+        android:id="@+id/unAuthActivity2"
+        android:name="com.quang.daapp.ui.other.UnAuthActivity"
+        android:label="activity_un_auth"
+        tools:layout="@layout/activity_un_auth" />
+    <fragment
+        android:id="@+id/editExpertProfileFragment"
+        android:name="com.quang.daapp.ui.expertEditProfile.EditExpertProfileFragment"
+        android:label="fragment_edit_expert_profile"
+        tools:layout="@layout/fragment_edit_expert_profile" />
 
     <!--<fragment
         android:id="@+id/navigation_profile_expert"

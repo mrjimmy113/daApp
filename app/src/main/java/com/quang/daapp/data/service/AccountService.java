@@ -39,6 +39,13 @@ public interface AccountService {
     @GET("/account/cus")
     Call<Customer> getCustomerProfile(@Header("authorization") String token);
 
+    @GET("/account/exp")
+    Call<Expert> getExpertProfile();
+
+    @Multipart
+    @PUT("/account/exp")
+    Call<Number> updateExpert(@Part MultipartBody.Part file, @Part("infor") RequestBody infor);
+
     @FormUrlEncoded
     @POST("/account/changePassword")
     Call<Number> changePassword(@Header("authorization") String token,

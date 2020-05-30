@@ -24,6 +24,7 @@ import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.service.RetrofitClient;
 import com.quang.daapp.databinding.FragmentProfileCustomerBinding;
+import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
 import com.quang.daapp.ultis.AuthTokenManager;
 
 import java.text.SimpleDateFormat;
@@ -56,9 +57,22 @@ public class ProfileCustomerFragment extends Fragment {
         view.findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AuthTokenManager.removeToken(getContext());
-                navigation.navigate(R.id.unAuthActivity);
-                getActivity().finish();
+                ConfirmDialogFragment confirmDialog = new ConfirmDialogFragment(
+                        getString(R.string.mes_logout_confirm), new ConfirmDialogFragment.OnConfirmDialogListener() {
+                    @Override
+                    public void OnYesListener() {
+                        AuthTokenManager.removeToken(getContext());
+                        navigation.navigate(R.id.unAuthActivity);
+                        getActivity().finish();
+                    }
+
+                    @Override
+                    public void OnNoListener() {
+
+                    }
+                }
+                );
+                confirmDialog.show(getParentFragmentManager(),getTag());
             }
         });
 
@@ -68,7 +82,7 @@ public class ProfileCustomerFragment extends Fragment {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 Gson gson = new GsonBuilder().create();
-                bundle.putSerializable("data", gson.toJson(data));
+                bundle.putString("data", gson.toJson(data));
                 navigation.navigate(R.id.action_navigation_profile_to_editCustomerProfileFragment,bundle);
             }
         });

@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Expert implements Serializable {
+
+    private Integer id;
+
     private String email;
 
     private String password;
@@ -13,6 +16,7 @@ public class Expert implements Serializable {
 
     private Date createdDate;
 
+    private String imgName;
 
     private Major major;
 
@@ -95,5 +99,25 @@ public class Expert implements Serializable {
 
     public void setBankAccountNo(String bankAccountNo) {
         this.bankAccountNo = bankAccountNo;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getImgName() {
+        return imgName;
+    }
+
+    public void setImgName(String imgName) {
+        this.imgName = imgName;
+    }
+
+    public String getFeeString() {
+        return feePerHour + "";
     }
 }

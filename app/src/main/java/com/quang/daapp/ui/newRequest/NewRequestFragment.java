@@ -71,6 +71,7 @@ public class NewRequestFragment extends Fragment {
 
     private NewRequestViewModel viewModel;
 
+    private NavController navController;
     public NewRequestFragment() {
         // Required empty public constructor
     }
@@ -90,7 +91,7 @@ public class NewRequestFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        navController = Navigation.findNavController(view);
         Calendar cldr = Calendar.getInstance();
         cldr.add(Calendar.DATE,2);
         txtEndDate = view.findViewById(R.id.txtEndDate);
@@ -186,7 +187,7 @@ public class NewRequestFragment extends Fragment {
                         }
 
                         if(number.intValue() == 201) {
-                            final NavController navController = Navigation.findNavController(view);
+
                             MessageDialogFragment dialog = new MessageDialogFragment("You request has been created",
                                     R.color.colorSuccess, R.drawable.ic_success, new MessageDialogFragment.OnMyDialogListener() {
                                 @Override
@@ -232,6 +233,13 @@ public class NewRequestFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
+
+        view.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void openDatePicker() {

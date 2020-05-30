@@ -20,6 +20,9 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.ProblemRequestDetail;
+import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
+import com.quang.daapp.ui.dialog.LoaderDialogFragment;
+import com.quang.daapp.ui.dialog.MessageDialogFragment;
 
 
 /**
@@ -32,6 +35,7 @@ public class ProblemRequestDetailFragment extends Fragment {
     ViewPager2 viewPager;
     TabLayout tabLayout;
     private boolean isExpert = false;
+
     public ProblemRequestDetailFragment() {
         // Required empty public constructor
     }
@@ -47,7 +51,7 @@ public class ProblemRequestDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Integer requestId = getArguments().getInt(getString(R.string.key_request_id));
+        final Integer requestId = getArguments().getInt(getString(R.string.key_request_id));
         Boolean expert = getArguments().getBoolean(getString(R.string.isExpert));
         isExpert = expert;
         viewModel = ViewModelProviders.of(this)
@@ -77,6 +81,9 @@ public class ProblemRequestDetailFragment extends Fragment {
         adapter.addFragment(image,"Image");
         if(!isExpert) {
             RequestDetailApplicantFragment applicant =  new RequestDetailApplicantFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(getString(R.string.key_request_id),requestId);
+            applicant.setArguments(bundle);
             adapter.addFragment(applicant,"Applicant");
 
         }else {
@@ -111,7 +118,63 @@ public class ProblemRequestDetailFragment extends Fragment {
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ConfirmDialogFragment confirmDialog = new ConfirmDialogFragment(getString(R.string.mes_expert_apply_confirm),
+                        new ConfirmDialogFragment.OnConfirmDialogListener() {
+                    @Override
+                    public void OnYesListener() {
+                        final LoaderDialogFragment loader = new LoaderDialogFragment();
+                        loader.show(getParentFragmentManager(),getTag());
+                        viewModel.applyResult(requestId);
+                        viewModel.getApplyResult().observe(getViewLifecycleOwner(), new Observer<Number>() {
+                            @Override
+                            public void onChanged(Number number) {
+                                loader.dismiss();
+                                if(number == null) return;
 
+                                int value = number.intValue();
+                                switch (value) {
+                                    case 200: {
+                                        MessageDialogFragment mesDialog = new MessageDialogFragment(
+                                                getString(R.string.mes_expert_apply_success),
+                                                R.color.colorSuccess, R.drawable.ic_success
+                                                , new MessageDialogFragment.OnMyDialogListener() {
+                                            @Override
+                                            public void OnOKListener() {
+                                                navController.navigate(R.id.navigation_home);
+                                            }
+                                        });
+                                        mesDialog.show(getParentFragmentManager(),getTag());
+                                        break;
+                                    }
+                                    case 202: {
+                                        MessageDialogFragment mesDialog = new MessageDialogFragment(
+                                                getString(R.string.mes_expert_apply_fail),
+                                                R.color.colorDanger,R.drawable.ic_error
+                                        );
+                                        mesDialog.show(getParentFragmentManager(),getTag());
+                                        break;
+                                    }
+                                    case 400: {
+                                        MessageDialogFragment mesDialog = new MessageDialogFragment(
+                                                getString(R.string.mes_error_400),
+                                                R.color.colorDanger,R.drawable.ic_error
+                                        );
+                                        mesDialog.show(getParentFragmentManager(),getTag());
+                                        break;
+                                    }
+
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void OnNoListener() {
+
+                    }
+                });
+
+                confirmDialog.show(getParentFragmentManager(),getTag());
             }
         });
     }

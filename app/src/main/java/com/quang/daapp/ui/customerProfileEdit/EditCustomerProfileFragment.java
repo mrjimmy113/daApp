@@ -68,7 +68,7 @@ public class EditCustomerProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermissions();
+            CommonUltis.checkPermissions(getContext(),getActivity());
         }
 
         return inflater.inflate(R.layout.fragment_edit_customer_profile, container, false);
@@ -133,7 +133,7 @@ public class EditCustomerProfileFragment extends Fragment {
             }
 
             if(data.getImgName() != null && !data.getImgName().trim().isEmpty()) {
-                Glide.with(getContext()).load(RetrofitClient.getImageUrl(data.getImgName())).into(ivAvatar);
+                Glide.with(view).load(RetrofitClient.getImageUrl(data.getImgName())).into(ivAvatar);
             }
         }
 
@@ -264,20 +264,7 @@ public class EditCustomerProfileFragment extends Fragment {
         picker.show();
     }
 
-    private void pickFromGallery(){
-        //Create an Intent with action as ACTION_PICK
-        Intent intent=new Intent(Intent.ACTION_PICK);
-        // Sets the type as image/*. This ensures only components of type image are selected
-        intent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        // Launching the Intent
-        startActivityForResult(intent, CommonUltis.GALLERY_REQUEST_CODE);
 
-
-    }
 
     private void changeDateDisplay(Date date) {
         choosenDate = date;
@@ -286,23 +273,8 @@ public class EditCustomerProfileFragment extends Fragment {
         txtEndDate.setText(a);
     }
 
-    private void checkPermissions(){
-
-        if (ContextCompat.checkSelfPermission(getContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED||
-                ContextCompat.checkSelfPermission(getContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    },
-                    1052);
-
-        }
-
+    private void pickFromGallery(){
+        startActivityForResult(CommonUltis.getPickFromGalleryIntent(), CommonUltis.GALLERY_REQUEST_CODE);
     }
+
 }

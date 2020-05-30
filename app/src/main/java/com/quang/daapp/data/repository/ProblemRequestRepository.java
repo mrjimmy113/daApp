@@ -4,8 +4,10 @@ package com.quang.daapp.data.repository;
 
 import android.util.Log;
 
+import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.data.model.ProblemRequestDetail;
+import com.quang.daapp.data.model.StatusEnum;
 import com.quang.daapp.data.service.ProblemRequestService;
 import com.quang.daapp.data.service.RetrofitClient;
 
@@ -77,6 +79,42 @@ public class ProblemRequestRepository {
         return  result;
     }
 
+    public  MutableLiveData<List<ProblemRequest>> getCurrentUserAppliedRequest() {
+        CreateService();
+        final MutableLiveData<List<ProblemRequest>> result = new MutableLiveData<>();
+        service.getCurrentAppliedProblemRequest().enqueue(new Callback<List<ProblemRequest>>() {
+            @Override
+            public void onResponse(Call<List<ProblemRequest>> call, Response<List<ProblemRequest>> response) {
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProblemRequest>> call, Throwable t) {
+
+            }
+        });
+
+        return  result;
+    }
+
+    public  MutableLiveData<List<ProblemRequest>> getCurrentUserRequestWithStatus(StatusEnum statusEnum) {
+        CreateService();
+        final MutableLiveData<List<ProblemRequest>> result = new MutableLiveData<>();
+        service.getCurrentProblemRequestWithStatus(statusEnum).enqueue(new Callback<List<ProblemRequest>>() {
+            @Override
+            public void onResponse(Call<List<ProblemRequest>> call, Response<List<ProblemRequest>> response) {
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<ProblemRequest>> call, Throwable t) {
+
+            }
+        });
+
+        return  result;
+    }
+
     public MutableLiveData<Number> createNewRequest(String[] files, Date endDate, String title, String description, int id) {
         CreateService();
         final MutableLiveData<Number> result = new MutableLiveData<>();
@@ -111,6 +149,57 @@ public class ProblemRequestRepository {
 
             @Override
             public void onFailure(Call<List<ProblemRequest>> call, Throwable t) {
+
+            }
+        });
+        return result;
+    }
+
+    public MutableLiveData<Number> expertApply(int requestId) {
+        CreateService();
+        final MutableLiveData<Number> result = new MutableLiveData<>();
+        service.expertApply(requestId).enqueue(new Callback<Number>() {
+            @Override
+            public void onResponse(Call<Number> call, Response<Number> response) {
+                result.setValue(response.code());
+            }
+
+            @Override
+            public void onFailure(Call<Number> call, Throwable t) {
+
+            }
+        });
+        return  result;
+    }
+
+    public MutableLiveData<List<Expert>> getApplicant(int requestId) {
+        CreateService();
+        final MutableLiveData<List<Expert>> result = new MutableLiveData<>();
+        service.getApplicants(requestId).enqueue(new Callback<List<Expert>>() {
+            @Override
+            public void onResponse(Call<List<Expert>> call, Response<List<Expert>> response) {
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Expert>> call, Throwable t) {
+
+            }
+        });
+        return result;
+    }
+
+    public MutableLiveData<Number> acceptExpert(int requestId, int expertId) {
+        CreateService();
+        final MutableLiveData<Number> result = new MutableLiveData<>();
+        service.acceptExpert(requestId,expertId).enqueue(new Callback<Number>() {
+            @Override
+            public void onResponse(Call<Number> call, Response<Number> response) {
+                result.setValue(response.code());
+            }
+
+            @Override
+            public void onFailure(Call<Number> call, Throwable t) {
 
             }
         });

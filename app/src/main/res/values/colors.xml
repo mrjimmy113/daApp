@@ -7,4 +7,5 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorDanger">#F30000</color>
     <color name="colorSuccess">#6FF300</color>
+    <color name="colorWarning">#F37500</color>
 </resources>

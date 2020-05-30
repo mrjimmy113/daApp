@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:paddingBottom="10dp"
+    android:background="@drawable/dialog_outline"
+    android:gravity="center"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_dialog_result"
+        android:paddingVertical="30dp"
+        android:background="#F37500"
+        android:src="@drawable/ic_warning"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+
+    <TextView
+        android:id="@+id/txtMessage"
+        android:layout_marginVertical="20dp"
+        android:padding="10dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="You have been successfully doing something"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:gravity="center"
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btnYes"
+                android:textColor="@color/colorWhite"
+                android:textSize="20dp"
+                android:text="Yes"
+                android:background="@drawable/my_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btnNo"
+                android:textColor="@color/colorWhite"
+                android:textSize="20dp"
+                android:text="No"
+                android:background="@drawable/my_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>
