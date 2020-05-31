@@ -7,6 +7,7 @@ import com.quang.daapp.data.model.StatusEnum;
 
 import java.io.File;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -30,6 +31,16 @@ public interface ProblemRequestService {
                                   @Part("title") RequestBody title, @Part("description") RequestBody description,
                                   @Part("majorId") int id
                                   );
+
+    @Multipart
+    @PUT("/request")
+    Call<Number> updateRequest(@Part MultipartBody.Part[] files,
+                               @Part("requestId") int requestId,
+                               @Part("endDate") RequestBody date,
+                                  @Part("title") RequestBody title, @Part("description") RequestBody description,
+                                  @Part("majorId") int id,@Part("delImgs") RequestBody delImgs
+    );
+
 
     @GET("/request")
     Call<List<ProblemRequest>> getCurrentProblemRequest();

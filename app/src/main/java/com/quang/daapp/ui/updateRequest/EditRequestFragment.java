@@ -1,4 +1,4 @@
-package com.quang.daapp.ui.newRequest;
+package com.quang.daapp.ui.updateRequest;
 
 import android.Manifest;
 import android.app.Activity;
@@ -8,19 +8,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -35,26 +22,40 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Major;
+import com.quang.daapp.data.model.ProblemRequestDetail;
+import com.quang.daapp.data.service.RetrofitClient;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ui.viewAdapter.ImgChooserAdapter;
 import com.quang.daapp.ultis.CommonUltis;
 
 import java.io.File;
-import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NewRequestFragment extends Fragment {
+public class EditRequestFragment extends Fragment {
 
     private TextView txtEndDate;
     private Date choosenDate;
@@ -69,10 +70,11 @@ public class NewRequestFragment extends Fragment {
     private ImgChooserAdapter adapter;
     private List<Major> majorsResult;
 
-    private NewRequestViewModel viewModel;
+    private EditRequestViewModel viewModel;
 
     private NavController navController;
-    public NewRequestFragment() {
+    private ProblemRequestDetail detail;
+    public EditRequestFragment() {
         // Required empty public constructor
     }
 
@@ -81,7 +83,7 @@ public class NewRequestFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermissions();
+            CommonUltis.checkPermissions(getContext(),getActivity());
         }
         return inflater.inflate(R.layout.fragment_new_request, container, false);
     }
@@ -91,20 +93,32 @@ public class NewRequestFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        assert getArguments() != null;
+        String json = getArguments().getString("data");
+        detail = (new GsonBuilder().create()).fromJson(json,ProblemRequestDetail.class);
+
+
         navController = Navigation.findNavController(view);
         Calendar cldr = Calendar.getInstance();
         cldr.add(Calendar.DATE,2);
         txtEndDate = view.findViewById(R.id.txtEndDate);
-        changeDateDisplay(new Date(cldr.getTimeInMillis()));
+        changeDateDisplay(new Date(detail.getDeadlineDate().getTime()));
 
 
         viewModel = ViewModelProviders.of(this)
-                .get(NewRequestViewModel.class);
+                .get(EditRequestViewModel.class);
 
         final EditText edtTitle = view.findViewById(R.id.edtTitle);
         final EditText edtDescription = view.findViewById(R.id.edtDescription);
 
         final Spinner spnMajor = view.findViewById(R.id.spn_major);
+
+        edtTitle.setText(detail.getTitle());
+        edtDescription.setText(detail.getDescription());
+        for (String img:
+             detail.getImages()) {
+            imgURL.add(RetrofitClient.getImageUrl(img));
+        }
 
         viewModel.getAllMajor();
         viewModel.getAllMajorResult().observe(getViewLifecycleOwner(), new Observer<List<Major>>() {
@@ -113,48 +127,13 @@ public class NewRequestFragment extends Fragment {
                 if(majors == null) return;
 
                 majorsResult = majors;
-                String[] majorArray = new String[majors.size()];
-                for (int i = 0 ; i< majorArray.length; i++) {
-                    majorArray[i] = majors.get(i).getMajor();
-                }
-                ArrayAdapter<String> adapterCity = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, majorArray);
+
+                ArrayAdapter<Major> adapterCity = new ArrayAdapter<Major>(getContext(),android.R.layout.simple_spinner_item, majorsResult);
                 adapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spnMajor.setAdapter(adapterCity);
+                spnMajor.setSelection(detail.getMajor().getId() - 1);
             }
         });
-
-        viewModel.getNewRequestFormState().observe(getViewLifecycleOwner(), new Observer<NewRequestFormState>() {
-            @Override
-            public void onChanged(NewRequestFormState newRequestFormState) {
-                if(newRequestFormState == null) return;
-                if(newRequestFormState.getTitleError() != null) {
-                    edtTitle.setError(getString(newRequestFormState.getTitleError()));
-                }
-                if(newRequestFormState.getDescriptionError() != null) {
-                    edtDescription.setError(getString(newRequestFormState.getDescriptionError()));
-                }
-            }
-        });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                viewModel.onDataChange(edtTitle.getText().toString(),edtDescription.getText().toString(),choosenDate,totalImageLength);
-            }
-        };
-
-        edtTitle.addTextChangedListener(afterTextChangedListener);
-        edtDescription.addTextChangedListener(afterTextChangedListener);
 
         txtTotalLength = view.findViewById(R.id.txtTotalLength);
         final ImageButton btnChooseDate = view.findViewById(R.id.btnChooseDate);
@@ -167,38 +146,35 @@ public class NewRequestFragment extends Fragment {
             public void onClick(View v) {
                 final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
                 loaderDialog.show(getParentFragmentManager(),getTag());
-                int id = 0;
-                for (Major m: majorsResult) {
-                    if(m.getMajor().equals(spnMajor.getSelectedItem().toString())) {
-                        id = m.getId();
-                        break;
-                    }
-                }
-                viewModel.createNewRequest(imgURL.toArray(new String[imgURL.size()]),
-                        choosenDate,edtTitle.getText().toString(),edtDescription.getText().toString(),id);
-                viewModel.getNewRequestResult().observe(getViewLifecycleOwner(), new Observer<Number>() {
+
+                viewModel.editRequest(adapter.getNewImg().toArray(new String[adapter.getNewImg().size()]),
+                        detail.getRequestId(),
+                        choosenDate,edtTitle.getText().toString(),edtDescription.getText().toString(),
+                        ((Major)spnMajor.getSelectedItem()).getId(),
+                        adapter.getOldImgDelete());
+                viewModel.getEditRequestResult().observe(getViewLifecycleOwner(), new Observer<Number>() {
                     @Override
                     public void onChanged(Number number) {
                         loaderDialog.dismiss();
                         if(number == null) {
-                            MessageDialogFragment dialog = new MessageDialogFragment("There is something went wrong, Please try again", R.color.colorDanger,R.drawable.ic_error);
-                            dialog.show(getActivity().getSupportFragmentManager(),"");
+                            MessageDialogFragment dialog = new MessageDialogFragment(getString(R.string.mes_error_400), R.color.colorDanger,R.drawable.ic_error);
+                            dialog.show(getParentFragmentManager(),getTag());
                             return;
                         }
 
-                        if(number.intValue() == 201) {
+                        if(number.intValue() == 200) {
 
-                            MessageDialogFragment dialog = new MessageDialogFragment("You request has been created",
+                            MessageDialogFragment dialog = new MessageDialogFragment(getString(R.string.mes_edit_request_success),
                                     R.color.colorSuccess, R.drawable.ic_success, new MessageDialogFragment.OnMyDialogListener() {
                                 @Override
                                 public void OnOKListener() {
                                     navController.navigate(R.id.navigation_home_customer);
                                 }
                             });
-                            dialog.show(getActivity().getSupportFragmentManager(),"");
+                            dialog.show(getParentFragmentManager(),getTag());
                         }else if(number.intValue() == 400) {
-                            MessageDialogFragment dialog = new MessageDialogFragment("There is something went wrong, Please try again", R.color.colorDanger,R.drawable.ic_error);
-                            dialog.show(getActivity().getSupportFragmentManager(),"");
+                            MessageDialogFragment dialog = new MessageDialogFragment(getString(R.string.mes_error_400), R.color.colorDanger,R.drawable.ic_error);
+                            dialog.show(getParentFragmentManager(),getTag());
                         }
                     }
                 });
@@ -237,7 +213,7 @@ public class NewRequestFragment extends Fragment {
         view.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                navController.popBackStack();
             }
         });
     }
@@ -264,25 +240,7 @@ public class NewRequestFragment extends Fragment {
         picker.show();
     }
 
-    private void checkPermissions(){
 
-        if (ContextCompat.checkSelfPermission(getContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED||
-                ContextCompat.checkSelfPermission(getContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    },
-                    1052);
-
-        }
-
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -352,6 +310,7 @@ public class NewRequestFragment extends Fragment {
         }else {
             if(totalImageLength + file.length() < 5 * 1024 * 1024) {
                 imgURL.add(uri);
+                adapter.addNewImg(uri);
                 adapter.notifyItemInserted(imgURL.size() - 1);
                 totalImageLength += file.length();
                 txtTotalLength.setText((double)(totalImageLength / 1024) + "");

@@ -61,4 +61,8 @@
         android:name="com.quang.daapp.ui.other.UnAuthActivity"
         android:label="activity_un_auth"
         tools:layout="@layout/activity_un_auth" />
+    <fragment
+        android:id="@+id/editRequestFragment"
+        android:name="com.quang.daapp.ui.updateRequest.EditRequestFragment"
+        android:label="EditRequestFragment" />
 </navigation>

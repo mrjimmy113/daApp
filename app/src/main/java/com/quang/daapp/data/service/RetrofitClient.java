@@ -14,8 +14,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static Retrofit retrofit;
-    private static final String BASE_URL = "http://192.168.42.229:8080";
-    private   static final String IMG_URL = "/request/image?imgName=";
+    public static final String BASE_URL = "http://192.168.42.30:8080";
+    public static final String IMG_URL = "/request/image?imgName=";
     private static String token = "";
 
     public static void setToken(String token) {

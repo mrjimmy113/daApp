@@ -54,7 +54,7 @@ public class RequestDetailApplicantFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final RecyclerView recyclerView = view.findViewById(R.id.recycle);
-        navController = Navigation.findNavController(view);
+        navController = Navigation.findNavController(getParentFragment().getView());
         adapter = new ExpertInforAdapter(getContext(), expertList, new ExpertInforAdapter.OnExpertInforInterface() {
             @Override
             public void OnProfileClickListener(int position) {

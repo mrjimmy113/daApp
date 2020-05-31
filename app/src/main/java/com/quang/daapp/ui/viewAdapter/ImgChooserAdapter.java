@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.quang.daapp.R;
+import com.quang.daapp.data.service.RetrofitClient;
 
 import java.util.ArrayList;
 
@@ -21,13 +22,27 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ImgChooserAdapter extends RecyclerView.Adapter<ImgChooserAdapter.ViewHolder> {
 
     Context mContext;
-    ArrayList<Uri> imgURL;
+    ArrayList<String> imgURL;
+    ArrayList<String> oldImgDelete = new ArrayList<>();
+    ArrayList<String> newImg = new ArrayList<>();
     OnItemRemove onItemRemove;
 
-    public ImgChooserAdapter(Context mContext, ArrayList<Uri> imgURL, OnItemRemove onItemRemove) {
+    public ImgChooserAdapter(Context mContext, ArrayList<String> imgURL, OnItemRemove onItemRemove) {
         this.mContext = mContext;
         this.imgURL = imgURL;
         this.onItemRemove = onItemRemove;
+    }
+
+    public void addNewImg(String string) {
+        newImg.add(string);
+    }
+
+    public ArrayList<String> getNewImg() {
+        return newImg;
+    }
+
+    public ArrayList<String> getOldImgDelete() {
+        return oldImgDelete;
     }
 
     @NonNull
@@ -43,12 +58,11 @@ public class ImgChooserAdapter extends RecyclerView.Adapter<ImgChooserAdapter.Vi
         holder.btnDelImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-            }
-        });
-        holder.btnDelImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                if(imgURL.get(position).contains(RetrofitClient.BASE_URL)) {
+                    oldImgDelete.add(imgURL.get(position).split("=")[1]);
+                }else {
+                    newImg.remove(newImg.indexOf(imgURL.get(position)));
+                }
                 onItemRemove.OnItemRemoved(position);
             }
         });

@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 
 
 import com.quang.daapp.R;
+import com.quang.daapp.data.model.Major;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.ui.other.RequestListFragment;
 
@@ -62,7 +63,9 @@ public class CustomerHomeFragment extends Fragment {
         fragNewRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
-
+                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                navController.navigate(R.id.action_navigation_home_to_problemRequestDetail,bundle);
             }
         });
 

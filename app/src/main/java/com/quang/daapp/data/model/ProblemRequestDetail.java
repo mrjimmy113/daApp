@@ -27,6 +27,16 @@ public class ProblemRequestDetail {
 
     private List<String> images = new ArrayList<>();
 
+    private Major major;
+
+    public Major getMajor() {
+        return major;
+    }
+
+    public void setMajor(Major major) {
+        this.major = major;
+    }
+
     public Integer getRequestId() {
         return requestId;
     }

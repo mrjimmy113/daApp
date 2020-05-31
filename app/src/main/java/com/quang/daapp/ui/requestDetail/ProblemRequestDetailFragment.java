@@ -18,6 +18,8 @@ import android.widget.ImageButton;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.ProblemRequestDetail;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
@@ -35,6 +37,7 @@ public class ProblemRequestDetailFragment extends Fragment {
     ViewPager2 viewPager;
     TabLayout tabLayout;
     private boolean isExpert = false;
+    ProblemRequestDetail detail;
 
     public ProblemRequestDetailFragment() {
         // Required empty public constructor
@@ -69,6 +72,7 @@ public class ProblemRequestDetailFragment extends Fragment {
             @Override
             public void onChanged(ProblemRequestDetail problemRequestDetail) {
                 if(problemRequestDetail == null) return;
+                detail = problemRequestDetail;
                 infor.setData(problemRequestDetail);
                 image.setDate(problemRequestDetail.getImages());
             }
@@ -111,7 +115,10 @@ public class ProblemRequestDetailFragment extends Fragment {
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Bundle bundle = new Bundle();
+                Gson gson = new GsonBuilder().create();
+                bundle.putString("data", gson.toJson(detail));
+                navController.navigate(R.id.editRequestFragment,bundle);
             }
         });
 
