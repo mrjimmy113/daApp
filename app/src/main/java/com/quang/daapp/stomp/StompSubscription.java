@@ -1,4 +1,4 @@
-package com.quang.daapp.test;
+package com.quang.daapp.stomp;
 
 public class StompSubscription {
     private final Integer id;

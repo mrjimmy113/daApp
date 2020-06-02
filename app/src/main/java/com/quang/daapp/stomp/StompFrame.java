@@ -1,4 +1,4 @@
-package com.quang.daapp.test;
+package com.quang.daapp.stomp;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -16,6 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkClient {
     private static Retrofit retrofit;
 
+    private static Gson gson;
+
     public static final String BASE_URL = "http://192.168.42.30:8080";
 
     public static final String IMG_URL = "/request/image?imgName=";
@@ -23,6 +25,16 @@ public class NetworkClient {
 
     public static void setToken(String token) {
         NetworkClient.token = token;
+    }
+
+    public static Gson getGson() {
+        if(gson == null) {
+             gson = new GsonBuilder()
+                    .setLenient()
+                    .setDateFormat("yyyy-MM-dd")
+                    .create();
+        }
+        return  gson;
     }
 
     public static Retrofit getRetrofitInstance() {
@@ -41,15 +53,12 @@ public class NetworkClient {
                                               return chain.proceed(request);
                                           }
                                       });
-            Gson gson = new GsonBuilder()
-                    .setLenient()
-                    .setDateFormat("yyyy-MM-dd")
-                    .create();
+
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(httpClient.build())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(GsonConverterFactory.create(getGson()))
                     .build();
         }
         return retrofit;

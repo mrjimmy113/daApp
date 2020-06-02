@@ -2,9 +2,11 @@ package com.quang.daapp.ultis;
 
 import android.util.Log;
 
-import com.quang.daapp.test.StompClient;
-import com.quang.daapp.test.StompFrame;
-import com.quang.daapp.test.StompMessageListener;
+import com.quang.daapp.stomp.ReceiveMessage;
+import com.quang.daapp.stomp.SendMessage;
+import com.quang.daapp.stomp.StompClient;
+import com.quang.daapp.stomp.StompFrame;
+import com.quang.daapp.stomp.StompMessageListener;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -17,7 +19,7 @@ public class WebSocketClient {
     public static WebSocketClient instance;
 
     public StompClient stompClient;
-    private Map<String, MutableLiveData<String>> subscribes = new HashMap<>();
+    private Map<String, MutableLiveData<ReceiveMessage>> subscribes = new HashMap<>();
 
     public static WebSocketClient getInstance() {
         if(instance == null) {
@@ -44,25 +46,25 @@ public class WebSocketClient {
 
     public void subscribe(String channel) {
         if(stompClient ==null) return;
-        MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
+        MutableLiveData<ReceiveMessage> mutableLiveData = new MutableLiveData<>();
         subscribes.put(channel,mutableLiveData);
         stompClient.subscribe("/topic/messages."  + channel, new StompMessageListener() {
 
             @Override
             public void onMessage(StompFrame stompFrame) {
-                mutableLiveData.setValue(stompFrame.getBody());
+                mutableLiveData.setValue(NetworkClient.getGson().fromJson(stompFrame.getBody(),ReceiveMessage.class));
             }
 
 
         });
     }
 
-    public void chat(String channel, String message) {
+    public void chat(String channel, SendMessage message) {
         if(stompClient ==null) return;
-        stompClient.send("/app/chat." + channel, message);
+        stompClient.send("/app/chat." + channel, NetworkClient.getGson().toJson(message));
     }
 
-    public LiveData<String> getSubscribeChannelData(String channel) {
+    public LiveData<ReceiveMessage> getSubscribeChannelData(String channel) {
         return  subscribes.get(channel);
     }
 

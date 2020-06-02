@@ -1,4 +1,4 @@
-package com.quang.daapp.test;
+package com.quang.daapp.stomp;
 
 public enum StompCommand {
     CONNECT("CONNECT"),
