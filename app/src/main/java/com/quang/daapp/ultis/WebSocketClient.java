@@ -1,59 +1,69 @@
 package com.quang.daapp.ultis;
 
-import rx.Observer;
-import ua.naiksoftware.stomp.Stomp;
-import ua.naiksoftware.stomp.client.StompClient;
-import ua.naiksoftware.stomp.client.StompMessage;
+import android.util.Log;
+
+import com.quang.daapp.test.StompClient;
+import com.quang.daapp.test.StompFrame;
+import com.quang.daapp.test.StompMessageListener;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 public class WebSocketClient {
-    private static StompClient stompClient;
-    public static final String SOCKET_URL = "ws://192.168.42.251:8080";
-    public static StompClient getStompClient() {
-        if(stompClient == null) {
-            stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, SOCKET_URL+ "/chat");
-            stompClient.connect();
-        }
+    public static WebSocketClient instance;
 
-        return stompClient;
+    public StompClient stompClient;
+    private Map<String, MutableLiveData<String>> subscribes = new HashMap<>();
+
+    public static WebSocketClient getInstance() {
+        if(instance == null) {
+            instance = new WebSocketClient();
+            instance.connect();
+            boolean connected = true;
+            try {
+                connected = instance.stompClient.connectBlocking();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+
+            }
+            if (!connected) {
+                Log.e("CLMN","Failed to connect to the socket");
+
+            }
+        }
+        return instance;
     }
 
-    public static void subcribeChat(String channel) {
-        if(stompClient != null) {
-            stompClient.topic("/topic/messages." + channel).subscribe(new Observer<StompMessage>() {
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-
-                }
-
-                @Override
-                public void onNext(StompMessage stompMessage) {
-
-                }
-            });
-
-        }
+    public void connect() {
+        stompClient = new StompClient(URI.create("ws://192.168.137.1:8080/chat"));
     }
 
-    public static void sendChat(String channel, String message) {
-        if(stompClient != null) {
-            stompClient.send("/app/chat." + channel).subscribe();
-        }
+    public void subscribe(String channel) {
+        if(stompClient ==null) return;
+        MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
+        subscribes.put(channel,mutableLiveData);
+        stompClient.subscribe("/topic/messages."  + channel, new StompMessageListener() {
+
+            @Override
+            public void onMessage(StompFrame stompFrame) {
+                mutableLiveData.setValue(stompFrame.getBody());
+            }
+
+
+        });
     }
 
-
-
-
-
-
-
-    public static void disconnectClient() {
-        if(stompClient != null) {
-            stompClient.disconnect();
-        }
+    public void chat(String channel, String message) {
+        if(stompClient ==null) return;
+        stompClient.send("/app/chat." + channel, message);
     }
+
+    public LiveData<String> getSubscribeChannelData(String channel) {
+        return  subscribes.get(channel);
+    }
+
 }
