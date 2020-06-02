@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder;
 import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.service.AccountService;
-import com.quang.daapp.data.service.RetrofitClient;
+import com.quang.daapp.ultis.NetworkClient;
 
 import java.io.File;
 
@@ -204,7 +204,7 @@ public class AccountRepository {
 
     private void CreateService() {
         if(service == null) {
-            service = RetrofitClient.getRetrofitInstance().create(AccountService.class);
+            service = NetworkClient.getRetrofitInstance().create(AccountService.class);
         }
     }
 }

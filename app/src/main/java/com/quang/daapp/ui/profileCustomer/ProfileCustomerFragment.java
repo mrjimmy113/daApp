@@ -22,7 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
-import com.quang.daapp.data.service.RetrofitClient;
+import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.databinding.FragmentProfileCustomerBinding;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
 import com.quang.daapp.ultis.AuthTokenManager;
@@ -106,7 +106,7 @@ public class ProfileCustomerFragment extends Fragment {
                     txtDob.setText(format.format(data.getDob()));
                 }
                 if(data.getImgName() != null && !data.getImgName().trim().isEmpty()) {
-                    Glide.with(getContext()).load(RetrofitClient.getImageUrl(data.getImgName())).into(ivAvatar);
+                    Glide.with(getContext()).load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
                 }
 
 

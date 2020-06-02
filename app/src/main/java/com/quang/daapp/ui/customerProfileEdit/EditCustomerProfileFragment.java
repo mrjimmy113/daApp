@@ -1,18 +1,14 @@
 package com.quang.daapp.ui.customerProfileEdit;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -35,7 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
-import com.quang.daapp.data.service.RetrofitClient;
+import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ultis.CommonUltis;
@@ -133,7 +129,7 @@ public class EditCustomerProfileFragment extends Fragment {
             }
 
             if(data.getImgName() != null && !data.getImgName().trim().isEmpty()) {
-                Glide.with(view).load(RetrofitClient.getImageUrl(data.getImgName())).into(ivAvatar);
+                Glide.with(view).load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
             }
         }
 

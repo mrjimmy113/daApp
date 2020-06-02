@@ -1,6 +1,5 @@
 package com.quang.daapp.ui.updateRequest;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -8,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +23,7 @@ import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Major;
 import com.quang.daapp.data.model.ProblemRequestDetail;
-import com.quang.daapp.data.service.RetrofitClient;
+import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ui.viewAdapter.ImgChooserAdapter;
@@ -41,8 +38,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -117,7 +112,7 @@ public class EditRequestFragment extends Fragment {
         edtDescription.setText(detail.getDescription());
         for (String img:
              detail.getImages()) {
-            imgURL.add(RetrofitClient.getImageUrl(img));
+            imgURL.add(NetworkClient.getImageUrl(img));
         }
 
         viewModel.getAllMajor();

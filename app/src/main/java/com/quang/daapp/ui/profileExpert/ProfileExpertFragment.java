@@ -1,28 +1,21 @@
 package com.quang.daapp.ui.profileExpert;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
-import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.model.Expert;
-import com.quang.daapp.data.service.RetrofitClient;
-import com.quang.daapp.databinding.FragmentProfileCustomerBinding;
+import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.databinding.FragmentProfileExpertBinding;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
-import com.quang.daapp.ui.profileCustomer.ProfileCustomerViewModel;
 import com.quang.daapp.ultis.AuthTokenManager;
-
-import java.text.SimpleDateFormat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -104,7 +97,7 @@ public class ProfileExpertFragment extends Fragment {
 
                 binding.setProfile(expert);
                 data = expert;
-                Glide.with(view).load(RetrofitClient.getImageUrl(data.getImgName())).into(ivAvatar);
+                Glide.with(view).load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
             }
         });
 

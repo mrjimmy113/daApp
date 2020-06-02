@@ -2,7 +2,7 @@ package com.quang.daapp.data.repository;
 
 import com.quang.daapp.data.model.Major;
 import com.quang.daapp.data.service.MajorService;
-import com.quang.daapp.data.service.RetrofitClient;
+import com.quang.daapp.ultis.NetworkClient;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class MajorRepository {
 
     private void CreateService() {
         if(service == null) {
-            service = RetrofitClient.getRetrofitInstance().create(MajorService.class);
+            service = NetworkClient.getRetrofitInstance().create(MajorService.class);
         }
     }
 }

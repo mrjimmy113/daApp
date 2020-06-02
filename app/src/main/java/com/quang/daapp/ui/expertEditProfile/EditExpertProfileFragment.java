@@ -10,12 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,24 +21,19 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
-import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.Major;
-import com.quang.daapp.data.service.RetrofitClient;
-import com.quang.daapp.ui.customerProfileEdit.EditCustomerProfileFormState;
-import com.quang.daapp.ui.customerProfileEdit.EditCustomerProfileViewModel;
+import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ultis.CommonUltis;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -96,7 +89,7 @@ public class EditExpertProfileFragment extends Fragment {
             edtBankName.setText(data.getBankName());
             edtAccountNo.setText(data.getBankAccountNo());
             edtDescription.setText(data.getDescription());
-            Glide.with(getContext()).load(RetrofitClient.getImageUrl(data.getImgName())).into(ivAvatar);
+            Glide.with(getContext()).load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
         }
 
 

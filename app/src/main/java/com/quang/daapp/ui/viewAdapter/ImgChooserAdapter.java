@@ -1,9 +1,6 @@
 package com.quang.daapp.ui.viewAdapter;
 
 import android.content.Context;
-import android.net.Uri;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.quang.daapp.R;
-import com.quang.daapp.data.service.RetrofitClient;
+import com.quang.daapp.ultis.NetworkClient;
 
 import java.util.ArrayList;
 
@@ -58,7 +55,7 @@ public class ImgChooserAdapter extends RecyclerView.Adapter<ImgChooserAdapter.Vi
         holder.btnDelImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(imgURL.get(position).contains(RetrofitClient.BASE_URL)) {
+                if(imgURL.get(position).contains(NetworkClient.BASE_URL)) {
                     oldImgDelete.add(imgURL.get(position).split("=")[1]);
                 }else {
                     newImg.remove(newImg.indexOf(imgURL.get(position)));

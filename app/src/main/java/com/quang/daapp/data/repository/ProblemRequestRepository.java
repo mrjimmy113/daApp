@@ -2,8 +2,6 @@ package com.quang.daapp.data.repository;
 
 
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.data.model.Expert;
@@ -11,13 +9,12 @@ import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.data.model.ProblemRequestDetail;
 import com.quang.daapp.data.model.StatusEnum;
 import com.quang.daapp.data.service.ProblemRequestService;
-import com.quang.daapp.data.service.RetrofitClient;
+import com.quang.daapp.ultis.NetworkClient;
 
 import java.io.File;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +24,6 @@ import androidx.lifecycle.MutableLiveData;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -239,7 +235,7 @@ public class ProblemRequestRepository {
 
     private void CreateService() {
         if(service == null) {
-            service = RetrofitClient.getRetrofitInstance().create(ProblemRequestService.class);
+            service = NetworkClient.getRetrofitInstance().create(ProblemRequestService.class);
         }
 
     }

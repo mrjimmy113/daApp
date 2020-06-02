@@ -1,4 +1,4 @@
-package com.quang.daapp.data.service;
+package com.quang.daapp.ultis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,14 +12,17 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitClient {
+
+public class NetworkClient {
     private static Retrofit retrofit;
+
     public static final String BASE_URL = "http://192.168.42.30:8080";
+
     public static final String IMG_URL = "/request/image?imgName=";
     private static String token = "";
 
     public static void setToken(String token) {
-        RetrofitClient.token = token;
+        NetworkClient.token = token;
     }
 
     public static Retrofit getRetrofitInstance() {
@@ -55,4 +58,9 @@ public class RetrofitClient {
     public static String getImageUrl(String imageName) {
         return BASE_URL + IMG_URL + imageName;
     }
+
+
+
+
+
 }

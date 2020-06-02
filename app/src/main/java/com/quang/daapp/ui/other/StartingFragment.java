@@ -10,7 +10,6 @@ import androidx.navigation.Navigation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.HTTP;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +18,7 @@ import android.view.ViewGroup;
 
 import com.quang.daapp.R;
 import com.quang.daapp.data.service.AccountService;
-import com.quang.daapp.data.service.RetrofitClient;
+import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ultis.AuthTokenManager;
 
 
@@ -52,12 +51,12 @@ public class StartingFragment extends Fragment {
             navController.navigate(R.id.loginFragment);
 
         }else {
-            RetrofitClient.getRetrofitInstance().create(AccountService.class).check(token).enqueue(new Callback<Boolean>() {
+            NetworkClient.getRetrofitInstance().create(AccountService.class).check(token).enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                     Log.e("Status", response.code() + "");
                     if(response.code() == 200) {
-                        RetrofitClient.setToken(token);
+                        NetworkClient.setToken(token);
                         if(response.body()) {
                             navController.navigate(R.id.expertActivity);
                             getActivity().finish();
