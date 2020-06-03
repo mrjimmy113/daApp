@@ -8,7 +8,8 @@ public class ReceiveMessage {
     private String time;
 
 
-
+    public ReceiveMessage() {
+    }
 
     public ReceiveMessage(boolean isExpert, String message, MessageType type, String time) {
         super();

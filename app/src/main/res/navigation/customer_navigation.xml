@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_navigation_home_to_problemRequestDetail"
             app:destination="@id/problemRequestDetail" />
+        <action
+            android:id="@+id/action_navigation_home_customer_to_customerCommunicationFragment"
+            app:destination="@id/customerCommunicationFragment" />
     </fragment>
 
     <fragment
@@ -65,4 +68,9 @@
         android:id="@+id/editRequestFragment"
         android:name="com.quang.daapp.ui.updateRequest.EditRequestFragment"
         android:label="EditRequestFragment" />
+    <fragment
+        android:id="@+id/customerCommunicationFragment"
+        android:name="com.quang.daapp.ui.customerCommunication.CustomerCommunicationFragment"
+        android:label="fragment_customer_communication"
+        tools:layout="@layout/fragment_customer_communication" />
 </navigation>

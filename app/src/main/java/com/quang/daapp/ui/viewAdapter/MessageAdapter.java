@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.Message;
+import com.quang.daapp.stomp.ReceiveMessage;
 
 import java.util.List;
 
@@ -20,37 +21,57 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
     Context mContext;
-    List<Message> messages;
+    List<ReceiveMessage> messages;
     String otherName;
+    boolean isExpert;
 
-    public MessageAdapter(Context mContext, List<Message> messages, String otherName) {
+    public MessageAdapter(Context mContext, List<ReceiveMessage> messages, String otherName, boolean isExpert) {
         this.mContext = mContext;
         this.messages = messages;
         this.otherName = otherName;
+        this.isExpert = isExpert;
+    }
+
+    public void setMessages(List<ReceiveMessage> messages) {
+        this.messages = messages;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_expert_profile,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_message,parent,false);
         return new MessageAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final  Message message = messages.get(position);
+        final  ReceiveMessage message = messages.get(position);
         holder.txtMessage.setText(message.getMessage());
         holder.txtTime.setText(message.getTime().toString());
-        if(!message.isYou()) {
-            holder.txtName.setText(otherName);
-            holder.container1.setGravity(Gravity.START);
-            holder.container2.setGravity(Gravity.START);
+        if(isExpert) {
+            if(!message.isExpert()) {
+                holder.txtName.setText(otherName);
+                holder.container1.setGravity(Gravity.START);
+                holder.container2.setGravity(Gravity.START);
+            }
+        }else {
+            if(message.isExpert()) {
+                holder.txtName.setText(otherName);
+                holder.container1.setGravity(Gravity.START);
+                holder.container2.setGravity(Gravity.START);
+            }
         }
     }
 
     @Override
     public int getItemCount() {
         return messages.size();
+    }
+
+    public void addMessage(ReceiveMessage message) {
+        messages.add(message);
+        this.notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

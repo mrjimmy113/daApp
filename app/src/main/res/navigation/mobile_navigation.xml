@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.quang.daapp.ui.home.ExpertHomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home_expert" />
+        tools:layout="@layout/fragment_home_expert" >
+        <action
+            android:id="@+id/action_navigation_home_to_expertCommunicationFragment"
+            app:destination="@id/expertCommunicationFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -53,6 +57,11 @@
         android:name="com.quang.daapp.ui.expertEditProfile.EditExpertProfileFragment"
         android:label="fragment_edit_expert_profile"
         tools:layout="@layout/fragment_edit_expert_profile" />
+    <fragment
+        android:id="@+id/expertCommunicationFragment"
+        android:name="com.quang.daapp.ui.expertCommunication.ExpertCommunicationFragment"
+        android:label="fragment_expert_communication"
+        tools:layout="@layout/fragment_expert_communication" />
 
     <!--<fragment
         android:id="@+id/navigation_profile_expert"

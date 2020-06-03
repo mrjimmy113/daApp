@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.ui.other.RequestListFragment;
+import com.quang.daapp.ultis.WebSocketClient;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class ExpertHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        WebSocketClient.getInstance().connect(getContext());
         final NavController navController = Navigation.findNavController(view);
 
         final RequestListFragment fragProcessRequest =
@@ -45,7 +47,9 @@ public class ExpertHomeFragment extends Fragment {
         fragProcessRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
-
+                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                navController.navigate(R.id.action_navigation_home_to_expertCommunicationFragment,bundle);
             }
         });
 
@@ -68,6 +72,10 @@ public class ExpertHomeFragment extends Fragment {
             @Override
             public void onChanged(List<ProblemRequest> problemRequests) {
                 fragProcessRequest.setList(problemRequests);
+                for (ProblemRequest p:
+                        problemRequests) {
+                    WebSocketClient.getInstance().subscribe(p.getRequestId());
+                }
                 if(problemRequests.size() > 0) {
                     fragProcessRequest.openClose();
                     isProcessingOpen = true;

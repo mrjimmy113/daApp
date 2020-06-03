@@ -75,7 +75,6 @@
     <string name="mes_edit_request_success">Your request has been updated</string>
 
 
-
     <string name="title_activity_expert">ExpertActivity</string>
     <string name="field_hint_fee">Fee per hour</string>
     <string name="adapter_all">All</string>

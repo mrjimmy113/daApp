@@ -18,7 +18,7 @@ public class NetworkClient {
 
     private static Gson gson;
 
-    public static final String BASE_URL = "http://192.168.42.30:8080";
+    public static final String BASE_URL = "http://192.168.137.1:8080";
 
     public static final String IMG_URL = "/request/image?imgName=";
     private static String token = "";

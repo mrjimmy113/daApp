@@ -22,6 +22,7 @@ import com.quang.daapp.R;
 import com.quang.daapp.data.model.Major;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.ui.other.RequestListFragment;
+import com.quang.daapp.ultis.WebSocketClient;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class CustomerHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        WebSocketClient.getInstance().connect(getContext());
         final NavController navController = Navigation.findNavController(view);
         final Button btnNewRequest = view.findViewById(R.id.btnNewRequest);
         final RequestListFragment fragProcessRequest =
@@ -52,7 +54,9 @@ public class CustomerHomeFragment extends Fragment {
         fragProcessRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
-                
+                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                navController.navigate(R.id.action_navigation_home_customer_to_customerCommunicationFragment,bundle);
             }
         });
 
@@ -82,6 +86,10 @@ public class CustomerHomeFragment extends Fragment {
             @Override
             public void onChanged(List<ProblemRequest> problemRequests) {
                 fragProcessRequest.setList(problemRequests);
+                for (ProblemRequest p:
+                     problemRequests) {
+                    WebSocketClient.getInstance().subscribe(p.getRequestId());
+                }
                 if(problemRequests.size() > 0) {
                     fragProcessRequest.openClose();
                     isProcessingOpen = true;

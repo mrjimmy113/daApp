@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.communication.CommunicationFragment">
+    tools:context=".ui.expertCommunication.ExpertCommunicationFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tool_bar"
@@ -137,6 +137,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:padding="5dp"
         android:id="@+id/recycle_messages"
         android:layout_above="@id/layout_chat_box"
         android:layout_below="@id/layout_status"
@@ -162,14 +163,15 @@
             android:layout_weight="7"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
-            <TextView
-
+            <EditText
+                android:id="@+id/edtMessage"
                 android:background="@drawable/edt_text_box"
                 android:textSize="20sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
         <ImageButton
+            android:id="@+id/btnSend"
             android:background="@drawable/my_button"
             android:src="@drawable/ic_send"
             android:layout_weight="2"
