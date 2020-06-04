@@ -16,7 +16,7 @@ public class CustomerHomeViewModel extends ViewModel {
 
     private MutableLiveData<List<ProblemRequest>> newRequestList = new MutableLiveData<>();
 
-    private MutableLiveData<List<ProblemRequest>> processingRequestList = new MutableLiveData<>();
+    private MutableLiveData<List<ProblemRequest>> acceptedRequestList = new MutableLiveData<>();
 
     private ProblemRequestRepository repository;
 
@@ -36,11 +36,11 @@ public class CustomerHomeViewModel extends ViewModel {
         return newRequestList;
     }
 
-    public void getCurrentUserProcessingRequest() {
-        processingRequestList =  repository.getCurrentUserRequestWithStatus(StatusEnum.PROCESSING);
+    public void getCurrentUserAcceptedRequest() {
+        acceptedRequestList =  repository.getCurrentUserRequestWithStatus(StatusEnum.ACCEPTED);
     }
 
-    public LiveData<List<ProblemRequest>> getProcessingRequestList() {
-        return processingRequestList;
+    public LiveData<List<ProblemRequest>> getAcceptedRequestList() {
+        return acceptedRequestList;
     }
 }

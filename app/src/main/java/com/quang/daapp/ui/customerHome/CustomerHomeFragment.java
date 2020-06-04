@@ -2,7 +2,6 @@ package com.quang.daapp.ui.customerHome;
 
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import androidx.navigation.Navigation;
 
 
 import com.quang.daapp.R;
-import com.quang.daapp.data.model.Major;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.ui.other.RequestListFragment;
 import com.quang.daapp.ultis.WebSocketClient;
@@ -50,7 +48,7 @@ public class CustomerHomeFragment extends Fragment {
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_process_request);
 
         assert fragProcessRequest != null;
-        fragProcessRequest.setTitle("Processing request");
+        fragProcessRequest.setTitle("Accepted request");
         fragProcessRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
@@ -80,11 +78,12 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
-        viewModel.getCurrentUserProcessingRequest();
+        viewModel.getCurrentUserAcceptedRequest();
         viewModel.getCurrentUserNewRequest();
-        viewModel.getProcessingRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
+        viewModel.getAcceptedRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
             @Override
             public void onChanged(List<ProblemRequest> problemRequests) {
+                if(problemRequests == null) return;
                 fragProcessRequest.setList(problemRequests);
                 for (ProblemRequest p:
                      problemRequests) {

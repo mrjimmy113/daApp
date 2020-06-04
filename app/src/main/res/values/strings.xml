@@ -79,6 +79,9 @@
     <string name="field_hint_fee">Fee per hour</string>
     <string name="adapter_all">All</string>
     <string name="isExpert">isExpert</string>
+    <string name="communication_menu_cancel">Cancel</string>
+    <string name="communication_menu_estimate">Estimate</string>
+    <string name="communication_menu_complete">Complete</string>
 
     <string-array name="account_type_array">
         <item>Customer</item>

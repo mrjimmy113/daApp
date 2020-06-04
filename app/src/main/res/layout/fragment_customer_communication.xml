@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.customerCommunication.CustomerCommunicationFragment">
+    tools:context=".ui.communication.CustomerCommunicationFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tool_bar"
@@ -89,18 +89,19 @@
             android:layout_width="match_parent"
             android:layout_height="50dp">
             <LinearLayout
-                android:background="@color/colorPrimary"
                 android:layout_weight="1"
                 android:id="@+id/status_estimate"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <TextView
+                    android:background="@color/colorPrimary"
+                    android:id="@+id/txtAccept"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite"
                     android:gravity="center"
                     android:textSize="20sp"
-                    android:text="Estimate"
+                    android:text="Accept"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
             </LinearLayout>
@@ -112,6 +113,8 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <TextView
+                    android:textColor="@color/colorPrimaryDark"
+                    android:id="@+id/txtProcess"
                     android:gravity="center"
                     android:textSize="20sp"
                     android:text="Process"
@@ -126,6 +129,8 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <TextView
+                    android:textColor="@color/colorPrimaryDark"
+                    android:id="@+id/txtComplete"
                     android:gravity="center"
                     android:textSize="20sp"
                     android:text="Complete"
@@ -152,7 +157,9 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <ImageButton
+            android:id="@+id/btnMenu"
             android:background="@drawable/my_button"
             android:src="@drawable/ic_more_vec"
             android:layout_weight="1"

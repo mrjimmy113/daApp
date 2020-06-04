@@ -6,5 +6,9 @@ public enum MessageType {
     ESTIMATE_YES,
     ESTIMATE_NO,
     CANCEL,
-    COMPLETE
+    CANCEL_YES,
+    CANCEL_NO,
+    COMPLETE,
+    COMPLETE_YES,
+    COMPLETE_NO
 }

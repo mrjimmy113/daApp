@@ -70,7 +70,7 @@
         android:label="EditRequestFragment" />
     <fragment
         android:id="@+id/customerCommunicationFragment"
-        android:name="com.quang.daapp.ui.customerCommunication.CustomerCommunicationFragment"
+        android:name="com.quang.daapp.ui.communication.CustomerCommunicationFragment"
         android:label="fragment_customer_communication"
         tools:layout="@layout/fragment_customer_communication" />
 </navigation>

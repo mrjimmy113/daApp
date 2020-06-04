@@ -13,7 +13,7 @@ public class ProblemRequestDetail {
 
     private String description;
 
-    private String status;
+    private StatusEnum status;
 
     private String feedBack;
 
@@ -61,11 +61,11 @@ public class ProblemRequestDetail {
         this.description = description;
     }
 
-    public String getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEnum status) {
         this.status = status;
     }
 

@@ -1,5 +1,5 @@
 package com.quang.daapp.data.model;
 
 public enum StatusEnum {
-    NEW, PROCESSING
+    NEW, ACCEPTED,PROCESSING, COMPLETE, AVAILABLE, UNAVAILABLE
 }

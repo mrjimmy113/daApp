@@ -1,4 +1,4 @@
-package com.quang.daapp.ui.expertCommunication;
+package com.quang.daapp.ui.communication;
 
 import android.os.Bundle;
 
@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,8 +33,9 @@ import java.util.ArrayList;
 public class ExpertCommunicationFragment extends Fragment {
     NavController navController;
     RecyclerView recyclerView;
-    String channel;
+    int channel;
     MessageAdapter adapter;
+    CommunicationViewModel viewModel;
 
     public ExpertCommunicationFragment() {
         // Required empty public constructor
@@ -43,14 +45,15 @@ public class ExpertCommunicationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        viewModel =
+                ViewModelProviders.of(this).get(CommunicationViewModel.class);
         return inflater.inflate(R.layout.fragment_expert_communication, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        channel = getArguments().getInt(getString(R.string.key_request_id)) + "";
+        channel = getArguments().getInt(getString(R.string.key_request_id)) ;
         navController = Navigation.findNavController(view);
         recyclerView = view.findViewById(R.id.recycle_messages);
         final EditText edtMessage= view.findViewById(R.id.edtMessage);
@@ -59,7 +62,11 @@ public class ExpertCommunicationFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
 
-
+        viewModel.getChatMessage(channel);
+        viewModel.getChatMessageResult().observe(getViewLifecycleOwner(),receiveMessages -> {
+            adapter.setMessages(receiveMessages);
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+        });
 
         view.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +88,7 @@ public class ExpertCommunicationFragment extends Fragment {
         WebSocketClient.getInstance().getSubscribeChannelData(channel).observe(getViewLifecycleOwner(), new Observer<ReceiveMessage>() {
             @Override
             public void onChanged(ReceiveMessage receiveMessage) {
-                adapter.addMessage(receiveMessage);
+
             }
         });
 

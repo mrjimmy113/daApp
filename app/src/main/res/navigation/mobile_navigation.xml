@@ -59,7 +59,7 @@
         tools:layout="@layout/fragment_edit_expert_profile" />
     <fragment
         android:id="@+id/expertCommunicationFragment"
-        android:name="com.quang.daapp.ui.expertCommunication.ExpertCommunicationFragment"
+        android:name="com.quang.daapp.ui.communication.ExpertCommunicationFragment"
         android:label="fragment_expert_communication"
         tools:layout="@layout/fragment_expert_communication" />
 

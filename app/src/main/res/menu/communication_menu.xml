@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_complete"
+        android:title="@string/communication_menu_complete" />
+    <item
+        android:id="@+id/menu_estimate"
+        android:title="@string/communication_menu_estimate" />
+    <item
+        android:id="@+id/menu_cancel"
+        android:title="@string/communication_menu_cancel" />
+
+
+</menu>

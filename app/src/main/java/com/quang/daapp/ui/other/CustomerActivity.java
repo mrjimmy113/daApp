@@ -15,15 +15,27 @@ import androidx.navigation.ui.NavigationUI;
 public class CustomerActivity extends AppCompatActivity {
 
     ConstraintLayout loaderLayout = null;
+    BottomNavigationView navView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
+
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.navigation_home_customer ||
+                    destination.getId() == R.id.navigation_profile_customer ||
+                    destination.getId() == R.id.navigation_dashboard_customer
 
+            ) {
+                navView.setVisibility(View.VISIBLE);
+            }else {
+                navView.setVisibility(View.GONE);
+            }
+        });
 
         NavigationUI.setupWithNavController(navView, navController);
     }

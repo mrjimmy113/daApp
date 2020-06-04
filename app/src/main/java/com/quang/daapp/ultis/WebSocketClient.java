@@ -65,17 +65,15 @@ public class WebSocketClient {
         });
     }
 
-    public void chat(String channel, SendMessage message) {
+    public void chat(int channel, SendMessage message) {
         if(stompClient ==null) return;
         stompClient.send("/app/chat." + channel, NetworkClient.getGson().toJson(message));
     }
 
-    public LiveData<ReceiveMessage> getSubscribeChannelData(String channel) {
+    public LiveData<ReceiveMessage> getSubscribeChannelData(int channel) {
         return  subscribes.get(channel);
     }
 
-    public int getLenght() {
-        return subscribes.size();
-    }
+
 
 }
