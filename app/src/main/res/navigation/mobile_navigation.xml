@@ -11,8 +11,8 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home_expert" >
         <action
-            android:id="@+id/action_navigation_home_to_expertCommunicationFragment"
-            app:destination="@id/expertCommunicationFragment" />
+            android:id="@+id/action_navigation_home_to_communicationFragment2"
+            app:destination="@id/communicationFragment2" />
     </fragment>
 
     <fragment
@@ -58,10 +58,10 @@
         android:label="fragment_edit_expert_profile"
         tools:layout="@layout/fragment_edit_expert_profile" />
     <fragment
-        android:id="@+id/expertCommunicationFragment"
-        android:name="com.quang.daapp.ui.communication.ExpertCommunicationFragment"
-        android:label="fragment_expert_communication"
-        tools:layout="@layout/fragment_expert_communication" />
+        android:id="@+id/communicationFragment2"
+        android:name="com.quang.daapp.ui.communication.CommunicationFragment"
+        android:label="fragment_communication"
+        tools:layout="@layout/fragment_communication" />
 
     <!--<fragment
         android:id="@+id/navigation_profile_expert"

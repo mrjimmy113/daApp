@@ -37,7 +37,7 @@ public class ExpertHomeViewModel extends ViewModel {
     }
 
     public void getCurrentUserProcessingRequest() {
-        processingRequestListResult =  repository.getCurrentUserRequestWithStatus(StatusEnum.PROCESSING);
+        processingRequestListResult =  repository.getCurrentUserRequestWithStatus(StatusEnum.ACCEPTED);
     }
 
     public LiveData<List<ProblemRequest>> getProcessingRequestListResult() {

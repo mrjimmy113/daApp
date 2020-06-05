@@ -54,6 +54,7 @@ public class CustomerHomeFragment extends Fragment {
             public void OnRequestClickListener(int id) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),false);
                 navController.navigate(R.id.action_navigation_home_customer_to_customerCommunicationFragment,bundle);
             }
         });

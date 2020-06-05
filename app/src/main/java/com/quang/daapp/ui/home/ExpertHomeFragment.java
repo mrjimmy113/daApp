@@ -49,7 +49,8 @@ public class ExpertHomeFragment extends Fragment {
             public void OnRequestClickListener(int id) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
-                navController.navigate(R.id.action_navigation_home_to_expertCommunicationFragment,bundle);
+                bundle.putBoolean(getString(R.string.isExpert),true);
+                navController.navigate(R.id.action_navigation_home_to_communicationFragment2,bundle);
             }
         });
 

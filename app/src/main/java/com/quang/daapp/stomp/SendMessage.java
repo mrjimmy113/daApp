@@ -1,23 +1,14 @@
 package com.quang.daapp.stomp;
 
 public class SendMessage {
-
-    private boolean isExpert;
     private String message;
     private MessageType type;
 
-    public SendMessage(boolean isExpert, String message, MessageType type) {
-        this.isExpert = isExpert;
+    public SendMessage(String message, MessageType type) {
         this.message = message;
         this.type = type;
     }
 
-    public boolean isExpert() {
-        return isExpert;
-    }
-    public void setExpert(boolean isExpert) {
-        this.isExpert = isExpert;
-    }
     public String getMessage() {
         return message;
     }
