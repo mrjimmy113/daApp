@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_navigation_home_to_communicationFragment2"
             app:destination="@id/communicationFragment2" />
+        <action
+            android:id="@+id/action_navigation_home_to_requestFinalInforFragment2"
+            app:destination="@id/requestFinalInforFragment2" />
     </fragment>
 
     <fragment
@@ -62,6 +65,11 @@
         android:name="com.quang.daapp.ui.communication.CommunicationFragment"
         android:label="fragment_communication"
         tools:layout="@layout/fragment_communication" />
+    <fragment
+        android:id="@+id/requestFinalInforFragment2"
+        android:name="com.quang.daapp.ui.requestDetail.RequestFinalInforFragment"
+        android:label="fragment_request_final_infor"
+        tools:layout="@layout/fragment_request_final_infor" />
 
     <!--<fragment
         android:id="@+id/navigation_profile_expert"

@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_navigation_home_customer_to_customerCommunicationFragment"
             app:destination="@id/customerCommunicationFragment" />
+        <action
+            android:id="@+id/action_navigation_home_customer_to_requestFinalInforFragment"
+            app:destination="@id/requestFinalInforFragment" />
     </fragment>
 
     <fragment
@@ -73,4 +76,9 @@
         android:name="com.quang.daapp.ui.communication.CommunicationFragment"
         android:label="fragment_customer_communication"
         tools:layout="@layout/fragment_communication" />
+    <fragment
+        android:id="@+id/requestFinalInforFragment"
+        android:name="com.quang.daapp.ui.requestDetail.RequestFinalInforFragment"
+        android:label="fragment_request_final_infor"
+        tools:layout="@layout/fragment_request_final_infor" />
 </navigation>

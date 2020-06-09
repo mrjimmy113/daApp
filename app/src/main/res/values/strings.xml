@@ -75,15 +75,16 @@
     <string name="mes_edit_request_success">Your request has been updated</string>
 
     <!--Communication-->
+    <string name="mes_estimate_confirm">Do you really want to accept this offer</string>
     <string name="mes_estimate_sent">Estimate has been sent</string>
     <string name="mes_estimate_yes">Estimate has been accepted</string>
     <string name="mes_estimate_no">Estimate has been rejected</string>
     <string name="mes_cancel_yes">Estimate has been rejected</string>
     <string name="mes_cancel">You has canceled this request, please wait for your partner to confirm</string>
-    <string name="mes_cancel_confirm">Your partner has canceled this request, would you like to cancel ?</string>
+    <string name="mes_cancel_confirm">Do you really want to cancel this request ?</string>
     <string name="mes_complete_yes">Great, your request has been completed</string>
     <string name="mes_complete">You has completed this request, please wait for your partner to confirm</string>
-    <string name="mes_complete_confirm">Your partner has completed this request, would you like to complete ?</string>
+    <string name="mes_complete_confirm">Do you really want to complete this request ?</string>
 
 
     <string name="title_activity_expert">ExpertActivity</string>

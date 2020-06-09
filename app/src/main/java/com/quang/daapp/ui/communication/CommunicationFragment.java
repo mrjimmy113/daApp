@@ -29,12 +29,14 @@ import com.quang.daapp.stomp.ReceiveMessage;
 import com.quang.daapp.stomp.SendMessage;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
 import com.quang.daapp.ui.dialog.EstimateDialogFragment;
+import com.quang.daapp.ui.dialog.FeedBackDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ui.viewAdapter.MessageAdapter;
 import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ultis.WebSocketClient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,6 +57,8 @@ public class CommunicationFragment extends Fragment {
     TextView txtComplete;
     PopupMenu popupMenu;
     boolean isExpert = false;
+    List<ReceiveMessage> receiveMessageList;
+    private int estimatePos = 0;
 
     public CommunicationFragment() {
         // Required empty public constructor
@@ -88,7 +92,27 @@ public class CommunicationFragment extends Fragment {
         txtAccept = view.findViewById(R.id.txtAccept);
         txtProcess = view.findViewById(R.id.txtProcess);
         txtComplete = view.findViewById(R.id.txtComplete);
-        adapter = new MessageAdapter(getContext(), new ArrayList<>(),"Partner", isExpert);
+        adapter = new MessageAdapter(getContext(), new ArrayList<>(), "Partner", isExpert,StatusEnum.ACCEPTED, new MessageAdapter.IMessageAdapter() {
+            @Override
+            public void OnEstimateYesClick(int pos) {
+                ReceiveMessage mes = adapter.getMessages().get(pos);
+                ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(getString(R.string.mes_estimate_confirm),
+                        new ConfirmDialogFragment.OnConfirmDialogListener() {
+                    @Override
+                    public void OnYesListener() {
+                        WebSocketClient.getInstance().chat(channel,
+                                new SendMessage(mes.getMessage(), MessageType.ESTIMATE_YES));
+                        estimatePos = pos;
+                    }
+
+                    @Override
+                    public void OnNoListener() {
+
+                    }
+                });
+                confirmDialogFragment.show(getParentFragmentManager(),getTag());
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
@@ -98,7 +122,9 @@ public class CommunicationFragment extends Fragment {
         viewModel.getChatMessage(channel);
         viewModel.getChatMessageResult().observe(getViewLifecycleOwner(),receiveMessages -> {
             if(receiveMessages == null) return;
-            adapter.setMessages(receiveMessages);
+            receiveMessageList = receiveMessages;
+            adapter.setMessages(receiveMessageList);
+            adapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         });
 
@@ -106,6 +132,8 @@ public class CommunicationFragment extends Fragment {
         viewModel.getDetailResult().observe(getViewLifecycleOwner(),problemRequestDetail -> {
             if(problemRequestDetail == null) return;
             detail = problemRequestDetail;
+            adapter.setStatusEnum(detail.getStatus());
+
             txtRequestTitle.setText(problemRequestDetail.getTitle());
             changeStatus(problemRequestDetail.getStatus());
             popupMenu = updateMenu(problemRequestDetail.getStatus());
@@ -139,38 +167,23 @@ public class CommunicationFragment extends Fragment {
         WebSocketClient.getInstance().getSubscribeChannelData(channel).observe(getViewLifecycleOwner(), receiveMessage -> {
             switch (receiveMessage.getType()) {
                 case CHAT: {
-                    adapter.addMessage(receiveMessage);
-                    Log.e("CLMN", receiveMessage.isExpert() + " - " + receiveMessage.getMessage());
-                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+
                     break;
                 }
                 case ESTIMATE: {
-                    if(!isExpert) {
-                        Estimate estimate = NetworkClient.getGson().fromJson(receiveMessage.getMessage(),Estimate.class);
-                        String message = "You expert estimation is " + estimate.getHour() + " hour to solve which cost " + estimate.getTotal();
-                        ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(message, new ConfirmDialogFragment.OnConfirmDialogListener() {
-                            @Override
-                            public void OnYesListener() {
-                                WebSocketClient.getInstance().chat(channel,
-                                        new SendMessage(receiveMessage.getMessage(), MessageType.ESTIMATE_YES));
-                            }
-
-                            @Override
-                            public void OnNoListener() {
-
-                            }
-                        });
-                        confirmDialogFragment.show(getParentFragmentManager(),getTag());
-                    }else {
+                    if(isExpert) {
                         MessageDialogFragment dialogFragment = new MessageDialogFragment(getString(R.string.mes_estimate_sent),R.color.colorSuccess,R.drawable.ic_success);
                         dialogFragment.show(getParentFragmentManager(),getTag());
+
                     }
                     break;
                 }
                 case ESTIMATE_YES:{
                     MessageDialogFragment dialogFragment = new MessageDialogFragment(getString(R.string.mes_estimate_yes),R.color.colorSuccess,R.drawable.ic_success);
                     dialogFragment.show(getParentFragmentManager(),getTag());
-                    detail.setStatus(StatusEnum.PROCESSING);
+                    if(detail != null) detail.setStatus(StatusEnum.PROCESSING);
+                    adapter.setStatusEnum(StatusEnum.PROCESSING);
+                    adapter.notifyItemChanged(estimatePos);
                     changeStatus(StatusEnum.PROCESSING);
                     break;
                 }
@@ -192,7 +205,7 @@ public class CommunicationFragment extends Fragment {
                     dialogFragment.show(getParentFragmentManager(),getTag());
                 }
                 case CANCEL: {
-                    if(!receiveMessage.isExpert()) {
+                    if(receiveMessage.isExpert() == isExpert) {
                         MessageDialogFragment dialogFragment = new MessageDialogFragment(
                                 getString(R.string.mes_cancel), R.color.colorDanger, R.drawable.ic_warning,
                                 new MessageDialogFragment.OnMyDialogListener() {
@@ -224,7 +237,7 @@ public class CommunicationFragment extends Fragment {
                     break;
                 }
                 case COMPLETE: {
-                    if(!receiveMessage.isExpert()) {
+                    if(receiveMessage.isExpert() == isExpert) {
                         MessageDialogFragment dialogFragment = new MessageDialogFragment(
                                 getString(R.string.mes_complete), R.color.colorSuccess, R.drawable.ic_success,
                                 new MessageDialogFragment.OnMyDialogListener() {
@@ -269,6 +282,9 @@ public class CommunicationFragment extends Fragment {
                     break;
                 }
             }
+            adapter.addMessage(receiveMessage);
+
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         });
 
     }
@@ -311,13 +327,46 @@ public class CommunicationFragment extends Fragment {
                     break;
                 }
                 case R.id.menu_cancel: {
-                    WebSocketClient.getInstance().chat(channel,
-                            new SendMessage("", MessageType.CANCEL));
+                    ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(
+                            getString(R.string.mes_cancel_confirm),
+                            new ConfirmDialogFragment.OnConfirmDialogListener() {
+                                @Override
+                                public void OnYesListener() {
+                                    WebSocketClient.getInstance().chat(channel,
+                                            new SendMessage("", MessageType.CANCEL));
+                                }
+
+                                @Override
+                                public void OnNoListener() {
+
+                                }
+                            }
+                    );
+                    confirmDialogFragment.show(getParentFragmentManager(),getTag());
                     break;
                 }
                 case R.id.menu_complete: {
-                    WebSocketClient.getInstance().chat(channel,
-                            new SendMessage("", MessageType.COMPLETE));
+                    ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(
+                            getString(R.string.mes_complete_confirm),
+                            new ConfirmDialogFragment.OnConfirmDialogListener() {
+                                @Override
+                                public void OnYesListener() {
+                                    if(isExpert) {
+                                        WebSocketClient.getInstance().chat(channel,
+                                                new SendMessage("", MessageType.COMPLETE));
+                                    }else {
+                                        FeedBackDialogFragment feedBackDialogFragment = new FeedBackDialogFragment(channel) ;
+                                        feedBackDialogFragment.show(getParentFragmentManager(),getTag());
+                                    }
+                                }
+
+                                @Override
+                                public void OnNoListener() {
+
+                                }
+                            }
+                    );
+                    confirmDialogFragment.show(getParentFragmentManager(),getTag());
                     break;
                 }
             }

@@ -18,6 +18,10 @@ public class ExpertHomeViewModel extends ViewModel {
 
     private MutableLiveData<List<ProblemRequest>> processingRequestListResult = new MutableLiveData<>();
 
+    private MutableLiveData<List<ProblemRequest>> tmpCancelRequestList = new MutableLiveData<>();
+
+    private MutableLiveData<List<ProblemRequest>> tmpCompleteRequestList = new MutableLiveData<>();
+
     private ProblemRequestRepository repository;
 
     public ExpertHomeViewModel() {
@@ -37,10 +41,29 @@ public class ExpertHomeViewModel extends ViewModel {
     }
 
     public void getCurrentUserProcessingRequest() {
-        processingRequestListResult =  repository.getCurrentUserRequestWithStatus(StatusEnum.ACCEPTED);
+        StatusEnum[] statusEnums = {StatusEnum.ACCEPTED,StatusEnum.PROCESSING};
+        processingRequestListResult =  repository.getCurrentUserRequestWithStatus(statusEnums);
     }
 
     public LiveData<List<ProblemRequest>> getProcessingRequestListResult() {
         return processingRequestListResult;
+    }
+
+    void getCurrentUserTmpCancelRequest() {
+        StatusEnum[] statusEnums = {StatusEnum.TMPCANCEL};
+        tmpCancelRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+    }
+
+    LiveData<List<ProblemRequest>> getTmpCancelRequestList() {
+        return tmpCancelRequestList;
+    }
+
+    void getCurrentUserTmpCompleteRequest() {
+        StatusEnum[] statusEnums = {StatusEnum.TMPCOMPLETE};
+        tmpCompleteRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+    }
+
+    LiveData<List<ProblemRequest>> getTmpCompleteRequestList() {
+        return tmpCompleteRequestList;
     }
 }

@@ -65,6 +65,31 @@ public class ExpertHomeFragment extends Fragment {
             }
         });
 
+        final RequestListFragment fragCancelRequest =
+                (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_tmp_cancel_request);
+
+        assert fragCancelRequest != null;
+        fragCancelRequest.setTitle("Temperately canceled request");
+        fragCancelRequest.setEvent(new RequestListFragment.OnRequestListListener() {
+            @Override
+            public void OnRequestClickListener(int id) {
+
+            }
+        });
+
+        final RequestListFragment fragCompleteRequest =
+                (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_tmp_complete_request);
+
+
+        assert fragCompleteRequest != null;
+        fragCompleteRequest.setTitle("Temperately completed request");
+        fragCompleteRequest.setEvent(new RequestListFragment.OnRequestListListener() {
+            @Override
+            public void OnRequestClickListener(int id) {
+
+            }
+        });
+
 
 
         viewModel.getCurrentUserProcessingRequest();
@@ -88,6 +113,30 @@ public class ExpertHomeFragment extends Fragment {
                         if(!isProcessingOpen) fragNewRequest.openClose();
                     }
                 });
+            }
+        });
+
+        viewModel.getCurrentUserTmpCancelRequest();
+        viewModel.getTmpCancelRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
+            @Override
+            public void onChanged(List<ProblemRequest> problemRequests) {
+                if(problemRequests == null) return;
+                fragCancelRequest.setList(problemRequests);
+                if(problemRequests.size() > 0) {
+                    view.findViewById(R.id.container_tmp_cancel).setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        viewModel.getCurrentUserTmpCompleteRequest();
+        viewModel.getTmpCompleteRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
+            @Override
+            public void onChanged(List<ProblemRequest> problemRequests) {
+                if(problemRequests == null) return;
+                fragCompleteRequest.setList(problemRequests);
+                if(problemRequests.size() > 0) {
+                    view.findViewById(R.id.container_tmp_complete).setVisibility(View.VISIBLE);
+                }
             }
         });
     }

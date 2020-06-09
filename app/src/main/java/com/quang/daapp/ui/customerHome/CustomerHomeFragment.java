@@ -59,6 +59,35 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
+        final RequestListFragment fragCancelRequest =
+                (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_tmp_cancel_request);
+
+
+        assert fragCancelRequest != null;
+        fragCancelRequest.setTitle("Temperately canceled request");
+        fragCancelRequest.setEvent(new RequestListFragment.OnRequestListListener() {
+            @Override
+            public void OnRequestClickListener(int id) {
+
+            }
+        });
+
+        final RequestListFragment fragCompleteRequest =
+                (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_tmp_complete_request);
+
+
+        assert fragCompleteRequest != null;
+        fragCompleteRequest.setTitle("Temperately completed request");
+        fragCompleteRequest.setEvent(new RequestListFragment.OnRequestListListener() {
+            @Override
+            public void OnRequestClickListener(int id) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),false);
+                navController.navigate(R.id.action_navigation_home_customer_to_requestFinalInforFragment,bundle);
+            }
+        });
+
         final RequestListFragment fragNewRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_new_request);
         assert fragNewRequest != null;
@@ -104,5 +133,28 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
+        viewModel.getCurrentUserTmpCancelRequest();
+        viewModel.getTmpCancelRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
+            @Override
+            public void onChanged(List<ProblemRequest> problemRequests) {
+                if(problemRequests == null) return;
+                fragCancelRequest.setList(problemRequests);
+                if(problemRequests.size() > 0) {
+                    view.findViewById(R.id.container_tmp_cancel).setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        viewModel.getCurrentUserTmpCompleteRequest();
+        viewModel.getTmpCompleteRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
+            @Override
+            public void onChanged(List<ProblemRequest> problemRequests) {
+                if(problemRequests == null) return;
+                fragCompleteRequest.setList(problemRequests);
+                if(problemRequests.size() > 0) {
+                    view.findViewById(R.id.container_tmp_complete).setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 }

@@ -55,5 +55,29 @@
         android:layout_height="wrap_content"
         tools:layout="@layout/fragment_request_list" />
 
+    <LinearLayout
+        android:id="@+id/container_tmp_cancel"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <fragment android:name="com.quang.daapp.ui.other.RequestListFragment"
+            android:id="@+id/frag_tmp_cancel_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_request_list" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_tmp_complete"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <fragment android:name="com.quang.daapp.ui.other.RequestListFragment"
+            android:id="@+id/frag_tmp_complete_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_request_list" />
+    </LinearLayout>
+
 
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.quang.daapp.data.service;
 
+import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.data.model.ProblemRequestDetail;
@@ -49,7 +50,7 @@ public interface ProblemRequestService {
     Call<List<ProblemRequest>> getCurrentAppliedProblemRequest();
 
     @GET("/request/status")
-    Call<List<ProblemRequest>> getCurrentProblemRequestWithStatus(@Query("status")StatusEnum statusEnum);
+    Call<List<ProblemRequest>> getCurrentProblemRequestWithStatus(@Query("status")StatusEnum[] statusEnum);
 
     @GET("/request/detail")
     Call<ProblemRequestDetail> getRequestDetail(@Query("id") int requestId);
@@ -68,4 +69,10 @@ public interface ProblemRequestService {
     @FormUrlEncoded
     @PUT("/request/accept")
     Call<Number> acceptExpert(@Field("requestId") int requestId, @Field("expertId") int expertId);
+
+    @GET("/request/cus")
+    Call<Customer> getCustomerProfile(@Query("requestId") int requestId);
+
+    @GET("/request/exp")
+    Call<Expert> getExpertProfile(@Query("requestId") int requestId);
 }

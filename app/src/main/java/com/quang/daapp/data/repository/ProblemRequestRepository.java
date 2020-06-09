@@ -4,6 +4,7 @@ package com.quang.daapp.data.repository;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.data.model.ProblemRequestDetail;
@@ -98,7 +99,7 @@ public class ProblemRequestRepository {
         return  result;
     }
 
-    public  MutableLiveData<List<ProblemRequest>> getCurrentUserRequestWithStatus(StatusEnum statusEnum) {
+    public  MutableLiveData<List<ProblemRequest>> getCurrentUserRequestWithStatus(StatusEnum[] statusEnum) {
         CreateService();
         final MutableLiveData<List<ProblemRequest>> result = new MutableLiveData<>();
         service.getCurrentProblemRequestWithStatus(statusEnum).enqueue(new Callback<List<ProblemRequest>>() {
@@ -230,6 +231,42 @@ public class ProblemRequestRepository {
 
             }
         });
+        return result;
+    }
+
+    public MutableLiveData<Customer> getCustomerProfile(int requestId) {
+        CreateService();
+        final MutableLiveData<Customer> result = new MutableLiveData<>();
+        service.getCustomerProfile(requestId).enqueue(new Callback<Customer>() {
+            @Override
+            public void onResponse(Call<Customer> call, Response<Customer> response) {
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Customer> call, Throwable t) {
+
+            }
+        });
+
+        return result;
+    }
+
+    public MutableLiveData<Expert> getExpertProfile(int requestId) {
+        CreateService();
+        final MutableLiveData<Expert> result = new MutableLiveData<>();
+        service.getExpertProfile(requestId).enqueue(new Callback<Expert>() {
+            @Override
+            public void onResponse(Call<Expert> call, Response<Expert> response) {
+                result.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Expert> call, Throwable t) {
+
+            }
+        });
+
         return result;
     }
 
