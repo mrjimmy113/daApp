@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/unauth_nav_graph"
-    app:startDestination="@id/videoCallFragment">
+    app:startDestination="@id/startingFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -49,9 +49,4 @@
         android:name="com.quang.daapp.ui.expertReg.RegisterExpertFragment"
         android:label="fragment_register_expert"
         tools:layout="@layout/fragment_register_expert" />
-    <fragment
-        android:id="@+id/videoCallFragment"
-        android:name="com.quang.daapp.VideoCallFragment"
-        android:label="fragment_video_call"
-        tools:layout="@layout/fragment_video_call" />
 </navigation>

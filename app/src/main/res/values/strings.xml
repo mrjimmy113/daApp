@@ -95,6 +95,8 @@
     <string name="communication_menu_estimate">Estimate</string>
     <string name="communication_menu_complete">Complete</string>
 
+    <string name="camera_permission_deny">You can not start video call with out camera and audio</string>
+
     <string-array name="account_type_array">
         <item>Customer</item>
         <item>Computer Expert</item>

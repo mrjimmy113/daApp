@@ -64,12 +64,21 @@
         android:id="@+id/communicationFragment2"
         android:name="com.quang.daapp.ui.communication.CommunicationFragment"
         android:label="fragment_communication"
-        tools:layout="@layout/fragment_communication" />
+        tools:layout="@layout/fragment_communication" >
+        <action
+            android:id="@+id/action_communicationFragment2_to_videoCallFragment2"
+            app:destination="@id/videoCallFragment2" />
+    </fragment>
     <fragment
         android:id="@+id/requestFinalInforFragment2"
         android:name="com.quang.daapp.ui.requestDetail.RequestFinalInforFragment"
         android:label="fragment_request_final_infor"
         tools:layout="@layout/fragment_request_final_infor" />
+    <fragment
+        android:id="@+id/videoCallFragment2"
+        android:name="com.quang.daapp.VideoCallFragment"
+        android:label="fragment_video_call"
+        tools:layout="@layout/fragment_video_call" />
 
     <!--<fragment
         android:id="@+id/navigation_profile_expert"

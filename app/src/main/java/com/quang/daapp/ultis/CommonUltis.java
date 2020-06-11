@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentActivity;
 public class CommonUltis {
 
     public static final int GALLERY_REQUEST_CODE = 1052;
-    public static final int CAMERA_PERMISSION_REQUEST_CODE = 1024;
+    public static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
 
     public static String getPathFromURI(Uri uri, Activity activity) {
         String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -60,14 +60,16 @@ public class CommonUltis {
         }
     }
 
-    public static void checkCameraPermission(Context context, Activity activity) {
+    public static boolean checkCameraPermission(Context context, Activity activity) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity,
                     new String[]{
                             Manifest.permission.CAMERA
                     },
                     CAMERA_PERMISSION_REQUEST_CODE);
+            return  false;
         }
+        return true;
     }
 
 }
