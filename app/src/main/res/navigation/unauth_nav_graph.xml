@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_loginFragment_to_registerChooserFragment"
             app:destination="@id/registerChooserFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_forgetPasswordFragment"
+            app:destination="@id/forgetPasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerCustomerFragment"
@@ -49,4 +52,8 @@
         android:name="com.quang.daapp.ui.expertReg.RegisterExpertFragment"
         android:label="fragment_register_expert"
         tools:layout="@layout/fragment_register_expert" />
+    <fragment
+        android:id="@+id/forgetPasswordFragment"
+        android:name="com.quang.daapp.ui.forgetPassword.ForgetPasswordFragment"
+        android:label="ForgetPasswordFragment" />
 </navigation>

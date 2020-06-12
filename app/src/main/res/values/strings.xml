@@ -96,6 +96,9 @@
     <string name="communication_menu_complete">Complete</string>
 
     <string name="camera_permission_deny">You can not start video call with out camera and audio</string>
+    <string name="call_receive">You receive a call, would you like to answer</string>
+    <string name="forget_password_success">Please check your email for new password</string>
+    <string name="forget_password_no_email">We can not find your account, please check your email</string>
 
     <string-array name="account_type_array">
         <item>Customer</item>

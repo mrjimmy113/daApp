@@ -52,4 +52,8 @@ public interface AccountService {
                                 @Field("currentPassword") String currentPassword,
                                 @Field("newPassword") String newPassword);
 
+    @FormUrlEncoded
+    @POST("/account/forgetPassword")
+    Call<Number> forgetPassword(@Field("email") String email);
+
 }

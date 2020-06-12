@@ -49,30 +49,41 @@
                     android:drawableStart="@drawable/ic_password" />
 
                 <LinearLayout
-                    android:gravity="center"
-                    android:layout_marginTop="30dp"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                         <Button
-                            android:layout_marginRight="30dp"
+                            android:gravity="center"
                             android:textColor="@color/colorWhite"
                             android:background="@drawable/my_button"
                             android:id="@+id/btnLogin"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:text="@string/action_sign_in"
-                            android:layout_marginEnd="30dp" />
+                            android:layout_marginVertical="10dp"
+                            />
                         <Button
-                            android:layout_marginLeft="30dp"
+                            android:layout_marginVertical="10dp"
                             android:textColor="@color/colorWhite"
                             android:background="@drawable/my_button"
                             android:id="@+id/btnRegister"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:text="@string/action_register"
-                            android:layout_marginStart="30dp" />
+                    />
+                        <Button
+                            android:layout_marginVertical="10dp"
+                            android:textColor="@color/colorWhite"
+                            android:background="@drawable/my_button"
+                            android:id="@+id/btnForget"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:text="Forget Password"
+                            />
                 </LinearLayout>
 
         </LinearLayout>

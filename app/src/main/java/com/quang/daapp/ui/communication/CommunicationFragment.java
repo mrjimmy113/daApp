@@ -59,6 +59,7 @@ public class CommunicationFragment extends Fragment {
     private  boolean isExpert = false;
     private   List<ReceiveMessage> receiveMessageList;
     private int estimatePos = 0;
+    private String sessionDescription = "";
 
     public CommunicationFragment() {
         // Required empty public constructor
@@ -256,6 +257,23 @@ public class CommunicationFragment extends Fragment {
                     dialogFragment.show(getParentFragmentManager(),getTag());
                     break;
                 }
+                case OFFER: {
+                    if(receiveMessage.isExpert() != isExpert) {
+                        sessionDescription = receiveMessage.getMessage();
+                        ConfirmDialogFragment confirm = new ConfirmDialogFragment("", new ConfirmDialogFragment.OnConfirmDialogListener() {
+                            @Override
+                            public void OnYesListener() {
+                                navigateToVideoCall();
+                            }
+
+                            @Override
+                            public void OnNoListener() {
+
+                            }
+                        });
+                    }
+                    break;
+                }
             }
             adapter.addMessage(receiveMessage);
 
@@ -368,7 +386,6 @@ public class CommunicationFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.e("CLMNL","CCSCSCSC");
         if (requestCode == CommonUltis.CAMERA_PERMISSION_REQUEST_CODE) {
 
             if (grantResults.length > 0 &&
@@ -386,6 +403,7 @@ public class CommunicationFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt("channel",channel);
         bundle.putBoolean(getString(R.string.isExpert),isExpert);
+        bundle.putString("session", sessionDescription);
         if(isExpert) {
             navController.navigate(R.id.action_communicationFragment2_to_videoCallFragment2,bundle);
         }else {

@@ -1,4 +1,4 @@
-package com.quang.daapp;
+package com.quang.daapp.ui.communication;
 
 import android.os.Bundle;
 
@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.quang.daapp.R;
 import com.quang.daapp.stomp.MessageType;
 import com.quang.daapp.stomp.ReceiveMessage;
 import com.quang.daapp.stomp.SendMessage;

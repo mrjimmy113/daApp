@@ -58,7 +58,12 @@ public class LoginFragment extends Fragment {
 
 
 
-
+        view.findViewById(R.id.btnForget).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigate(R.id.action_loginFragment_to_forgetPasswordFragment);
+            }
+        });
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {

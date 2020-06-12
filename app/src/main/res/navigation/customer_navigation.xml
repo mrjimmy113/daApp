@@ -87,7 +87,7 @@
         tools:layout="@layout/fragment_request_final_infor" />
     <fragment
         android:id="@+id/videoCallFragment3"
-        android:name="com.quang.daapp.VideoCallFragment"
+        android:name="com.quang.daapp.ui.communication.VideoCallFragment"
         android:label="fragment_video_call"
         tools:layout="@layout/fragment_video_call" />
 </navigation>

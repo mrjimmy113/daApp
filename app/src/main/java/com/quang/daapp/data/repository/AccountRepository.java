@@ -202,6 +202,24 @@ public class AccountRepository {
         return  result;
     }
 
+    public MutableLiveData<Number> forgetPassword(String email) {
+        CreateService();
+        final MutableLiveData<Number> result = new MutableLiveData<>();
+        service.forgetPassword(email).enqueue(new Callback<Number>() {
+            @Override
+            public void onResponse(Call<Number> call, Response<Number> response) {
+                result.setValue(response.code());
+                
+            }
+
+            @Override
+            public void onFailure(Call<Number> call, Throwable t) {
+
+            }
+        });
+        return result;
+    }
+
     private void CreateService() {
         if(service == null) {
             service = NetworkClient.getRetrofitInstance().create(AccountService.class);
