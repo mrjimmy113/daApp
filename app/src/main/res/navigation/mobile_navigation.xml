@@ -79,6 +79,11 @@
         android:name="com.quang.daapp.ui.communication.VideoCallFragment"
         android:label="fragment_video_call"
         tools:layout="@layout/fragment_video_call" />
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="com.quang.daapp.ui.history.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" />
 
     <!--<fragment
         android:id="@+id/navigation_profile_expert"

@@ -24,7 +24,8 @@ public class ExpertActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (destination.getId() == R.id.navigation_home ||
                     destination.getId() == R.id.navigation_profile_expert ||
-                    destination.getId() == R.id.navigation_dashboard
+                    destination.getId() == R.id.navigation_dashboard ||
+                    destination.getId() == R.id.navigation_history
 
             ) {
                 navView.setVisibility(View.VISIBLE);

@@ -28,7 +28,7 @@ public class CustomerActivity extends AppCompatActivity {
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (destination.getId() == R.id.navigation_home_customer ||
                     destination.getId() == R.id.navigation_profile_customer ||
-                    destination.getId() == R.id.navigation_dashboard_customer
+                    destination.getId() == R.id.navigation_history
 
             ) {
                 navView.setVisibility(View.VISIBLE);

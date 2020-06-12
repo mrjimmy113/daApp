@@ -25,10 +25,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard_customer"
-        android:name="com.quang.daapp.ui.customerDashboard.CustomerDashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard_customer" />
+        android:id="@+id/navigation_history"
+        android:name="com.quang.daapp.ui.history.HistoryFragment"
+        android:label="History"
+        tools:layout="@layout/fragment_history" />
 
     <fragment
         android:id="@+id/navigation_profile_customer"

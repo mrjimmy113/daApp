@@ -12,6 +12,11 @@
         android:title="Search" />
 
     <item
+        android:id="@+id/navigation_history"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="History" />
+
+    <item
         android:id="@+id/navigation_profile_expert"
         android:icon="@drawable/ic_profile"
         android:title="@string/title_profile" />
