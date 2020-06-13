@@ -117,6 +117,7 @@ public class RTCClient {
         view.init(rootEglBase.getEglBaseContext(), null);
     }
 
+
     public void startLocalVideoCapture(SurfaceViewRenderer view) {
         SurfaceTextureHelper surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
         videoCapturer.initialize(surfaceTextureHelper,context, localVideoSource.getCapturerObserver());
@@ -195,8 +196,9 @@ public class RTCClient {
         peerConnection.addIceCandidate(iceCandidate);
     }
 
-    public void clmn() {
-        Log.e("ICE:", peerConnection.getRemoteDescription() + "");
-        Log.e("ICE:", peerConnection.getLocalDescription() + "");
+
+    public void endCall() {
+        peerConnection.close();
+        peerConnection = null;
     }
 }

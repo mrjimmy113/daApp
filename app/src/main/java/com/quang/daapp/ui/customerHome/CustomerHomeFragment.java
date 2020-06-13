@@ -19,6 +19,8 @@ import androidx.navigation.Navigation;
 
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.ProblemRequest;
+import com.quang.daapp.ui.other.CustomerActivity;
+import com.quang.daapp.ui.other.ExpertActivity;
 import com.quang.daapp.ui.other.RequestListFragment;
 import com.quang.daapp.ultis.WebSocketClient;
 
@@ -41,7 +43,6 @@ public class CustomerHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        WebSocketClient.getInstance().connect(getContext());
         final NavController navController = Navigation.findNavController(view);
         final Button btnNewRequest = view.findViewById(R.id.btnNewRequest);
         final RequestListFragment fragProcessRequest =
@@ -119,6 +120,7 @@ public class CustomerHomeFragment extends Fragment {
                      problemRequests) {
                     WebSocketClient.getInstance().subscribe(p.getRequestId());
                 }
+                ((CustomerActivity) getActivity()).startSub();
                 if(problemRequests.size() > 0) {
                     fragProcessRequest.openClose();
                     isProcessingOpen = true;

@@ -74,6 +74,9 @@ public class WebSocketClient {
         return  subscribes.get(channel);
     }
 
+    public Map<Integer, MutableLiveData<ReceiveMessage>> getSubscribes() {
+        return subscribes;
+    }
 
 
 }

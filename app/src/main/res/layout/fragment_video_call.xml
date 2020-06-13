@@ -21,55 +21,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="100dp"
-            android:weightSum="3"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            >
+            app:layout_constraintRight_toRightOf="parent">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <ImageButton
+                android:id="@+id/btnEndCall"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end">
-
-                <ImageButton
-                    android:id="@+id/clmn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/round_button"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_voice" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center">
-
-                <ImageButton
-                    android:id="@+id/dkm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/round_button"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_cam_off" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start">
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/round_button_red"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_call_end" />
-            </LinearLayout>
+                android:background="@drawable/round_button_red"
+                android:padding="10dp"
+                android:src="@drawable/ic_call_end" />
 
         </LinearLayout>
 
@@ -131,16 +94,21 @@
                     android:textColor="@color/colorWhite" />
             </LinearLayout>
         </LinearLayout>
-
-        <org.webrtc.SurfaceViewRenderer
-            android:id="@+id/localRenderer"
+        <LinearLayout
+            android:background="@color/colorDanger"
             android:layout_width="100dp"
             android:layout_height="150dp"
             android:layout_marginTop="68dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.948"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+            <org.webrtc.SurfaceViewRenderer
+                android:id="@+id/localRenderer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

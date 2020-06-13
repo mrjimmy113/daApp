@@ -37,6 +37,7 @@ import com.quang.daapp.ultis.WebSocketClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +60,8 @@ public class CommunicationFragment extends Fragment {
     private  boolean isExpert = false;
     private   List<ReceiveMessage> receiveMessageList;
     private int estimatePos = 0;
-    private String sessionDescription = "";
+
+    private boolean answer = false;
 
     public CommunicationFragment() {
         // Required empty public constructor
@@ -73,6 +75,7 @@ public class CommunicationFragment extends Fragment {
         viewModel =
                 ViewModelProviders.of(this).get(CommunicationViewModel.class);
 
+
         return inflater.inflate(R.layout.fragment_communication, container, false);
     }
 
@@ -84,8 +87,11 @@ public class CommunicationFragment extends Fragment {
         assert getArguments() != null;
         channel = getArguments().getInt(getString(R.string.key_request_id)) ;
         isExpert = getArguments().getBoolean(getString(R.string.isExpert));
-
+        answer = getArguments().getBoolean("answer");
         navController = Navigation.findNavController(view);
+        if(answer) {
+            navigateToVideoCall();
+        }
         recyclerView = view.findViewById(R.id.recycle_messages);
         final EditText edtMessage= view.findViewById(R.id.edtMessage);
         final ImageButton btnSend = view.findViewById(R.id.btnSend);
@@ -257,23 +263,6 @@ public class CommunicationFragment extends Fragment {
                     dialogFragment.show(getParentFragmentManager(),getTag());
                     break;
                 }
-                case OFFER: {
-                    if(receiveMessage.isExpert() != isExpert) {
-                        sessionDescription = receiveMessage.getMessage();
-                        ConfirmDialogFragment confirm = new ConfirmDialogFragment("", new ConfirmDialogFragment.OnConfirmDialogListener() {
-                            @Override
-                            public void OnYesListener() {
-                                navigateToVideoCall();
-                            }
-
-                            @Override
-                            public void OnNoListener() {
-
-                            }
-                        });
-                    }
-                    break;
-                }
             }
             adapter.addMessage(receiveMessage);
 
@@ -403,7 +392,7 @@ public class CommunicationFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt("channel",channel);
         bundle.putBoolean(getString(R.string.isExpert),isExpert);
-        bundle.putString("session", sessionDescription);
+        bundle.putBoolean("answer", answer);
         if(isExpert) {
             navController.navigate(R.id.action_communicationFragment2_to_videoCallFragment2,bundle);
         }else {

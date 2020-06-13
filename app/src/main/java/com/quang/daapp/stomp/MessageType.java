@@ -13,5 +13,8 @@ public enum MessageType {
     COMPLETE_NO,
     OFFER,
     ANSWER,
-    ICE
+    ICE,
+    CALLING,
+    ACCEPT,
+    DECLINE
 }
