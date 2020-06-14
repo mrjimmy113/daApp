@@ -17,6 +17,8 @@ import com.quang.daapp.data.model.StatusEnum;
 import com.quang.daapp.stomp.ReceiveMessage;
 import com.quang.daapp.ultis.NetworkClient;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -25,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<ReceiveMessage> messages;
+    private List<ReceiveMessage> messages = new ArrayList<>();
     private String otherName;
     private boolean isExpert;
     private StatusEnum statusEnum;
@@ -62,6 +64,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     }
 
+    public void addMessage(List<ReceiveMessage> messages) {
+        this.messages.addAll(messages);
+    }
+
     public List<ReceiveMessage> getMessages() {
         return messages;
     }
@@ -78,26 +84,37 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         ReceiveMessage message = messages.get(position);
         switch (message.getType()) {
             case CHAT: {
-
                 holder.container2.setVisibility(View.VISIBLE);
+                holder.layout_estimate_yes.setVisibility(View.GONE);
+                holder.layout_estimate.setVisibility(View.GONE);
                 holder.txtMessage.setText(message.getMessage());
-                holder.txtTime.setText(message.getTime().toString());
+                holder.txtTime.setText(message.getTime());
                 if(isExpert) {
                     if(!message.isExpert()) {
-                        holder.txtName.setText(otherName);
+                        holder.txtName.setText(otherName + " ");
                         holder.container1.setGravity(Gravity.START);
                         holder.container2.setGravity(Gravity.START);
+                    }else {
+                        holder.txtName.setText("You ");
+                        holder.container1.setGravity(Gravity.END);
+                        holder.container2.setGravity(Gravity.END);
                     }
                 }else {
                     if(message.isExpert()) {
-                        holder.txtName.setText(otherName);
+                        holder.txtName.setText(otherName + " ");
                         holder.container1.setGravity(Gravity.START);
                         holder.container2.setGravity(Gravity.START);
+                    }else {
+                        holder.txtName.setText("You ");
+                        holder.container1.setGravity(Gravity.END);
+                        holder.container2.setGravity(Gravity.END);
                     }
                 }
                 break;
             }
             case ESTIMATE: {
+                holder.container2.setVisibility(View.GONE);
+                holder.layout_estimate_yes.setVisibility(View.GONE);
                 if(statusEnum == StatusEnum.ACCEPTED) {
                     Estimate estimate = NetworkClient.getGson().fromJson(message.getMessage(),Estimate.class);
                     holder.layout_estimate.setVisibility(View.VISIBLE);
@@ -119,6 +136,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             case ESTIMATE_YES: {
                 Estimate estimate = NetworkClient.getGson().fromJson(message.getMessage(),Estimate.class);
                 holder.layout_estimate_yes.setVisibility(View.VISIBLE);
+                holder.layout_estimate.setVisibility(View.GONE);
+                holder.container2.setVisibility(View.GONE);
                 holder.txtHourEstimateYes.setText(estimate.getHour() + "");
                 holder.txtTotalEstimateYes.setText(estimate.getTotal() + "");
                 break;
@@ -132,7 +151,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
     public void addMessage(ReceiveMessage message) {
-        messages.add(message);
+        messages.add(0,message);
 
     }
 

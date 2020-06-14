@@ -47,8 +47,8 @@ public class ProblemRequestDetailViewModel extends ViewModel {
         return expertProfileResult;
     }
 
-    public void getChatMessage(int requestId) {
-        chatMessageResult = chatRepository.getMessages(requestId);
+    public void getChatMessage(int requestId, int page) {
+        chatMessageResult = chatRepository.getMessages(requestId, page);
     }
 
     public LiveData<List<ReceiveMessage>> getChatMessageResult() {

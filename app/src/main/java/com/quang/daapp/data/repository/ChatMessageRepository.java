@@ -25,10 +25,10 @@ public class ChatMessageRepository {
         return instance;
     }
 
-    public MutableLiveData<List<ReceiveMessage>> getMessages(int requestId) {
+    public MutableLiveData<List<ReceiveMessage>> getMessages(int requestId, int page) {
         CreateService();
         final  MutableLiveData<List<ReceiveMessage>> mutableLiveData = new MutableLiveData<>();
-        service.getMessages(requestId).enqueue(new Callback<List<ReceiveMessage>>() {
+        service.getMessages(requestId, page).enqueue(new Callback<List<ReceiveMessage>>() {
             @Override
             public void onResponse(Call<List<ReceiveMessage>> call, Response<List<ReceiveMessage>> response) {
                 mutableLiveData.setValue(response.body());

@@ -9,8 +9,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ public class RequestFinalInforFragment extends Fragment {
     private TabLayout tabLayout;
     private boolean isExpert = false;
     private ProblemRequestDetail detail;
+    private int page = 0;
 
     public RequestFinalInforFragment() {
         // Required empty public constructor
@@ -92,7 +95,7 @@ public class RequestFinalInforFragment extends Fragment {
             }
         });
 
-        viewModel.getChatMessage(requestId);
+        viewModel.getChatMessage(requestId,page);
         viewModel.getChatMessageResult().observe(getViewLifecycleOwner(), new Observer<List<ReceiveMessage>>() {
             @Override
             public void onChanged(List<ReceiveMessage> receiveMessages) {

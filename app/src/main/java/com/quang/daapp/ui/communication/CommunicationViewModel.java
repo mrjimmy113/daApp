@@ -24,8 +24,8 @@ public class CommunicationViewModel extends ViewModel {
         requestRepository = ProblemRequestRepository.getInstance();
     }
 
-    public void getChatMessage(int requestId) {
-        chatMessageResult = repository.getMessages(requestId);
+    public void getChatMessage(int requestId, int page) {
+        chatMessageResult = repository.getMessages(requestId, page);
     }
 
     public LiveData<List<ReceiveMessage>> getChatMessageResult() {

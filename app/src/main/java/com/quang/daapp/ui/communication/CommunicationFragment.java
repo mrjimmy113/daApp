@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.quang.daapp.R;
@@ -60,8 +61,12 @@ public class CommunicationFragment extends Fragment {
     private  boolean isExpert = false;
     private   List<ReceiveMessage> receiveMessageList;
     private int estimatePos = 0;
+    private int page = 0;
+    private ProgressBar recycleLoader;
 
     private boolean answer = false;
+    private boolean nextFlag = false;
+    private boolean outOfHistory = false;
 
     public CommunicationFragment() {
         // Required empty public constructor
@@ -100,6 +105,7 @@ public class CommunicationFragment extends Fragment {
         txtAccept = view.findViewById(R.id.txtAccept);
         txtProcess = view.findViewById(R.id.txtProcess);
         txtComplete = view.findViewById(R.id.txtComplete);
+        recycleLoader = view.findViewById(R.id.recycle_loader);
 
         view.findViewById(R.id.btnVideoCall).setOnClickListener(v ->
         {
@@ -129,18 +135,52 @@ public class CommunicationFragment extends Fragment {
             confirmDialogFragment.show(getParentFragmentManager(),getTag());
         });
         recyclerView.setAdapter(adapter);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         popupMenu = updateMenu(null);
 
-        viewModel.getChatMessage(channel);
+        viewModel.getChatMessage(channel,page);
         viewModel.getChatMessageResult().observe(getViewLifecycleOwner(),receiveMessages -> {
             if(receiveMessages == null) return;
-            receiveMessageList = receiveMessages;
-            adapter.setMessages(receiveMessageList);
+            adapter.addMessage(receiveMessages);
             adapter.notifyDataSetChanged();
-            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+            if(page == 0) {
+                recyclerView.scrollToPosition(0);
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                boolean canScrollUp = recyclerView.canScrollVertically(-1);
+                boolean canScrollDown = recyclerView.canScrollVertically(1);
+                if(canScrollDown && !canScrollUp && !outOfHistory) {
+                    recycleLoader.setVisibility(View.VISIBLE);
+
+                    if(!nextFlag) {
+                        viewModel.getChatMessage(channel,page + 1);
+                        viewModel.getChatMessageResult().observe(getViewLifecycleOwner(),receiveMessages -> {
+                            if(receiveMessages == null) return;
+                            if(receiveMessages.size() > 0) {
+                                adapter.addMessage(receiveMessages);
+                                adapter.notifyItemRangeInserted(adapter.getItemCount() - receiveMessages.size(),
+                                        receiveMessages.size());
+                                page++;
+                            }else {
+                                outOfHistory = true;
+                            }
+                            nextFlag = false;
+                            recycleLoader.setVisibility(View.GONE);
+
+                        });
+                        nextFlag = true;
+                    }
+                }else {
+                    recycleLoader.setVisibility(View.GONE);
+                }
+            }
         });
 
         viewModel.getDetail(channel);
@@ -265,8 +305,8 @@ public class CommunicationFragment extends Fragment {
                 }
             }
             adapter.addMessage(receiveMessage);
-
-            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+            adapter.notifyItemInserted(0);
+            recyclerView.scrollToPosition(0);
         });
 
     }

@@ -13,5 +13,5 @@ import retrofit2.http.Query;
 public interface ChatMessageService {
 
     @GET("/chatMessage")
-    Call<List<ReceiveMessage>> getMessages(@Query("requestId") int requestId);
+    Call<List<ReceiveMessage>> getMessages(@Query("requestId") int requestId, @Query("page") int page);
 }
