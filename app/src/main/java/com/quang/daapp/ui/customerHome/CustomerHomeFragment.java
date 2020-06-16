@@ -69,7 +69,11 @@ public class CustomerHomeFragment extends Fragment {
         fragCancelRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
-
+                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),false);
+                bundle.putInt("mode",3);
+                navController.navigate(R.id.action_navigation_home_customer_to_requestFinalInforFragment,bundle);
             }
         });
 
@@ -85,6 +89,7 @@ public class CustomerHomeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),false);
+                bundle.putInt("mode",2);
                 navController.navigate(R.id.action_navigation_home_customer_to_requestFinalInforFragment,bundle);
             }
         });
@@ -141,6 +146,10 @@ public class CustomerHomeFragment extends Fragment {
             public void onChanged(List<ProblemRequest> problemRequests) {
                 if(problemRequests == null) return;
                 fragCancelRequest.setList(problemRequests);
+                for (ProblemRequest p:
+                        problemRequests) {
+                    WebSocketClient.getInstance().subscribe(p.getRequestId());
+                }
                 if(problemRequests.size() > 0) {
                     view.findViewById(R.id.container_tmp_cancel).setVisibility(View.VISIBLE);
                 }
@@ -153,6 +162,10 @@ public class CustomerHomeFragment extends Fragment {
             public void onChanged(List<ProblemRequest> problemRequests) {
                 if(problemRequests == null) return;
                 fragCompleteRequest.setList(problemRequests);
+                for (ProblemRequest p:
+                        problemRequests) {
+                    WebSocketClient.getInstance().subscribe(p.getRequestId());
+                }
                 if(problemRequests.size() > 0) {
                     view.findViewById(R.id.container_tmp_complete).setVisibility(View.VISIBLE);
                 }

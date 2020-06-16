@@ -37,7 +37,6 @@ public class ExpertHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        WebSocketClient.getInstance().connect(getContext());
         final NavController navController = Navigation.findNavController(view);
 
         final RequestListFragment fragProcessRequest =
@@ -74,7 +73,11 @@ public class ExpertHomeFragment extends Fragment {
         fragCancelRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
-
+                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),true);
+                bundle.putInt("mode",3);
+                navController.navigate(R.id.action_navigation_home_to_requestFinalInforFragment2,bundle);
             }
         });
 
@@ -87,7 +90,11 @@ public class ExpertHomeFragment extends Fragment {
         fragCompleteRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
-
+                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),true);
+                bundle.putInt("mode",2);
+                navController.navigate(R.id.action_navigation_home_to_requestFinalInforFragment2,bundle);
             }
         });
 
@@ -124,6 +131,10 @@ public class ExpertHomeFragment extends Fragment {
             public void onChanged(List<ProblemRequest> problemRequests) {
                 if(problemRequests == null) return;
                 fragCancelRequest.setList(problemRequests);
+                for (ProblemRequest p:
+                        problemRequests) {
+                    WebSocketClient.getInstance().subscribe(p.getRequestId());
+                }
                 if(problemRequests.size() > 0) {
                     view.findViewById(R.id.container_tmp_cancel).setVisibility(View.VISIBLE);
                 }
@@ -136,10 +147,15 @@ public class ExpertHomeFragment extends Fragment {
             public void onChanged(List<ProblemRequest> problemRequests) {
                 if(problemRequests == null) return;
                 fragCompleteRequest.setList(problemRequests);
+                for (ProblemRequest p:
+                        problemRequests) {
+                    WebSocketClient.getInstance().subscribe(p.getRequestId());
+                }
                 if(problemRequests.size() > 0) {
                     view.findViewById(R.id.container_tmp_complete).setVisibility(View.VISIBLE);
                 }
             }
         });
     }
+
 }

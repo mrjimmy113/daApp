@@ -59,7 +59,7 @@ public class RequestDetailMessageFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycle_messages);
         adapter = new MessageAdapter(getContext(), receiveMessageList, "Partner", isExpert, StatusEnum.TMPCOMPLETE);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,true));
     }
 
     public void setList(List<ReceiveMessage> list) {

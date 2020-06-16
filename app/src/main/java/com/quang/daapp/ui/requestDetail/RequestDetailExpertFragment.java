@@ -25,14 +25,14 @@ public class RequestDetailExpertFragment extends Fragment {
     private Expert expert;
     private boolean isViewCreated = false;
 
-    ImageView iv_avatar;
-    TextView txtFullName;
-    TextView txtEmail;
-    TextView txtMajor;
-    TextView txtFee;
-    TextView txtBankName;
-    TextView txtAccountNo;
-    TextView txtDescription;
+    private ImageView iv_avatar;
+    private TextView txtFullName;
+    private TextView txtEmail;
+    private TextView txtMajor;
+    private TextView txtFee;
+    private TextView txtBankName;
+    private TextView txtAccountNo;
+    private TextView txtDescription;
 
     public RequestDetailExpertFragment() {
         // Required empty public constructor

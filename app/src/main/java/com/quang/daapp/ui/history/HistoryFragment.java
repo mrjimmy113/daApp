@@ -30,6 +30,9 @@ public class HistoryFragment extends Fragment {
     private HistoryViewModel viewModel;
     private boolean isExpert = false;
 
+    private RequestListFragment completeRequest;
+    private RequestListFragment cancelRequest;
+
     public HistoryFragment() {
         // Required empty public constructor
     }
@@ -50,10 +53,10 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         NavController navController = Navigation.findNavController(view);
-        final RequestListFragment completeRequest =
+        completeRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_complete_request);
 
-        final RequestListFragment cancelRequest =
+        cancelRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_cancel_request);
 
 
@@ -64,9 +67,9 @@ public class HistoryFragment extends Fragment {
             bundle.putInt(getString(R.string.key_request_id), id);
             bundle.putBoolean(getString(R.string.isExpert),isExpert);
             if(isExpert) {
-                navController.navigate(R.id.action_navigation_home_to_requestFinalInforFragment2,bundle);
+                navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment2,bundle);
             }else {
-                navController.navigate(R.id.action_navigation_home_customer_to_requestFinalInforFragment,bundle);
+                navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment,bundle);
             }
         });
 
@@ -76,24 +79,31 @@ public class HistoryFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putInt(getString(R.string.key_request_id), id);
             bundle.putBoolean(getString(R.string.isExpert),isExpert);
+            bundle.putInt("mode", 1);
             if(isExpert) {
-                navController.navigate(R.id.action_navigation_home_to_requestFinalInforFragment2,bundle);
+                navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment2,bundle);
             }else {
-                navController.navigate(R.id.action_navigation_home_customer_to_requestFinalInforFragment,bundle);
+                navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment,bundle);
             }
         });
 
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         viewModel.getCompleteRequest();
         viewModel.getCompleteRequestResult().observe(getViewLifecycleOwner(), problemRequests -> {
-            if(problemRequests == null) return;
+            if (problemRequests == null) return;
             completeRequest.setList(problemRequests);
         });
 
         viewModel.getCancelRequest();
         viewModel.getCancelRequestResult().observe(getViewLifecycleOwner(), problemRequests -> {
-            if(problemRequests == null) return;
+            if (problemRequests == null) return;
             cancelRequest.setList(problemRequests);
         });
-
     }
 }

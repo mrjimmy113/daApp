@@ -21,9 +21,16 @@ import android.widget.ImageButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.quang.daapp.R;
+import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.ProblemRequestDetail;
+import com.quang.daapp.stomp.MessageType;
 import com.quang.daapp.stomp.ReceiveMessage;
+import com.quang.daapp.stomp.SendMessage;
+import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
+import com.quang.daapp.ui.dialog.FeedBackDialogFragment;
+import com.quang.daapp.ui.dialog.MessageDialogFragment;
+import com.quang.daapp.ultis.WebSocketClient;
 
 import java.util.List;
 
@@ -59,11 +66,13 @@ public class RequestFinalInforFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final int requestId = getArguments().getInt(getString(R.string.key_request_id));
         isExpert = getArguments().getBoolean(getString(R.string.isExpert));
+        int mode = getArguments().getInt("mode");
 
         final RequestDetailInforFragment inform =  new RequestDetailInforFragment();
         final RequestDetailImageFragment image = new RequestDetailImageFragment();
         final RequestDetailMessageFragment message = new RequestDetailMessageFragment(isExpert);
         RequestDetailExpertFragment expertFrag = null;
+        RequestDetailCustomerFragment customerFrag = null;
 
         final ImageButton btnSubmit = view.findViewById(R.id.btnSubmit);
 
@@ -71,7 +80,15 @@ public class RequestFinalInforFragment extends Fragment {
         final ImageButton btnBack = view.findViewById(R.id.btnBack);
 
         if(isExpert) {
-
+            customerFrag = new RequestDetailCustomerFragment();
+            viewModel.getCustomerProfile(requestId);
+            RequestDetailCustomerFragment finalCusFrag = customerFrag;
+            viewModel.getCustomerProfileResult().observe(getViewLifecycleOwner(), new Observer<Customer>() {
+                @Override
+                public void onChanged(Customer customer) {
+                    finalCusFrag.setCustomer(customer);
+                }
+            });
         }else {
             expertFrag = new RequestDetailExpertFragment();
             viewModel.getExpertProfile(requestId);
@@ -111,7 +128,7 @@ public class RequestFinalInforFragment extends Fragment {
         adapter.addFragment(inform,"Information");
         adapter.addFragment(image,"Image");
         if(isExpert) {
-
+            adapter.addFragment(customerFrag,"Partner");
         }else {
             adapter.addFragment(expertFrag,"Partner");
         }
@@ -135,13 +152,74 @@ public class RequestFinalInforFragment extends Fragment {
         });
 
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        btnSubmit.setOnClickListener(v -> {
+            ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(
+                    getString(R.string.mes_complete_confirm),
+                    new ConfirmDialogFragment.OnConfirmDialogListener() {
+                        @Override
+                        public void OnYesListener() {
+                            if(isExpert) {
+                                SendMessage sendMessage = new SendMessage("", MessageType.COMPLETE);
+                                WebSocketClient.getInstance().chat(requestId,sendMessage);
+                            }else {
+                                FeedBackDialogFragment feedBackDialogFragment = new FeedBackDialogFragment(requestId) ;
+                                feedBackDialogFragment.show(getParentFragmentManager(),getTag());
+                            }
+                        }
 
-            }
+                        @Override
+                        public void OnNoListener() {
+
+                        }
+                    }
+            );
+            confirmDialogFragment.show(getParentFragmentManager(),getTag());
         });
 
+        if(mode == 1) {
+            btnSubmit.setVisibility(View.GONE);
+        } else if(mode == 2) {
+            WebSocketClient.getInstance().getSubscribeChannelData(requestId).observe(getViewLifecycleOwner(), completeMessageObserver());
 
+        }else if(mode == 3) {
+            WebSocketClient.getInstance().getSubscribeChannelData(requestId).observe(getViewLifecycleOwner(), cancelMessageObserver());
+        }
+    }
+
+    private Observer<ReceiveMessage> completeMessageObserver() {
+        return message -> {
+            if(message.isExpert() == isExpert) {
+                switch (message.getType()) {
+                    case COMPLETE_YES: {
+                        MessageDialogFragment messageDialog =
+                                new MessageDialogFragment(getString(R.string.mes_complete_yes),R.color.colorSuccess,R.drawable.ic_success);
+                        messageDialog.show(getParentFragmentManager(),getTag());
+                        navController.popBackStack();
+                    }
+                    case NONE: {
+                        MessageDialogFragment messageDialog =
+                                new MessageDialogFragment("You have already completed this request",R.color.colorWarning,R.drawable.ic_warning);
+                        messageDialog.show(getParentFragmentManager(),getTag());
+                    }
+                }
+            }
+        };
+    }
+
+    private Observer<ReceiveMessage> cancelMessageObserver() {
+        return message -> {
+            switch (message.getType()) {
+                case CANCEL_YES: {
+                    MessageDialogFragment messageDialog =
+                            new MessageDialogFragment(getString(R.string.mes_cancel_yes),R.color.colorSuccess,R.drawable.ic_success);
+                    messageDialog.show(getParentFragmentManager(),getTag());
+                }
+                case NONE: {
+                    MessageDialogFragment messageDialog =
+                            new MessageDialogFragment("You have already canceled this request",R.color.colorSuccess,R.drawable.ic_success);
+                    messageDialog.show(getParentFragmentManager(),getTag());
+                }
+            }
+        };
     }
 }

@@ -1,6 +1,7 @@
 package com.quang.daapp.stomp;
 
 public enum MessageType {
+    NONE,
     CHAT ,
     ESTIMATE,
     ESTIMATE_YES,

@@ -28,7 +28,11 @@
         android:id="@+id/navigation_history"
         android:name="com.quang.daapp.ui.history.HistoryFragment"
         android:label="History"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_navigation_history_to_requestFinalInforFragment"
+            app:destination="@id/requestFinalInforFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile_customer"

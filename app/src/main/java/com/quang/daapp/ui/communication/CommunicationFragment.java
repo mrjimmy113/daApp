@@ -67,6 +67,7 @@ public class CommunicationFragment extends Fragment {
     private boolean answer = false;
     private boolean nextFlag = false;
     private boolean outOfHistory = false;
+    boolean skipFirstMessage = false;
 
     public CommunicationFragment() {
         // Required empty public constructor
@@ -139,7 +140,61 @@ public class CommunicationFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        popupMenu = updateMenu(null);
+        popupMenu = new PopupMenu(getActivity(),btnMenu);
+        popupMenu.getMenuInflater().inflate(R.menu.communication_menu,popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_estimate: {
+                    EstimateDialogFragment estimateDialogFragment = new EstimateDialogFragment(channel);
+                    estimateDialogFragment.show(getParentFragmentManager(),getTag());
+                    break;
+                }
+                case R.id.menu_cancel: {
+                    ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(
+                            getString(R.string.mes_cancel_confirm),
+                            new ConfirmDialogFragment.OnConfirmDialogListener() {
+                                @Override
+                                public void OnYesListener() {
+                                    WebSocketClient.getInstance().chat(channel,
+                                            new SendMessage("", MessageType.CANCEL));
+                                }
+
+                                @Override
+                                public void OnNoListener() {
+
+                                }
+                            }
+                    );
+                    confirmDialogFragment.show(getParentFragmentManager(),getTag());
+                    break;
+                }
+                case R.id.menu_complete: {
+                    ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(
+                            getString(R.string.mes_complete_confirm),
+                            new ConfirmDialogFragment.OnConfirmDialogListener() {
+                                @Override
+                                public void OnYesListener() {
+                                    if(isExpert) {
+                                        WebSocketClient.getInstance().chat(channel,
+                                                new SendMessage("", MessageType.COMPLETE));
+                                    }else {
+                                        FeedBackDialogFragment feedBackDialogFragment = new FeedBackDialogFragment(channel) ;
+                                        feedBackDialogFragment.show(getParentFragmentManager(),getTag());
+                                    }
+                                }
+
+                                @Override
+                                public void OnNoListener() {
+
+                                }
+                            }
+                    );
+                    confirmDialogFragment.show(getParentFragmentManager(),getTag());
+                    break;
+                }
+            }
+            return true;
+        });
 
         viewModel.getChatMessage(channel,page);
         viewModel.getChatMessageResult().observe(getViewLifecycleOwner(),receiveMessages -> {
@@ -191,7 +246,7 @@ public class CommunicationFragment extends Fragment {
 
             txtRequestTitle.setText(problemRequestDetail.getTitle());
             changeStatus(problemRequestDetail.getStatus());
-            popupMenu = updateMenu(problemRequestDetail.getStatus());
+            updateMenu(problemRequestDetail.getStatus());
         });
 
 
@@ -206,10 +261,17 @@ public class CommunicationFragment extends Fragment {
             edtMessage.setText("");
         });
 
+        if(WebSocketClient.getInstance().getSubscribeChannelData(channel).getValue() != null) {
+            skipFirstMessage = true;
+        }
         WebSocketClient.getInstance().getSubscribeChannelData(channel).observe(getViewLifecycleOwner(), receiveMessage -> {
+            if(skipFirstMessage) {
+                skipFirstMessage = false;
+                return;
+            }
             switch (receiveMessage.getType()) {
                 case CHAT: {
-
+                    
                     break;
                 }
                 case ESTIMATE: {
@@ -227,6 +289,7 @@ public class CommunicationFragment extends Fragment {
                     adapter.setStatusEnum(StatusEnum.PROCESSING);
                     adapter.notifyItemChanged(estimatePos);
                     changeStatus(StatusEnum.PROCESSING);
+                    updateMenu(StatusEnum.PROCESSING);
                     break;
                 }
                 case ESTIMATE_NO: {
@@ -338,79 +401,25 @@ public class CommunicationFragment extends Fragment {
         }
     }
 
-    private PopupMenu updateMenu(StatusEnum statusEnum) {
-        PopupMenu popupMenu = new PopupMenu(getActivity(),btnMenu);
-        popupMenu.getMenuInflater().inflate(R.menu.communication_menu,popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.menu_estimate: {
-                    EstimateDialogFragment estimateDialogFragment = new EstimateDialogFragment(channel);
-                    estimateDialogFragment.show(getParentFragmentManager(),getTag());
-                    break;
-                }
-                case R.id.menu_cancel: {
-                    ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(
-                            getString(R.string.mes_cancel_confirm),
-                            new ConfirmDialogFragment.OnConfirmDialogListener() {
-                                @Override
-                                public void OnYesListener() {
-                                    WebSocketClient.getInstance().chat(channel,
-                                            new SendMessage("", MessageType.CANCEL));
-                                }
-
-                                @Override
-                                public void OnNoListener() {
-
-                                }
-                            }
-                    );
-                    confirmDialogFragment.show(getParentFragmentManager(),getTag());
-                    break;
-                }
-                case R.id.menu_complete: {
-                    ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(
-                            getString(R.string.mes_complete_confirm),
-                            new ConfirmDialogFragment.OnConfirmDialogListener() {
-                                @Override
-                                public void OnYesListener() {
-                                    if(isExpert) {
-                                        WebSocketClient.getInstance().chat(channel,
-                                                new SendMessage("", MessageType.COMPLETE));
-                                    }else {
-                                        FeedBackDialogFragment feedBackDialogFragment = new FeedBackDialogFragment(channel) ;
-                                        feedBackDialogFragment.show(getParentFragmentManager(),getTag());
-                                    }
-                                }
-
-                                @Override
-                                public void OnNoListener() {
-
-                                }
-                            }
-                    );
-                    confirmDialogFragment.show(getParentFragmentManager(),getTag());
-                    break;
-                }
-            }
-            return true;
-        });
+    private void updateMenu(StatusEnum statusEnum) {
         if(statusEnum != null) {
             switch (statusEnum) {
                 case ACCEPTED:{
-                    popupMenu.getMenu().removeItem(R.id.menu_complete);
+                    popupMenu.getMenu().findItem(R.id.menu_complete).setVisible(false);
                     if(!isExpert) {
-                        popupMenu.getMenu().removeItem(R.id.menu_estimate);
+                        popupMenu.getMenu().findItem(R.id.menu_estimate).setVisible(false);
                     }
                     break;
                 }
                 case PROCESSING:{
-                    popupMenu.getMenu().removeItem(R.id.menu_estimate);
+                    popupMenu.getMenu().findItem(R.id.menu_estimate).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.menu_complete).setVisible(true);
                     break;
                 }
 
             }
         }
-        return popupMenu;
+
     }
 
     @Override
@@ -438,5 +447,10 @@ public class CommunicationFragment extends Fragment {
         }else {
             navController.navigate(R.id.action_customerCommunicationFragment_to_videoCallFragment3,bundle);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }
