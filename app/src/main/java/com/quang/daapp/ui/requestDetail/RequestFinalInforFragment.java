@@ -46,7 +46,6 @@ public class RequestFinalInforFragment extends Fragment {
     private TabLayout tabLayout;
     private boolean isExpert = false;
     private ProblemRequestDetail detail;
-    private int page = 0;
 
     public RequestFinalInforFragment() {
         // Required empty public constructor
@@ -70,7 +69,7 @@ public class RequestFinalInforFragment extends Fragment {
 
         final RequestDetailInforFragment inform =  new RequestDetailInforFragment();
         final RequestDetailImageFragment image = new RequestDetailImageFragment();
-        final RequestDetailMessageFragment message = new RequestDetailMessageFragment(isExpert);
+        final RequestDetailMessageFragment message = new RequestDetailMessageFragment(isExpert,requestId,viewModel);
         RequestDetailExpertFragment expertFrag = null;
         RequestDetailCustomerFragment customerFrag = null;
 
@@ -112,15 +111,7 @@ public class RequestFinalInforFragment extends Fragment {
             }
         });
 
-        viewModel.getChatMessage(requestId,page);
-        viewModel.getChatMessageResult().observe(getViewLifecycleOwner(), new Observer<List<ReceiveMessage>>() {
-            @Override
-            public void onChanged(List<ReceiveMessage> receiveMessages) {
-                if(receiveMessages == null) return;
-                message.setList(receiveMessages);
 
-            }
-        });
 
         tabLayout = view.findViewById(R.id.tab_layout);
         viewPager = view.findViewById(R.id.view_pager);
@@ -195,11 +186,13 @@ public class RequestFinalInforFragment extends Fragment {
                                 new MessageDialogFragment(getString(R.string.mes_complete_yes),R.color.colorSuccess,R.drawable.ic_success);
                         messageDialog.show(getParentFragmentManager(),getTag());
                         navController.popBackStack();
+                        break;
                     }
                     case NONE: {
                         MessageDialogFragment messageDialog =
                                 new MessageDialogFragment("You have already completed this request",R.color.colorWarning,R.drawable.ic_warning);
                         messageDialog.show(getParentFragmentManager(),getTag());
+                        break;
                     }
                 }
             }

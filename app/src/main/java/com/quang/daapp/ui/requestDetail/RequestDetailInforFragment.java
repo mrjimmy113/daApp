@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.quang.daapp.R;
@@ -27,6 +28,8 @@ public class RequestDetailInforFragment extends Fragment {
     private TextView txtDescription;
     private TextView txtCreatedDate;
     private TextView txtEndDate;
+    private RatingBar rbRating;
+    private TextView txtFeedBack;
     private ProblemRequestDetail detail;
 
 
@@ -51,6 +54,8 @@ public class RequestDetailInforFragment extends Fragment {
         txtDescription = view.findViewById(R.id.txtDescription);
         txtCreatedDate = view.findViewById(R.id.txtCreatedDate);
         txtEndDate = view.findViewById(R.id.txtEndDate);
+        rbRating = view.findViewById(R.id.rb_rating);
+        txtFeedBack = view.findViewById(R.id.txtFeedBack);
         if(detail != null) {
             setDateOnView();
         }
@@ -67,11 +72,13 @@ public class RequestDetailInforFragment extends Fragment {
 
     }
 
-    public void setDateOnView() {
+    private void setDateOnView() {
         txtTitle.setText(detail.getTitle());
         txtDescription.setText(detail.getDescription());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         txtCreatedDate.setText(dateFormat.format(detail.getCreatedDate()));
         txtEndDate.setText(dateFormat.format(detail.getDeadlineDate()));
+        txtFeedBack.setText(detail.getFeedBack());
+        rbRating.setRating(detail.getRating());
     }
 }

@@ -55,11 +55,11 @@ public class CommunicationFragment extends Fragment {
     private ImageButton btnMenu;
 
     private TextView txtAccept;
-    private  TextView txtProcess;
+    private TextView txtProcess;
     private TextView txtComplete;
-    private  PopupMenu popupMenu;
-    private  boolean isExpert = false;
-    private   List<ReceiveMessage> receiveMessageList;
+    private PopupMenu popupMenu;
+    private boolean isExpert = false;
+    private List<ReceiveMessage> receiveMessageList;
     private int estimatePos = 0;
     private int page = 0;
     private ProgressBar recycleLoader;
@@ -67,7 +67,7 @@ public class CommunicationFragment extends Fragment {
     private boolean answer = false;
     private boolean nextFlag = false;
     private boolean outOfHistory = false;
-    boolean skipFirstMessage = false;
+    private boolean skipFirstMessage = false;
 
     public CommunicationFragment() {
         // Required empty public constructor
@@ -86,20 +86,19 @@ public class CommunicationFragment extends Fragment {
     }
 
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         assert getArguments() != null;
-        channel = getArguments().getInt(getString(R.string.key_request_id)) ;
+        channel = getArguments().getInt(getString(R.string.key_request_id));
         isExpert = getArguments().getBoolean(getString(R.string.isExpert));
         answer = getArguments().getBoolean("answer");
         navController = Navigation.findNavController(view);
-        if(answer) {
+        if (answer) {
             navigateToVideoCall();
         }
         recyclerView = view.findViewById(R.id.recycle_messages);
-        final EditText edtMessage= view.findViewById(R.id.edtMessage);
+        final EditText edtMessage = view.findViewById(R.id.edtMessage);
         final ImageButton btnSend = view.findViewById(R.id.btnSend);
         btnMenu = view.findViewById(R.id.btnMenu);
         final TextView txtRequestTitle = view.findViewById(R.id.txtRequestTitle);
@@ -110,43 +109,43 @@ public class CommunicationFragment extends Fragment {
 
         view.findViewById(R.id.btnVideoCall).setOnClickListener(v ->
         {
-            if(CommonUltis.checkCameraPermission(getContext(),getActivity())) {
+            if (CommonUltis.checkCameraPermission(getContext(), getActivity())) {
                 navigateToVideoCall();
             }
 
         });
 
 
-        adapter = new MessageAdapter(getContext(), new ArrayList<>(), "Partner", isExpert,StatusEnum.ACCEPTED, pos -> {
+        adapter = new MessageAdapter(getContext(), new ArrayList<>(), "Partner", isExpert, StatusEnum.ACCEPTED, pos -> {
             ReceiveMessage mes = adapter.getMessages().get(pos);
             ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(getString(R.string.mes_estimate_confirm),
                     new ConfirmDialogFragment.OnConfirmDialogListener() {
-                @Override
-                public void OnYesListener() {
-                    WebSocketClient.getInstance().chat(channel,
-                            new SendMessage(mes.getMessage(), MessageType.ESTIMATE_YES));
-                    estimatePos = pos;
-                }
+                        @Override
+                        public void OnYesListener() {
+                            WebSocketClient.getInstance().chat(channel,
+                                    new SendMessage(mes.getMessage(), MessageType.ESTIMATE_YES));
+                            estimatePos = pos;
+                        }
 
-                @Override
-                public void OnNoListener() {
+                        @Override
+                        public void OnNoListener() {
 
-                }
-            });
-            confirmDialogFragment.show(getParentFragmentManager(),getTag());
+                        }
+                    });
+            confirmDialogFragment.show(getParentFragmentManager(), getTag());
         });
         recyclerView.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        popupMenu = new PopupMenu(getActivity(),btnMenu);
-        popupMenu.getMenuInflater().inflate(R.menu.communication_menu,popupMenu.getMenu());
+        popupMenu = new PopupMenu(getActivity(), btnMenu);
+        popupMenu.getMenuInflater().inflate(R.menu.communication_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_estimate: {
                     EstimateDialogFragment estimateDialogFragment = new EstimateDialogFragment(channel);
-                    estimateDialogFragment.show(getParentFragmentManager(),getTag());
+                    estimateDialogFragment.show(getParentFragmentManager(), getTag());
                     break;
                 }
                 case R.id.menu_cancel: {
@@ -165,7 +164,7 @@ public class CommunicationFragment extends Fragment {
                                 }
                             }
                     );
-                    confirmDialogFragment.show(getParentFragmentManager(),getTag());
+                    confirmDialogFragment.show(getParentFragmentManager(), getTag());
                     break;
                 }
                 case R.id.menu_complete: {
@@ -174,12 +173,12 @@ public class CommunicationFragment extends Fragment {
                             new ConfirmDialogFragment.OnConfirmDialogListener() {
                                 @Override
                                 public void OnYesListener() {
-                                    if(isExpert) {
+                                    if (isExpert) {
                                         WebSocketClient.getInstance().chat(channel,
                                                 new SendMessage("", MessageType.COMPLETE));
-                                    }else {
-                                        FeedBackDialogFragment feedBackDialogFragment = new FeedBackDialogFragment(channel) ;
-                                        feedBackDialogFragment.show(getParentFragmentManager(),getTag());
+                                    } else {
+                                        FeedBackDialogFragment feedBackDialogFragment = new FeedBackDialogFragment(channel);
+                                        feedBackDialogFragment.show(getParentFragmentManager(), getTag());
                                     }
                                 }
 
@@ -189,19 +188,19 @@ public class CommunicationFragment extends Fragment {
                                 }
                             }
                     );
-                    confirmDialogFragment.show(getParentFragmentManager(),getTag());
+                    confirmDialogFragment.show(getParentFragmentManager(), getTag());
                     break;
                 }
             }
             return true;
         });
 
-        viewModel.getChatMessage(channel,page);
-        viewModel.getChatMessageResult().observe(getViewLifecycleOwner(),receiveMessages -> {
-            if(receiveMessages == null) return;
+        viewModel.getChatMessage(channel, page);
+        viewModel.getChatMessageResult().observe(getViewLifecycleOwner(), receiveMessages -> {
+            if (receiveMessages == null) return;
             adapter.addMessage(receiveMessages);
             adapter.notifyDataSetChanged();
-            if(page == 0) {
+            if (page == 0) {
                 recyclerView.scrollToPosition(0);
             }
         });
@@ -211,19 +210,19 @@ public class CommunicationFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 boolean canScrollUp = recyclerView.canScrollVertically(-1);
                 boolean canScrollDown = recyclerView.canScrollVertically(1);
-                if(canScrollDown && !canScrollUp && !outOfHistory) {
+                if (canScrollDown && !canScrollUp && !outOfHistory) {
                     recycleLoader.setVisibility(View.VISIBLE);
 
-                    if(!nextFlag) {
-                        viewModel.getChatMessage(channel,page + 1);
-                        viewModel.getChatMessageResult().observe(getViewLifecycleOwner(),receiveMessages -> {
-                            if(receiveMessages == null) return;
-                            if(receiveMessages.size() > 0) {
+                    if (!nextFlag) {
+                        viewModel.getChatMessage(channel, page + 1);
+                        viewModel.getChatMessageResult().observe(getViewLifecycleOwner(), receiveMessages -> {
+                            if (receiveMessages == null) return;
+                            if (receiveMessages.size() > 0) {
                                 adapter.addMessage(receiveMessages);
                                 adapter.notifyItemRangeInserted(adapter.getItemCount() - receiveMessages.size(),
                                         receiveMessages.size());
                                 page++;
-                            }else {
+                            } else {
                                 outOfHistory = true;
                             }
                             nextFlag = false;
@@ -232,15 +231,15 @@ public class CommunicationFragment extends Fragment {
                         });
                         nextFlag = true;
                     }
-                }else {
+                } else {
                     recycleLoader.setVisibility(View.GONE);
                 }
             }
         });
 
         viewModel.getDetail(channel);
-        viewModel.getDetailResult().observe(getViewLifecycleOwner(),problemRequestDetail -> {
-            if(problemRequestDetail == null) return;
+        viewModel.getDetailResult().observe(getViewLifecycleOwner(), problemRequestDetail -> {
+            if (problemRequestDetail == null) return;
             detail = problemRequestDetail;
             adapter.setStatusEnum(detail.getStatus());
 
@@ -250,7 +249,10 @@ public class CommunicationFragment extends Fragment {
         });
 
 
-        view.findViewById(R.id.btnBack).setOnClickListener(v -> navController.popBackStack());
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
+            if (isExpert) navController.navigate(R.id.navigation_home);
+            else navController.navigate(R.id.navigation_home_customer);
+        });
 
         btnMenu.setOnClickListener(v -> popupMenu.show());
 
@@ -261,31 +263,31 @@ public class CommunicationFragment extends Fragment {
             edtMessage.setText("");
         });
 
-        if(WebSocketClient.getInstance().getSubscribeChannelData(channel).getValue() != null) {
+        if (WebSocketClient.getInstance().getSubscribeChannelData(channel).getValue() != null) {
             skipFirstMessage = true;
         }
         WebSocketClient.getInstance().getSubscribeChannelData(channel).observe(getViewLifecycleOwner(), receiveMessage -> {
-            if(skipFirstMessage) {
+            if (skipFirstMessage) {
                 skipFirstMessage = false;
                 return;
             }
             switch (receiveMessage.getType()) {
                 case CHAT: {
-                    
+
                     break;
                 }
                 case ESTIMATE: {
-                    if(isExpert) {
-                        MessageDialogFragment dialogFragment = new MessageDialogFragment(getString(R.string.mes_estimate_sent),R.color.colorSuccess,R.drawable.ic_success);
-                        dialogFragment.show(getParentFragmentManager(),getTag());
+                    if (isExpert) {
+                        MessageDialogFragment dialogFragment = new MessageDialogFragment(getString(R.string.mes_estimate_sent), R.color.colorSuccess, R.drawable.ic_success);
+                        dialogFragment.show(getParentFragmentManager(), getTag());
 
                     }
                     break;
                 }
-                case ESTIMATE_YES:{
-                    MessageDialogFragment dialogFragment = new MessageDialogFragment(getString(R.string.mes_estimate_yes),R.color.colorSuccess,R.drawable.ic_success);
-                    dialogFragment.show(getParentFragmentManager(),getTag());
-                    if(detail != null) detail.setStatus(StatusEnum.PROCESSING);
+                case ESTIMATE_YES: {
+                    MessageDialogFragment dialogFragment = new MessageDialogFragment(getString(R.string.mes_estimate_yes), R.color.colorSuccess, R.drawable.ic_success);
+                    dialogFragment.show(getParentFragmentManager(), getTag());
+                    if (detail != null) detail.setStatus(StatusEnum.PROCESSING);
                     adapter.setStatusEnum(StatusEnum.PROCESSING);
                     adapter.notifyItemChanged(estimatePos);
                     changeStatus(StatusEnum.PROCESSING);
@@ -293,8 +295,8 @@ public class CommunicationFragment extends Fragment {
                     break;
                 }
                 case ESTIMATE_NO: {
-                    MessageDialogFragment dialogFragment = new MessageDialogFragment(getString(R.string.mes_estimate_no),R.color.colorWarning,R.drawable.ic_warning);
-                    dialogFragment.show(getParentFragmentManager(),getTag());
+                    MessageDialogFragment dialogFragment = new MessageDialogFragment(getString(R.string.mes_estimate_no), R.color.colorWarning, R.drawable.ic_warning);
+                    dialogFragment.show(getParentFragmentManager(), getTag());
                     break;
                 }
                 case CANCEL_YES: {
@@ -302,16 +304,16 @@ public class CommunicationFragment extends Fragment {
                             getString(R.string.mes_cancel_yes), R.color.colorDanger, R.drawable.ic_warning,
                             () -> navController.popBackStack()
                     );
-                    dialogFragment.show(getParentFragmentManager(),getTag());
+                    dialogFragment.show(getParentFragmentManager(), getTag());
                 }
                 case CANCEL: {
-                    if(receiveMessage.isExpert() == isExpert) {
+                    if (receiveMessage.isExpert() == isExpert) {
                         MessageDialogFragment dialogFragment = new MessageDialogFragment(
                                 getString(R.string.mes_cancel), R.color.colorDanger, R.drawable.ic_warning,
                                 () -> navController.popBackStack()
                         );
-                        dialogFragment.show(getParentFragmentManager(),getTag());
-                    }else {
+                        dialogFragment.show(getParentFragmentManager(), getTag());
+                    } else {
                         ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment(
                                 getString(R.string.mes_cancel_confirm),
                                 new ConfirmDialogFragment.OnConfirmDialogListener() {
@@ -327,18 +329,18 @@ public class CommunicationFragment extends Fragment {
                                     }
                                 }
                         );
-                        dialogFragment.show(getParentFragmentManager(),getTag());
+                        dialogFragment.show(getParentFragmentManager(), getTag());
                     }
                     break;
                 }
                 case COMPLETE: {
-                    if(receiveMessage.isExpert() == isExpert) {
+                    if (receiveMessage.isExpert() == isExpert) {
                         MessageDialogFragment dialogFragment = new MessageDialogFragment(
                                 getString(R.string.mes_complete), R.color.colorSuccess, R.drawable.ic_success,
                                 () -> navController.popBackStack()
                         );
-                        dialogFragment.show(getParentFragmentManager(),getTag());
-                    }else {
+                        dialogFragment.show(getParentFragmentManager(), getTag());
+                    } else {
                         ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment(
                                 getString(R.string.mes_complete_confirm),
                                 new ConfirmDialogFragment.OnConfirmDialogListener() {
@@ -354,7 +356,7 @@ public class CommunicationFragment extends Fragment {
                                     }
                                 }
                         );
-                        dialogFragment.show(getParentFragmentManager(),getTag());
+                        dialogFragment.show(getParentFragmentManager(), getTag());
                     }
                     break;
                 }
@@ -363,7 +365,7 @@ public class CommunicationFragment extends Fragment {
                             getString(R.string.mes_complete_yes), R.color.colorSuccess, R.drawable.ic_success,
                             () -> navController.popBackStack()
                     );
-                    dialogFragment.show(getParentFragmentManager(),getTag());
+                    dialogFragment.show(getParentFragmentManager(), getTag());
                     break;
                 }
             }
@@ -402,16 +404,16 @@ public class CommunicationFragment extends Fragment {
     }
 
     private void updateMenu(StatusEnum statusEnum) {
-        if(statusEnum != null) {
+        if (statusEnum != null) {
             switch (statusEnum) {
-                case ACCEPTED:{
+                case ACCEPTED: {
                     popupMenu.getMenu().findItem(R.id.menu_complete).setVisible(false);
-                    if(!isExpert) {
+                    if (!isExpert) {
                         popupMenu.getMenu().findItem(R.id.menu_estimate).setVisible(false);
                     }
                     break;
                 }
-                case PROCESSING:{
+                case PROCESSING: {
                     popupMenu.getMenu().findItem(R.id.menu_estimate).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.menu_complete).setVisible(true);
                     break;
@@ -429,28 +431,30 @@ public class CommunicationFragment extends Fragment {
             if (grantResults.length > 0 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 navigateToVideoCall();
-            }  else {
+            } else {
                 MessageDialogFragment messageDialogFragment =
-                        new MessageDialogFragment(getString(R.string.camera_permission_deny),R.color.colorWarning,R.drawable.ic_warning);
-                messageDialogFragment.show(getParentFragmentManager(),getTag());
+                        new MessageDialogFragment(getString(R.string.camera_permission_deny), R.color.colorWarning, R.drawable.ic_warning);
+                messageDialogFragment.show(getParentFragmentManager(), getTag());
             }
         }
     }
 
     private void navigateToVideoCall() {
         Bundle bundle = new Bundle();
-        bundle.putInt("channel",channel);
-        bundle.putBoolean(getString(R.string.isExpert),isExpert);
+        bundle.putInt("channel", channel);
+        bundle.putBoolean(getString(R.string.isExpert), isExpert);
         bundle.putBoolean("answer", answer);
-        if(isExpert) {
-            navController.navigate(R.id.action_communicationFragment2_to_videoCallFragment2,bundle);
-        }else {
-            navController.navigate(R.id.action_customerCommunicationFragment_to_videoCallFragment3,bundle);
+        if (isExpert) {
+            navController.navigate(R.id.action_communicationFragment2_to_videoCallFragment2, bundle);
+        } else {
+            navController.navigate(R.id.action_customerCommunicationFragment_to_videoCallFragment3, bundle);
         }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(isExpert) navController.navigate(R.id.navigation_home);
+        else navController.navigate(R.id.navigation_home_customer);
     }
 }
