@@ -1,6 +1,6 @@
 package com.quang.daapp.ui.communication;
 
-import com.quang.daapp.data.model.ProblemRequest;
+import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.ProblemRequestDetail;
 import com.quang.daapp.data.repository.ChatMessageRepository;
 import com.quang.daapp.data.repository.ProblemRequestRepository;
@@ -16,27 +16,37 @@ public class CommunicationViewModel extends ViewModel {
 
     private MutableLiveData<List<ReceiveMessage>> chatMessageResult = new MutableLiveData<>();
     private MutableLiveData<ProblemRequestDetail> detailResult = new MutableLiveData<>();
+    private MutableLiveData<Expert> expertResult = new MutableLiveData<>();
     private ChatMessageRepository repository;
     private ProblemRequestRepository requestRepository;
 
     public CommunicationViewModel() {
         repository = ChatMessageRepository.getInstance();
         requestRepository = ProblemRequestRepository.getInstance();
+
     }
 
-    public void getChatMessage(int requestId, int page) {
+    void getExpert(int requestId) {
+        expertResult = requestRepository.getExpertProfile(requestId);
+    }
+
+    LiveData<Expert> getExpertResult() {
+        return expertResult;
+    }
+
+    void getChatMessage(int requestId, int page) {
         chatMessageResult = repository.getMessages(requestId, page);
     }
 
-    public LiveData<List<ReceiveMessage>> getChatMessageResult() {
+    LiveData<List<ReceiveMessage>> getChatMessageResult() {
         return chatMessageResult;
     }
 
-    public void getDetail(int requestId) {
+    void getDetail(int requestId) {
         detailResult = requestRepository.getRequestDetailById(requestId);
     }
 
-    public LiveData<ProblemRequestDetail> getDetailResult() {
+    LiveData<ProblemRequestDetail> getDetailResult() {
         return detailResult;
     }
 

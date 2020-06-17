@@ -51,7 +51,7 @@ public class CustomerActivity extends AppCompatActivity {
         for (MutableLiveData<ReceiveMessage> m: WebSocketClient.getInstance().getSubscribes().values()) {
             m.observe(this, message -> {
                 if(message.getType() == MessageType.CALLING && (message.isExpert())) {
-                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from", new ConfirmDialogFragment.OnConfirmDialogListener() {
+                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call", new ConfirmDialogFragment.OnConfirmDialogListener() {
                         @Override
                         public void OnYesListener() {
                             if (message.getType() == MessageType.CALLING) {
@@ -59,7 +59,7 @@ public class CustomerActivity extends AppCompatActivity {
                                 bundle.putInt(getString(R.string.key_request_id), Integer.parseInt(message.getMessage()));
                                 bundle.putBoolean(getString(R.string.isExpert), false);
                                 bundle.putBoolean("answer", true);
-                                navController.navigate(R.id.customerCommunicationFragment,bundle);
+                                navController.navigate(R.id.videoCallFragment3,bundle);
                             }
                         }
 

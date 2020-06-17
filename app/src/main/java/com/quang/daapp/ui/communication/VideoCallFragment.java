@@ -60,7 +60,7 @@ public class VideoCallFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int channel = getArguments().getInt("channel");
+        int channel = getArguments().getInt(getString(R.string.key_request_id));
         isExpert = getArguments().getBoolean(getString(R.string.isExpert));
         boolean answer = getArguments().getBoolean("answer");
         bundle = new Bundle();

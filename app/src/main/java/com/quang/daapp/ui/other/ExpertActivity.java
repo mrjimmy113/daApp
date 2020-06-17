@@ -59,7 +59,7 @@ public class ExpertActivity extends AppCompatActivity {
                                 bundle.putInt(getString(R.string.key_request_id), Integer.parseInt(message.getMessage()));
                                 bundle.putBoolean(getString(R.string.isExpert), true);
                                 bundle.putBoolean("answer", true);
-                                navController.navigate(R.id.communicationFragment2,bundle);
+                                navController.navigate(R.id.videoCallFragment2,bundle);
                             }
                         }
 
