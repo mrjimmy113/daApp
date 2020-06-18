@@ -66,9 +66,27 @@ public class EstimateDialogFragment extends DialogFragment {
         adapterMinute.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnMinute.setAdapter(adapterHour);
 
-        spnHour.setOnItemClickListener((parent, view12, position, id) -> onEstimateChange());
-        spnMinute.setOnItemClickListener((parent, view1, position, id) -> {
-            onEstimateChange();
+        spnHour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                onEstimateChange();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spnMinute.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                onEstimateChange();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
 
 
@@ -103,6 +121,7 @@ public class EstimateDialogFragment extends DialogFragment {
         int hour = (Integer) spnHour.getSelectedItem();
         int minute = (Integer) spnMinute.getSelectedItem();
         totalHour = hour + (float)minute / 60;
+        totalHour = Math.round(totalHour);
         totalMoney = totalHour * fee;
         txtError.setVisibility(View.INVISIBLE);
         txtTotal.setText(totalMoney + "");

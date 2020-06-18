@@ -81,6 +81,10 @@ public class VideoCallFragment extends Fragment {
             back();
         });
 
+        view.findViewById(R.id.btnSwitchCam).setOnClickListener(v -> {
+            rtcClient.switchCamera();
+        });
+
         rtcClient = new RTCClient(getContext(), new PeerConnection.Observer() {
             @Override
             public void onSignalingChange(PeerConnection.SignalingState signalingState) {

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.webrtc.Camera1Enumerator;
 import org.webrtc.CameraEnumerator;
+import org.webrtc.CameraVideoCapturer;
 import org.webrtc.DefaultVideoDecoderFactory;
 import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
@@ -50,6 +51,7 @@ public class RTCClient {
     private  VideoCapturer createVideoCapture() {
         VideoCapturer videoCapturer;
         videoCapturer = createCameraCapture(new Camera1Enumerator(false));
+
         return videoCapturer;
     }
 
@@ -122,11 +124,29 @@ public class RTCClient {
         SurfaceTextureHelper surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
         videoCapturer.initialize(surfaceTextureHelper,context, localVideoSource.getCapturerObserver());
         videoCapturer.startCapture(320, 240, 60);
+
         VideoTrack localVideoTrack = peerConnectionFactory.createVideoTrack("100", localVideoSource);
         localVideoTrack.addSink(view);
         MediaStream localStream = peerConnectionFactory.createLocalMediaStream(LOCAL_STREAM_ID);
         localStream.addTrack(localVideoTrack);
+
         peerConnection.addStream(localStream);
+    }
+
+    public void switchCamera() {
+        CameraVideoCapturer cameraVideoCapturer = (CameraVideoCapturer) videoCapturer;
+        cameraVideoCapturer.switchCamera(new CameraVideoCapturer.CameraSwitchHandler() {
+            @Override
+            public void onCameraSwitchDone(boolean b) {
+
+            }
+
+            @Override
+            public void onCameraSwitchError(String s) {
+
+            }
+        });
+
     }
 
     public void call(SdpObserver observer) {

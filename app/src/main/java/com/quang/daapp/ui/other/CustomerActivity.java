@@ -8,6 +8,7 @@ import com.quang.daapp.R;
 import com.quang.daapp.stomp.MessageType;
 import com.quang.daapp.stomp.ReceiveMessage;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
+import com.quang.daapp.ultis.CommonUltis;
 import com.quang.daapp.ultis.WebSocketClient;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,6 +45,9 @@ public class CustomerActivity extends AppCompatActivity {
                 navView.setVisibility(View.GONE);
             }
         });
+
+        CommonUltis.checkCameraPermission(this,this);
+        CommonUltis.checkPermissions(this,this);
 
         NavigationUI.setupWithNavController(navView, navController);
     }

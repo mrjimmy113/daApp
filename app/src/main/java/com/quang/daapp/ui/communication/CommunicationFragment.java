@@ -349,8 +349,10 @@ public class CommunicationFragment extends Fragment {
                                 new ConfirmDialogFragment.OnConfirmDialogListener() {
                                     @Override
                                     public void OnYesListener() {
-                                        WebSocketClient.getInstance().chat(channel,
-                                                new SendMessage(edtMessage.getText().toString(), MessageType.COMPLETE));
+                                        if(!isExpert) {
+                                            FeedBackDialogFragment feedBackDialog = new FeedBackDialogFragment(channel);
+                                            feedBackDialog.show(getParentFragmentManager(),getTag());
+                                        }
                                     }
 
                                     @Override
