@@ -27,7 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class EstimateDialogFragment extends DialogFragment {
+public class EstimateDialogFragment extends MyBaseDialogFragment {
 
     private int channel;
     private float fee;

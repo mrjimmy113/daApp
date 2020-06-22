@@ -12,12 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.quang.daapp.R;
+import com.quang.daapp.ultis.DialogManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class MessageDialogFragment extends DialogFragment {
+public class MessageDialogFragment extends MyBaseDialogFragment {
 
     private String message;
     private int bgColor;
@@ -73,6 +74,7 @@ public class MessageDialogFragment extends DialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         if(myDialogListener != null) myDialogListener.OnOKListener();
+
     }
 
 

@@ -6,12 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Expert;
+import com.quang.daapp.data.model.Major;
 import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.databinding.FragmentProfileExpertBinding;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
@@ -49,6 +51,7 @@ public class ProfileExpertFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final Button btnEditProfile = view.findViewById(R.id.btnEditProfile);
         final Button btnChangePassword = view.findViewById(R.id.btnChangePassword);
+        final TextView txtMajor = view.findViewById(R.id.txtMajor);
         ivAvatar = view.findViewById(R.id.iv_avatar);
         navigation = Navigation.findNavController(view);
         view.findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
@@ -97,6 +100,14 @@ public class ProfileExpertFragment extends Fragment {
 
                 binding.setProfile(expert);
                 data = expert;
+                String strMajor = "";
+                for (int i = 0; i< expert.getMajor().size();i++) {
+                    strMajor += expert.getMajor().get(i).getMajor();
+                    if(i < expert.getMajor().size() - 1) {
+                        strMajor += " - ";
+                    }
+                }
+                txtMajor.setText(strMajor);
                 Glide.with(view).load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
             }
         });

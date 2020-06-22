@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class LoaderDialogFragment extends DialogFragment {
+public class LoaderDialogFragment extends MyBaseDialogFragment {
 
     public LoaderDialogFragment() {
     }
@@ -30,4 +30,6 @@ public class LoaderDialogFragment extends DialogFragment {
 
         return dialog;
     }
+
+
 }

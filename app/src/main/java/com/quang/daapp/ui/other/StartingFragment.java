@@ -78,7 +78,7 @@ public class StartingFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<Boolean> call, Throwable t) {
-                    if(t instanceof ConnectException) {
+                    if(t instanceof ConnectException || t instanceof  SocketTimeoutException) {
                         MessageDialogFragment dialogTimeOut = new MessageDialogFragment(
                                 "Can not connect to server, please check your connection"
                                 , R.color.colorDanger, R.drawable.ic_error,

@@ -35,4 +35,18 @@ public class Major {
     public String toString() {
         return this.major;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Major major1 = (Major) o;
+        return id == major1.id &&
+                Objects.equals(major, major1.major);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, major);
+    }
 }

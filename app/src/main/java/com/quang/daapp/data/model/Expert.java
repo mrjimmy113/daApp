@@ -1,7 +1,9 @@
 package com.quang.daapp.data.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Expert implements Serializable {
 
@@ -18,7 +20,7 @@ public class Expert implements Serializable {
 
     private String imgName;
 
-    private Major major;
+    private List<Major> major = new ArrayList<>();
 
 
     private float feePerHour;
@@ -28,6 +30,14 @@ public class Expert implements Serializable {
     private String bankName;
 
     private String bankAccountNo;
+
+    public List<Major> getMajor() {
+        return major;
+    }
+
+    public void setMajor(List<Major> major) {
+        this.major = major;
+    }
 
     public String getEmail() {
         return email;
@@ -59,14 +69,6 @@ public class Expert implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public Major getMajor() {
-        return major;
-    }
-
-    public void setMajor(Major major) {
-        this.major = major;
     }
 
     public float getFeePerHour() {
@@ -118,6 +120,6 @@ public class Expert implements Serializable {
     }
 
     public String getFeeString() {
-        return feePerHour + "";
+        return (int)feePerHour + "";
     }
 }

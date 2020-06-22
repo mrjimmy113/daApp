@@ -10,20 +10,26 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.Major;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
+import com.quang.daapp.ui.viewAdapter.MajorSelectAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -34,6 +40,8 @@ public class RegisterExpertFragment extends Fragment {
 
     private RegisterExpertViewModel viewModel;
     private List<Major> majorsResult;
+    private RecyclerView recyclerMajor;
+    private MajorSelectAdapter adapter;
 
     public RegisterExpertFragment() {
         // Required empty public constructor
@@ -62,23 +70,16 @@ public class RegisterExpertFragment extends Fragment {
         final EditText edtBankName = view.findViewById(R.id.edtBankName);
         final EditText edtAccountNo = view.findViewById(R.id.edtAccountNo);
         final EditText edtDescription = view.findViewById(R.id.edtDescription);
-        final Spinner spnMajor = view.findViewById(R.id.spn_major);
+        final TextView txtMajorError = view.findViewById(R.id.txtMajorError);
+        recyclerMajor = view.findViewById(R.id.recycle_major);
 
         viewModel.getAllMajor();
-        viewModel.getAllMajorResult().observe(getViewLifecycleOwner(), new Observer<List<Major>>() {
-            @Override
-            public void onChanged(List<Major> majors) {
-                if(majors == null) return;
-
-                majorsResult = majors;
-                String[] majorArray = new String[majors.size()];
-                for (int i = 0 ; i< majorArray.length; i++) {
-                    majorArray[i] = majors.get(i).getMajor();
-                }
-                ArrayAdapter<String> adapterCity = new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item, majorArray);
-                adapterCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spnMajor.setAdapter(adapterCity);
-            }
+        viewModel.getAllMajorResult().observe(getViewLifecycleOwner(), majors -> {
+            if(majors == null) return;
+            majorsResult = majors;
+            adapter = new MajorSelectAdapter(getContext(),majors,new ArrayList<>());
+            recyclerMajor.setAdapter(adapter);
+            recyclerMajor.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         });
 
         final NavController navController = Navigation.findNavController(view);
@@ -96,7 +97,7 @@ public class RegisterExpertFragment extends Fragment {
             public void onClick(View v) {
                 RegisterExpertFormState state = viewModel.validateDate(edtEmail.getText().toString(),edtPassword.getText().toString(),
                         edtConfirm.getText().toString(),edtFirstName.getText().toString(),edtFee.getText().toString(),
-                        edtBankName.getText().toString(),edtAccountNo.getText().toString());
+                        edtBankName.getText().toString(),edtAccountNo.getText().toString(),adapter.getSelected().size());
 
                 if(!state.isDataValid()) {
                     MessageDialogFragment mesDialog = new MessageDialogFragment(getString(R.string.mes_error_validate), R.color.colorDanger, R.drawable.ic_error);
@@ -108,6 +109,7 @@ public class RegisterExpertFragment extends Fragment {
                     if(state.getFeeError() != null) edtFee.setError(getString(state.getFeeError()));
                     if(state.getBankAccount() != null) edtBankName.setError(getString(state.getBankAccount()));
                     if(state.getAccountNo() != null) edtAccountNo.setError(getString(state.getAccountNo()));
+                    if(state.getMajorError() != null) txtMajorError.setText(getString(state.getMajorError()));
                     return;
                 }
 
@@ -116,14 +118,8 @@ public class RegisterExpertFragment extends Fragment {
                 expert.setFullName(edtFirstName.getText().toString());
                 expert.setPassword(edtPassword.getText().toString());
                 expert.setFeePerHour(Float.parseFloat(edtFee.getText().toString()));
-                int id = 0;
-                for (Major m: majorsResult) {
-                    if(m.getMajor().equals(spnMajor.getSelectedItem().toString())) {
-                        id = m.getId();
-                        break;
-                    }
-                }
-                expert.setMajor(new Major(id,spnMajor.getSelectedItem().toString()));
+
+                expert.setMajor(adapter.getSelected());
                 expert.setBankName(edtBankName.getText().toString());
                 expert.setBankAccountNo(edtAccountNo.getText().toString());
                 expert.setDescription(edtDescription.getText().toString());

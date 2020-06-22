@@ -50,7 +50,7 @@ public class RegisterExpertViewModel extends ViewModel {
 
 
     public RegisterExpertFormState validateDate(String email, String password,
-                                                  String confirm, String fullName, String fee, String bankName, String accountNo) {
+                                                  String confirm, String fullName, String fee, String bankName, String accountNo, int numMajor) {
         RegisterExpertFormState newState = new RegisterExpertFormState();
         boolean isValid = true;
         if (!isUserNameValid(email)) {
@@ -79,6 +79,10 @@ public class RegisterExpertViewModel extends ViewModel {
         }
         if(accountNo.trim().isEmpty()) {
             newState.setAccountNo(R.string.invalid_account_no);
+            isValid = false;
+        }
+        if(numMajor == 0) {
+            newState.setMajorError(R.string.major_invalid);
             isValid = false;
         }
         newState.setDataValid(isValid);

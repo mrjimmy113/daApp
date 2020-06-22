@@ -44,7 +44,7 @@ public class EditExpertProfileViewModel extends ViewModel {
         allMajorResult = majorRepository.getAllMajor();
     }
 
-    public EditExpertProfileFormState validateDate(String fullName, String fee, String bankName, String accountNo) {
+    public EditExpertProfileFormState validateDate(String fullName, String fee, String bankName, String accountNo, int majorCount) {
         EditExpertProfileFormState newState = new EditExpertProfileFormState();
         boolean isValid = true;
 
@@ -64,6 +64,11 @@ public class EditExpertProfileViewModel extends ViewModel {
             newState.setAccountNo(R.string.invalid_account_no);
             isValid = false;
         }
+        if(majorCount <= 0) {
+            newState.setMajorError(R.string.major_invalid);
+            isValid = false;
+        }
+
         newState.setDataValid(isValid);
 
         return newState;

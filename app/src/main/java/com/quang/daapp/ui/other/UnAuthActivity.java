@@ -5,12 +5,14 @@ import androidx.navigation.Navigation;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.quang.daapp.R;
+import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ultis.DialogManager;
 import com.quang.daapp.ultis.NetworkClient;
 
-public class UnAuthActivity extends AppCompatActivity implements DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {
+public class UnAuthActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,14 +23,4 @@ public class UnAuthActivity extends AppCompatActivity implements DialogInterface
 
     }
 
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        DialogManager.getInstance().closeDialog();
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        DialogManager.getInstance().closeDialog();
-    }
 }

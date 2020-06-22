@@ -58,7 +58,14 @@ public class ExpertInforAdapter extends RecyclerView.Adapter<ExpertInforAdapter.
             Glide.with(mContext).load(NetworkClient.getImageUrl(expert.getImgName())).into(holder.iv_avatar);
         }
         holder.txtFullName.setText(expert.getFullName());
-        holder.txtMajor.setText(expert.getMajor().getMajor());
+        String strMajor = "";
+        for (int i =0; i< expert.getMajor().size();i++) {
+            strMajor += expert.getMajor().get(i);
+            if(i < expert.getMajor().size() - 1) {
+                strMajor += " - ";
+            }
+        }
+        holder.txtMajor.setText(strMajor);
         holder.txtFee.setText(expert.getFeePerHour() + "");
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override

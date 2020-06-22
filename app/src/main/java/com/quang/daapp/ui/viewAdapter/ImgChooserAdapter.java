@@ -18,11 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ImgChooserAdapter extends RecyclerView.Adapter<ImgChooserAdapter.ViewHolder> {
 
-    Context mContext;
-    ArrayList<String> imgURL;
-    ArrayList<String> oldImgDelete = new ArrayList<>();
-    ArrayList<String> newImg = new ArrayList<>();
-    OnItemRemove onItemRemove;
+    private Context mContext;
+    private ArrayList<String> imgURL;
+    private ArrayList<String> oldImgDelete = new ArrayList<>();
+    private ArrayList<String> newImg = new ArrayList<>();
+    private OnItemRemove onItemRemove;
 
     public ImgChooserAdapter(Context mContext, ArrayList<String> imgURL, OnItemRemove onItemRemove) {
         this.mContext = mContext;
@@ -58,7 +58,7 @@ public class ImgChooserAdapter extends RecyclerView.Adapter<ImgChooserAdapter.Vi
                 if(imgURL.get(position).contains(NetworkClient.BASE_URL)) {
                     oldImgDelete.add(imgURL.get(position).split("=")[1]);
                 }else {
-                    newImg.remove(newImg.indexOf(imgURL.get(position)));
+                    newImg.remove(imgURL.get(position));
                 }
                 onItemRemove.OnItemRemoved(position);
             }
@@ -70,12 +70,12 @@ public class ImgChooserAdapter extends RecyclerView.Adapter<ImgChooserAdapter.Vi
         return imgURL.size();
     }
 
-    public  class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
         ImageButton btnDelImg;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
             btnDelImg = itemView.findViewById(R.id.btnDelImg);

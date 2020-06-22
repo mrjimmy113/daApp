@@ -7,6 +7,7 @@ import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ultis.DialogManager;
 
 import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -30,7 +31,7 @@ public class MyRequestCallBack<T> implements Callback<T> {
     @Override
     public void onFailure(@NonNull Call<T> call, Throwable t) {
         mutableLiveData.postValue(null);
-        if(t instanceof ConnectException) {
+        if(t instanceof ConnectException || t instanceof SocketTimeoutException) {
             MessageDialogFragment dialogTimeOut = new MessageDialogFragment(
                     "Can not connect to server, please check your connection"
                     , R.color.colorDanger, R.drawable.ic_error

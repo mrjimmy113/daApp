@@ -74,7 +74,14 @@ public class RequestDetailExpertFragment extends Fragment {
         Glide.with(getContext()).load(NetworkClient.getImageUrl(expert.getImgName())).into(iv_avatar);
         txtEmail.setText(expert.getEmail());
         txtFullName.setText(expert.getFullName());
-        txtMajor.setText(expert.getMajor().getMajor());
+        StringBuilder strMajor = new StringBuilder();
+        for (int i = 0; i < expert.getMajor().size(); i++) {
+            strMajor.append(expert.getMajor().get(i));
+            if(i < expert.getMajor().size() - 1) {
+                strMajor.append(" - ");
+            }
+        }
+        txtMajor.setText(strMajor.toString());
         txtFee.setText(expert.getFeePerHour() + "");
         txtBankName.setText(expert.getBankName());
         txtAccountNo.setText(expert.getBankAccountNo());

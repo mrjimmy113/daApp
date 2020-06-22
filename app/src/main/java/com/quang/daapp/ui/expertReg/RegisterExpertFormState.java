@@ -15,6 +15,8 @@ public class RegisterExpertFormState {
 
     private Integer accountNo;
 
+    private Integer majorError;
+
     private boolean isDataValid;
 
     public Integer getUsernameError() {
@@ -79,5 +81,13 @@ public class RegisterExpertFormState {
 
     public void setDataValid(boolean dataValid) {
         isDataValid = dataValid;
+    }
+
+    public Integer getMajorError() {
+        return majorError;
+    }
+
+    public void setMajorError(Integer majorError) {
+        this.majorError = majorError;
     }
 }

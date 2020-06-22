@@ -9,7 +9,17 @@ public class EditExpertProfileFormState {
 
     private Integer accountNo;
 
+    private Integer majorError;
+
     private boolean isDataValid;
+
+    public Integer getMajorError() {
+        return majorError;
+    }
+
+    public void setMajorError(Integer majorError) {
+        this.majorError = majorError;
+    }
 
     public Integer getFullNameError() {
         return fullNameError;

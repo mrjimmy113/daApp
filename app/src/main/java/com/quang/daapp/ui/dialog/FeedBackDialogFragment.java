@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class FeedBackDialogFragment extends DialogFragment {
+public class FeedBackDialogFragment extends MyBaseDialogFragment {
 
     private int channel;
 

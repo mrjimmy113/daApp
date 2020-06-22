@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class ConfirmDialogFragment extends DialogFragment {
+public class ConfirmDialogFragment extends MyBaseDialogFragment {
 
     private String message;
     private OnConfirmDialogListener dialogListener;
