@@ -34,7 +34,7 @@ public interface AccountService {
 
     @FormUrlEncoded
     @POST("/account/check")
-    Call<Boolean> check(@Field("token") String token) ;
+    Call<Boolean> check(@Header("authorization") String auth,@Field("token") String token) ;
 
     @GET("/account/cus")
     Call<Customer> getCustomerProfile(@Header("authorization") String token);

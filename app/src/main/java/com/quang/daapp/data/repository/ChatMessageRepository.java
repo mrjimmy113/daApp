@@ -28,24 +28,14 @@ public class ChatMessageRepository {
     public MutableLiveData<List<ReceiveMessage>> getMessages(int requestId, int page) {
         CreateService();
         final  MutableLiveData<List<ReceiveMessage>> mutableLiveData = new MutableLiveData<>();
-        service.getMessages(requestId, page).enqueue(new Callback<List<ReceiveMessage>>() {
-            @Override
-            public void onResponse(Call<List<ReceiveMessage>> call, Response<List<ReceiveMessage>> response) {
-                mutableLiveData.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<ReceiveMessage>> call, Throwable t) {
-
-            }
-        });
+        service.getMessages(requestId, page).enqueue(new MyRequestCallBack<>(mutableLiveData));
         return mutableLiveData;
     }
 
 
     private void CreateService() {
         if(service == null) {
-            service = NetworkClient.getRetrofitInstance().create(ChatMessageService.class);
+            service = NetworkClient.getInstance().getRetrofitInstance().create(ChatMessageService.class);
         }
     }
 }

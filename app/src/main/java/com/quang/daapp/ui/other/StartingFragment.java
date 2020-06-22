@@ -18,8 +18,13 @@ import android.view.ViewGroup;
 
 import com.quang.daapp.R;
 import com.quang.daapp.data.service.AccountService;
+import com.quang.daapp.ui.dialog.MessageDialogFragment;
+import com.quang.daapp.ultis.DialogManager;
 import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ultis.AuthTokenManager;
+
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 
 /**
@@ -51,12 +56,12 @@ public class StartingFragment extends Fragment {
             navController.navigate(R.id.loginFragment);
 
         }else {
-            NetworkClient.getRetrofitInstance().create(AccountService.class).check(token).enqueue(new Callback<Boolean>() {
+            NetworkClient.getInstance().getRetrofitInstance().create(AccountService.class).check(token,token).enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                     Log.e("Status", response.code() + "");
                     if(response.code() == 200) {
-                        NetworkClient.setToken(token);
+
                         if(response.body()) {
                             navController.navigate(R.id.expertActivity);
                             getActivity().finish();
@@ -73,7 +78,14 @@ public class StartingFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<Boolean> call, Throwable t) {
-
+                    if(t instanceof ConnectException) {
+                        MessageDialogFragment dialogTimeOut = new MessageDialogFragment(
+                                "Can not connect to server, please check your connection"
+                                , R.color.colorDanger, R.drawable.ic_error,
+                                () -> navController.navigate(R.id.startingFragment)
+                        );
+                        DialogManager.getInstance().showDialog(dialogTimeOut,true);
+                    }
                 }
             });
         }

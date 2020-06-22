@@ -116,7 +116,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.container2.setVisibility(View.GONE);
                 holder.layout_estimate_yes.setVisibility(View.GONE);
                 if(statusEnum == StatusEnum.ACCEPTED) {
-                    Estimate estimate = NetworkClient.getGson().fromJson(message.getMessage(),Estimate.class);
+                    Estimate estimate = NetworkClient.getInstance().getGson().fromJson(message.getMessage(),Estimate.class);
                     holder.layout_estimate.setVisibility(View.VISIBLE);
                     holder.txtHourEstimate.setText(estimate.getHour() + "");
                     holder.txtTotalEstimate.setText(estimate.getTotal() + "");
@@ -134,7 +134,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 break;
             }
             case ESTIMATE_YES: {
-                Estimate estimate = NetworkClient.getGson().fromJson(message.getMessage(),Estimate.class);
+                Estimate estimate = NetworkClient.getInstance().getGson().fromJson(message.getMessage(),Estimate.class);
                 holder.layout_estimate_yes.setVisibility(View.VISIBLE);
                 holder.layout_estimate.setVisibility(View.GONE);
                 holder.container2.setVisibility(View.GONE);

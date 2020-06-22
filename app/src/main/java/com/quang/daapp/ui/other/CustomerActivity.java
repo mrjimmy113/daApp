@@ -9,6 +9,8 @@ import com.quang.daapp.stomp.MessageType;
 import com.quang.daapp.stomp.ReceiveMessage;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
 import com.quang.daapp.ultis.CommonUltis;
+import com.quang.daapp.ultis.DialogManager;
+import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ultis.WebSocketClient;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,7 @@ public class CustomerActivity extends AppCompatActivity {
     ConstraintLayout loaderLayout = null;
     BottomNavigationView navView = null;
     NavController navController;
+    private boolean isVideoCalling= false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +47,13 @@ public class CustomerActivity extends AppCompatActivity {
             }else {
                 navView.setVisibility(View.GONE);
             }
+            isVideoCalling =  destination.getId() == R.id.videoCallFragment2;
         });
 
         CommonUltis.checkCameraPermission(this,this);
         CommonUltis.checkPermissions(this,this);
-
+        NetworkClient.getInstance().init(this,this,navController);
+        DialogManager.getInstance().init(getSupportFragmentManager());
         NavigationUI.setupWithNavController(navView, navController);
     }
     public void startSub() {

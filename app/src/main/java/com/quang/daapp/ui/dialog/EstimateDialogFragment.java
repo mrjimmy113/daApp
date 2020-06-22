@@ -97,7 +97,7 @@ public class EstimateDialogFragment extends DialogFragment {
                 return;
             }
             dismiss();
-            String message = NetworkClient.getGson().toJson(new Estimate(
+            String message = NetworkClient.getInstance().getGson().toJson(new Estimate(
                     totalHour,
                     totalMoney
                     )

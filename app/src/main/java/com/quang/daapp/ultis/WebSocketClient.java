@@ -57,7 +57,7 @@ public class WebSocketClient {
             @Override
             public void onMessage(StompFrame stompFrame) {
 
-                mutableLiveData.postValue(NetworkClient.getGson().fromJson(stompFrame.getBody(),ReceiveMessage.class));
+                mutableLiveData.postValue(NetworkClient.getInstance().getGson().fromJson(stompFrame.getBody(),ReceiveMessage.class));
 
             }
 
@@ -67,7 +67,7 @@ public class WebSocketClient {
 
     public void chat(int channel, SendMessage message) {
         if(stompClient ==null) return;
-        stompClient.send("/app/chat." + channel, NetworkClient.getGson().toJson(message));
+        stompClient.send("/app/chat." + channel, NetworkClient.getInstance().getGson().toJson(message));
     }
 
     public LiveData<ReceiveMessage> getSubscribeChannelData(int channel) {

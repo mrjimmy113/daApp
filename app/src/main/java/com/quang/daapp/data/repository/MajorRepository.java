@@ -27,24 +27,14 @@ public class MajorRepository {
     public MutableLiveData<List<Major>> getAllMajor() {
         CreateService();
         final MutableLiveData<List<Major>> result = new MutableLiveData<>();
-        service.getAllMajor().enqueue(new Callback<List<Major>>() {
-            @Override
-            public void onResponse(Call<List<Major>> call, Response<List<Major>> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<Major>> call, Throwable t) {
-
-            }
-        });
+        service.getAllMajor().enqueue(new MyRequestCallBack<>(result));
 
         return result;
     }
 
     private void CreateService() {
         if(service == null) {
-            service = NetworkClient.getRetrofitInstance().create(MajorService.class);
+            service = NetworkClient.getInstance().getRetrofitInstance().create(MajorService.class);
         }
     }
 }

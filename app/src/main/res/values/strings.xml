@@ -42,6 +42,8 @@
 
     <!--Message Common-->
     <string name="mes_error_400">There is something wrong happen, please try again</string>
+    <string name="mes_error_401">We can not authenticate your request, please try again after login</string>
+    <string name="mes_error_403">You are not authorized to use this operation</string>
     <string name="mes_error_validate">Your form is not valid</string>
 
     <!--Login-->

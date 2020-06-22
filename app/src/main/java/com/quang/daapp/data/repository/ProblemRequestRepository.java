@@ -48,17 +48,7 @@ public class ProblemRequestRepository {
     public  MutableLiveData<ProblemRequestDetail> getRequestDetailById(int id) {
         CreateService();
         final MutableLiveData<ProblemRequestDetail> result = new MutableLiveData<>();
-        service.getRequestDetail(id).enqueue(new Callback<ProblemRequestDetail>() {
-            @Override
-            public void onResponse(Call<ProblemRequestDetail> call, Response<ProblemRequestDetail> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<ProblemRequestDetail> call, Throwable t) {
-
-            }
-        });
+        service.getRequestDetail(id).enqueue(new MyRequestCallBack<>(result));
 
         return result;
     }
@@ -66,17 +56,7 @@ public class ProblemRequestRepository {
     public  MutableLiveData<List<ProblemRequest>> getCurrentUserRequest() {
         CreateService();
         final MutableLiveData<List<ProblemRequest>> result = new MutableLiveData<>();
-        service.getCurrentProblemRequest().enqueue(new Callback<List<ProblemRequest>>() {
-            @Override
-            public void onResponse(Call<List<ProblemRequest>> call, Response<List<ProblemRequest>> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<ProblemRequest>> call, Throwable t) {
-
-            }
-        });
+        service.getCurrentProblemRequest().enqueue(new MyRequestCallBack<>(result));
 
         return  result;
     }
@@ -84,17 +64,7 @@ public class ProblemRequestRepository {
     public  MutableLiveData<List<ProblemRequest>> getCurrentUserAppliedRequest() {
         CreateService();
         final MutableLiveData<List<ProblemRequest>> result = new MutableLiveData<>();
-        service.getCurrentAppliedProblemRequest().enqueue(new Callback<List<ProblemRequest>>() {
-            @Override
-            public void onResponse(Call<List<ProblemRequest>> call, Response<List<ProblemRequest>> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<ProblemRequest>> call, Throwable t) {
-
-            }
-        });
+        service.getCurrentAppliedProblemRequest().enqueue(new MyRequestCallBack<>(result));
 
         return  result;
     }
@@ -102,18 +72,7 @@ public class ProblemRequestRepository {
     public  MutableLiveData<List<ProblemRequest>> getCurrentUserRequestWithStatus(StatusEnum[] statusEnum) {
         CreateService();
         final MutableLiveData<List<ProblemRequest>> result = new MutableLiveData<>();
-        service.getCurrentProblemRequestWithStatus(statusEnum).enqueue(new Callback<List<ProblemRequest>>() {
-            @Override
-            public void onResponse(Call<List<ProblemRequest>> call, Response<List<ProblemRequest>> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<ProblemRequest>> call, Throwable t) {
-
-            }
-        });
-
+        service.getCurrentProblemRequestWithStatus(statusEnum).enqueue(new MyRequestCallBack<>(result));
         return  result;
     }
 
@@ -125,17 +84,7 @@ public class ProblemRequestRepository {
                 RequestBody.create(MediaType.parse("text/plain"),title),
                 RequestBody.create(MediaType.parse("text/plain"),description),
                 id
-                ).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(@NonNull Call<Number> call, @NonNull Response<Number> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Number> call, @NonNull Throwable t) {
-
-            }
-        });
+                ).enqueue(new MyRequestCallBack<>(result));
 
         return result;
     }
@@ -150,17 +99,7 @@ public class ProblemRequestRepository {
                 RequestBody.create(MediaType.parse("text/plain"),description),
                 id, RequestBody.create(MediaType.parse("text/plain"),gson.toJson(delImgs))
 
-        ).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(@NonNull Call<Number> call, @NonNull Response<Number> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Number> call, @NonNull Throwable t) {
-
-            }
-        });
+        ).enqueue(new MyRequestCallBack<>(result));
 
         return result;
     }
@@ -169,110 +108,49 @@ public class ProblemRequestRepository {
     public MutableLiveData<List<ProblemRequest>> expertSearch(int major, String city, String language, int time) {
         CreateService();
         final MutableLiveData<List<ProblemRequest>> result = new MutableLiveData<>();
-        service.expertSearch(major, city, language, time).enqueue(new Callback<List<ProblemRequest>>() {
-            @Override
-            public void onResponse(Call<List<ProblemRequest>> call, Response<List<ProblemRequest>> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<ProblemRequest>> call, Throwable t) {
-
-            }
-        });
+        service.expertSearch(major, city, language, time).enqueue(new MyRequestCallBack<>(result));
         return result;
     }
 
     public MutableLiveData<Number> expertApply(int requestId) {
         CreateService();
         final MutableLiveData<Number> result = new MutableLiveData<>();
-        service.expertApply(requestId).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(Call<Number> call, Response<Number> response) {
-                result.setValue(response.code());
-            }
-
-            @Override
-            public void onFailure(Call<Number> call, Throwable t) {
-
-            }
-        });
+        service.expertApply(requestId).enqueue(new MyRequestCallBack<>(result));
         return  result;
     }
 
     public MutableLiveData<List<Expert>> getApplicant(int requestId) {
         CreateService();
         final MutableLiveData<List<Expert>> result = new MutableLiveData<>();
-        service.getApplicants(requestId).enqueue(new Callback<List<Expert>>() {
-            @Override
-            public void onResponse(Call<List<Expert>> call, Response<List<Expert>> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<List<Expert>> call, Throwable t) {
-
-            }
-        });
+        service.getApplicants(requestId).enqueue(new MyRequestCallBack<>(result));
         return result;
     }
 
     public MutableLiveData<Number> acceptExpert(int requestId, int expertId) {
         CreateService();
         final MutableLiveData<Number> result = new MutableLiveData<>();
-        service.acceptExpert(requestId,expertId).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(Call<Number> call, Response<Number> response) {
-                result.setValue(response.code());
-            }
-
-            @Override
-            public void onFailure(Call<Number> call, Throwable t) {
-
-            }
-        });
+        service.acceptExpert(requestId,expertId).enqueue(new MyRequestCallBack<>(result));
         return result;
     }
 
     public MutableLiveData<Customer> getCustomerProfile(int requestId) {
         CreateService();
         final MutableLiveData<Customer> result = new MutableLiveData<>();
-        service.getCustomerProfile(requestId).enqueue(new Callback<Customer>() {
-            @Override
-            public void onResponse(Call<Customer> call, Response<Customer> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<Customer> call, Throwable t) {
-
-            }
-        });
-
+        service.getCustomerProfile(requestId).enqueue(new MyRequestCallBack<>(result));
         return result;
     }
 
     public MutableLiveData<Expert> getExpertProfile(int requestId) {
         CreateService();
         final MutableLiveData<Expert> result = new MutableLiveData<>();
-        service.getExpertProfile(requestId).enqueue(new Callback<Expert>() {
-            @Override
-            public void onResponse(Call<Expert> call, Response<Expert> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<Expert> call, Throwable t) {
-
-            }
-        });
+        service.getExpertProfile(requestId).enqueue(new MyRequestCallBack<>(result));
 
         return result;
     }
 
     private void CreateService() {
         if(service == null) {
-            service = NetworkClient.getRetrofitInstance().create(ProblemRequestService.class);
+            service = NetworkClient.getInstance().getRetrofitInstance().create(ProblemRequestService.class);
         }
 
     }

@@ -248,6 +248,7 @@ public class CommunicationFragment extends Fragment {
         });
 
         viewModel.getDetail(channel);
+
         viewModel.getDetailResult().observe(getViewLifecycleOwner(), problemRequestDetail -> {
             if (problemRequestDetail == null) return;
             detail = problemRequestDetail;
@@ -266,10 +267,12 @@ public class CommunicationFragment extends Fragment {
         btnMenu.setOnClickListener(v -> popupMenu.show());
 
         btnSend.setOnClickListener(v -> {
+            if(!edtMessage.getText().toString().trim().isEmpty()) {
 
-            WebSocketClient.getInstance().chat(channel,
-                    new SendMessage(edtMessage.getText().toString(), MessageType.CHAT));
-            edtMessage.setText("");
+                WebSocketClient.getInstance().chat(channel,
+                        new SendMessage(edtMessage.getText().toString(), MessageType.CHAT));
+                edtMessage.setText("");
+            }
         });
 
         if (WebSocketClient.getInstance().getSubscribeChannelData(channel).getValue() != null) {

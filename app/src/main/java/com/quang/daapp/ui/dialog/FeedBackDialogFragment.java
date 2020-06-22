@@ -42,7 +42,7 @@ public class FeedBackDialogFragment extends DialogFragment {
         final Button btnYes = view.findViewById(R.id.btnYes);
         btnYes.setOnClickListener(v -> {
             dismiss();
-            String message = NetworkClient.getGson().toJson(new Feedback(
+            String message = NetworkClient.getInstance().getGson().toJson(new Feedback(
                     ratingBar.getRating(),
                     edtFeedback.getText().toString()
                     )

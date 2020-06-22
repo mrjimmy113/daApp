@@ -42,17 +42,7 @@ public class AccountRepository {
     public MutableLiveData<Customer> getProfile(String token) {
         CreateService();
         final MutableLiveData<Customer> result = new MutableLiveData<>();
-        service.getCustomerProfile(token).enqueue(new Callback<Customer>() {
-            @Override
-            public void onResponse(Call<Customer> call, Response<Customer> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<Customer> call, Throwable t) {
-                Log.e("Error:",t.getMessage());
-            }
-        });
+        service.getCustomerProfile(token).enqueue(new MyRequestCallBack<>(result));
 
         return result;
     }
@@ -60,17 +50,7 @@ public class AccountRepository {
     public MutableLiveData<Number> changePassword(String token, String currentPassword, String newPassword) {
         CreateService();
         final MutableLiveData<Number> result = new MutableLiveData<>();
-        service.changePassword(token,currentPassword,newPassword).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(Call<Number> call, Response<Number> response) {
-                result.setValue(response.code());
-            }
-
-            @Override
-            public void onFailure(Call<Number> call, Throwable t) {
-                Log.e("Error:",t.getMessage());
-            }
-        });
+        service.changePassword(token,currentPassword,newPassword).enqueue(new MyRequestCallBack<>(result));
         return result;
     }
 
@@ -78,17 +58,7 @@ public class AccountRepository {
         // handle login
         CreateService();
         final MutableLiveData<String> result = new MutableLiveData<>();
-        service.login(username,password).enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Log.e("Error:",t.getMessage());
-            }
-        });
+        service.login(username,password).enqueue(new MyRequestCallBack<>(result));
 
         return result;
     }
@@ -96,17 +66,7 @@ public class AccountRepository {
     public MutableLiveData<Number> registerCustomer(Customer model) {
         CreateService();
         final  MutableLiveData<Number> result = new MutableLiveData<>();
-        service.registerCustomer(model).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(Call<Number> call, Response<Number> response) {
-                result.setValue(response.code());
-            }
-
-            @Override
-            public void onFailure(Call<Number> call, Throwable t) {
-                Log.e("Error:", t.getMessage());
-            }
-        });
+        service.registerCustomer(model).enqueue(new MyRequestCallBack<>(result));
 
         return result;
     }
@@ -114,17 +74,7 @@ public class AccountRepository {
     public MutableLiveData<Number> registerExpert(Expert model) {
         CreateService();
         final MutableLiveData<Number> result = new MutableLiveData<>();
-        service.registerExpert(model).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(Call<Number> call, Response<Number> response) {
-                result.setValue(response.code());
-            }
-
-            @Override
-            public void onFailure(Call<Number> call, Throwable t) {
-
-            }
-        });
+        service.registerExpert(model).enqueue(new MyRequestCallBack<>(result));
 
         return result;
     }
@@ -138,22 +88,9 @@ public class AccountRepository {
             RequestBody filePart = RequestBody.create(MediaType.parse("image/jpeg"),file);
             f = MultipartBody.Part.createFormData("file", file.getName(),filePart);
         }
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .setDateFormat("yyyy-MM-dd")
-                .create();
+        Gson gson = NetworkClient.getInstance().getGson();
 
-        service.updateCustomer(f,RequestBody.create(MediaType.parse("application/json"), gson.toJson(customer))).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(Call<Number> call, Response<Number> response) {
-                result.setValue(response.code());
-            }
-
-            @Override
-            public void onFailure(Call<Number> call, Throwable t) {
-
-            }
-        });
+        service.updateCustomer(f,RequestBody.create(MediaType.parse("application/json"), gson.toJson(customer))).enqueue(new MyRequestCallBack<>(result));
         return  result;
     }
 
@@ -171,58 +108,28 @@ public class AccountRepository {
                 .setDateFormat("yyyy-MM-dd")
                 .create();
 
-        service.updateExpert(f,RequestBody.create(MediaType.parse("application/json"), gson.toJson(expert))).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(Call<Number> call, Response<Number> response) {
-                result.setValue(response.code());
-            }
+        service.updateExpert(f,RequestBody.create(MediaType.parse("application/json"), gson.toJson(expert))).enqueue(new MyRequestCallBack<>(result));
 
-            @Override
-            public void onFailure(Call<Number> call, Throwable t) {
-
-            }
-        });
         return  result;
     }
 
     public MutableLiveData<Expert> getExpertProfile() {
         CreateService();
         final MutableLiveData<Expert> result = new MutableLiveData<>();
-        service.getExpertProfile().enqueue(new Callback<Expert>() {
-            @Override
-            public void onResponse(Call<Expert> call, Response<Expert> response) {
-                result.setValue(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<Expert> call, Throwable t) {
-
-            }
-        });
+        service.getExpertProfile().enqueue(new MyRequestCallBack<>(result));
         return  result;
     }
 
     public MutableLiveData<Number> forgetPassword(String email) {
         CreateService();
         final MutableLiveData<Number> result = new MutableLiveData<>();
-        service.forgetPassword(email).enqueue(new Callback<Number>() {
-            @Override
-            public void onResponse(Call<Number> call, Response<Number> response) {
-                result.setValue(response.code());
-                
-            }
-
-            @Override
-            public void onFailure(Call<Number> call, Throwable t) {
-
-            }
-        });
+        service.forgetPassword(email).enqueue(new MyRequestCallBack<>(result));
         return result;
     }
 
     private void CreateService() {
         if(service == null) {
-            service = NetworkClient.getRetrofitInstance().create(AccountService.class);
+            service = NetworkClient.getInstance().getRetrofitInstance().create(AccountService.class);
         }
     }
 }

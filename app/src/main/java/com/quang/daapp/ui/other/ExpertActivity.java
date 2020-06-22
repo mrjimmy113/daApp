@@ -9,6 +9,8 @@ import com.quang.daapp.stomp.MessageType;
 import com.quang.daapp.stomp.ReceiveMessage;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
 import com.quang.daapp.ultis.CommonUltis;
+import com.quang.daapp.ultis.DialogManager;
+import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ultis.WebSocketClient;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,10 +24,11 @@ import androidx.navigation.ui.NavigationUI;
 public class ExpertActivity extends AppCompatActivity {
 
     private  NavController navController;
-
+    private boolean isVideoCalling = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         WebSocketClient.getInstance().connect(this);
         setContentView(R.layout.activity_expert);
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -42,9 +45,14 @@ public class ExpertActivity extends AppCompatActivity {
             }else {
                 navView.setVisibility(View.GONE);
             }
+            isVideoCalling =  destination.getId() == R.id.videoCallFragment3;
+
+
         });
         NavigationUI.setupWithNavController(navView, navController);
 
+        NetworkClient.getInstance().init(this,this,navController);
+        DialogManager.getInstance().init(getSupportFragmentManager());
         CommonUltis.checkCameraPermission(this,this);
         CommonUltis.checkPermissions(this,this);
         }
@@ -52,7 +60,7 @@ public class ExpertActivity extends AppCompatActivity {
     public void startSub() {
         for (MutableLiveData<ReceiveMessage> m: WebSocketClient.getInstance().getSubscribes().values()) {
             m.observe(this, message -> {
-                if(message.getType() == MessageType.CALLING && (!message.isExpert())) {
+                if(message.getType() == MessageType.CALLING && (!message.isExpert()) && !isVideoCalling) {
                     ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from", new ConfirmDialogFragment.OnConfirmDialogListener() {
                         @Override
                         public void OnYesListener() {

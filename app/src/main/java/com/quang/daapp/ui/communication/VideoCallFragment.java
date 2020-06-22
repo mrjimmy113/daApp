@@ -188,7 +188,7 @@ public class VideoCallFragment extends Fragment {
                             break;
                         }
                         case OFFER: {
-                            rtcClient.onRemoteSessionReceived(NetworkClient.getGson().fromJson(message.getMessage(),SessionDescription.class));
+                            rtcClient.onRemoteSessionReceived(NetworkClient.getInstance().getGson().fromJson(message.getMessage(),SessionDescription.class));
                             if(rtcClient.peerConnection.getLocalDescription() != null) {
                                 sendInfo(rtcClient.peerConnection.getLocalDescription(),MessageType.ANSWER,channel);
                             }
@@ -219,11 +219,11 @@ public class VideoCallFragment extends Fragment {
                         }
 
                         case ANSWER: {
-                            rtcClient.onRemoteSessionReceived(NetworkClient.getGson().fromJson(message.getMessage(),SessionDescription.class));
+                            rtcClient.onRemoteSessionReceived(NetworkClient.getInstance().getGson().fromJson(message.getMessage(),SessionDescription.class));
                             break;
                         }
                         case ICE: {
-                            rtcClient.addIceCandidate(NetworkClient.getGson().fromJson(message.getMessage(),IceCandidate.class));
+                            rtcClient.addIceCandidate(NetworkClient.getInstance().getGson().fromJson(message.getMessage(),IceCandidate.class));
                             break;
                         }
                     }
@@ -294,7 +294,7 @@ public class VideoCallFragment extends Fragment {
     }
 
     private void sendInfo(Object object, MessageType messageType, int channel) {
-        String json = NetworkClient.getGson().toJson(object);
+        String json = NetworkClient.getInstance().getGson().toJson(object);
         SendMessage sendMessage = new SendMessage(json, messageType);
         WebSocketClient.getInstance().chat(channel,sendMessage);
     }

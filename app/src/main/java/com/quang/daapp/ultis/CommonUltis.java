@@ -45,7 +45,7 @@ public class CommonUltis {
 
         if (ContextCompat.checkSelfPermission(context,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED||
+                != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(context,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -55,7 +55,7 @@ public class CommonUltis {
                             Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                     },
-                    1052);
+                    GALLERY_REQUEST_CODE);
 
         }
     }

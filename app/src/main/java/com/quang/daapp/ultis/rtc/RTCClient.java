@@ -3,6 +3,8 @@ package com.quang.daapp.ultis.rtc;
 import android.content.Context;
 import android.util.Log;
 
+import org.webrtc.AudioSource;
+import org.webrtc.AudioTrack;
 import org.webrtc.Camera1Enumerator;
 import org.webrtc.CameraEnumerator;
 import org.webrtc.CameraVideoCapturer;
@@ -35,6 +37,7 @@ public class RTCClient {
     private PeerConnectionFactory peerConnectionFactory;
     private VideoCapturer videoCapturer;
     private VideoSource localVideoSource;
+
     public PeerConnection peerConnection;
 
     private EglBase rootEglBase = EglBase.create();
@@ -127,8 +130,15 @@ public class RTCClient {
 
         VideoTrack localVideoTrack = peerConnectionFactory.createVideoTrack("100", localVideoSource);
         localVideoTrack.addSink(view);
+
+        MediaConstraints mediaConstraints = new MediaConstraints();
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("mediaConstraints", "true"));
+        AudioSource audioSource = peerConnectionFactory.createAudioSource(mediaConstraints);
+        AudioTrack audioTrack = peerConnectionFactory.createAudioTrack("101",audioSource);
+
         MediaStream localStream = peerConnectionFactory.createLocalMediaStream(LOCAL_STREAM_ID);
         localStream.addTrack(localVideoTrack);
+        localStream.addTrack(audioTrack);
 
         peerConnection.addStream(localStream);
     }
@@ -151,14 +161,16 @@ public class RTCClient {
 
     public void call(SdpObserver observer) {
         MediaConstraints constraints = new MediaConstraints();
-        constraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo","true"));
+        constraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio","true"));
+        constraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
         peerConnection.createOffer(observer,constraints);
 
     }
 
     public void answer(SdpObserver observer) {
         MediaConstraints constraints = new MediaConstraints();
-        constraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo","true"));
+        constraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio","true"));
+        constraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
         peerConnection.createAnswer(observer,constraints);
     }
 
@@ -219,6 +231,9 @@ public class RTCClient {
 
     public void endCall() {
         peerConnection.close();
+        localVideoSource.dispose();
+        videoCapturer.dispose();
+        peerConnectionFactory.dispose();
         peerConnection = null;
     }
 }
