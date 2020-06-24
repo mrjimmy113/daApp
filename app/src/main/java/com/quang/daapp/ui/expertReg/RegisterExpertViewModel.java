@@ -8,7 +8,6 @@ import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.Major;
 import com.quang.daapp.data.repository.AccountRepository;
 import com.quang.daapp.data.repository.MajorRepository;
-import com.quang.daapp.ui.customerReg.RegisterCustomerFormState;
 
 import java.util.List;
 

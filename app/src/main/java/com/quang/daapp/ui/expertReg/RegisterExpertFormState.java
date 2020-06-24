@@ -67,11 +67,11 @@ public class RegisterExpertFormState {
         this.bankAccount = bankAccount;
     }
 
-    public Integer getAccountNo() {
+    Integer getAccountNo() {
         return accountNo;
     }
 
-    public void setAccountNo(Integer accountNo) {
+    void setAccountNo(Integer accountNo) {
         this.accountNo = accountNo;
     }
 
@@ -83,11 +83,11 @@ public class RegisterExpertFormState {
         isDataValid = dataValid;
     }
 
-    public Integer getMajorError() {
+    Integer getMajorError() {
         return majorError;
     }
 
-    public void setMajorError(Integer majorError) {
+    void setMajorError(Integer majorError) {
         this.majorError = majorError;
     }
 }

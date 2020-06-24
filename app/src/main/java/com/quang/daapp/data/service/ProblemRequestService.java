@@ -50,7 +50,7 @@ public interface ProblemRequestService {
     Call<List<ProblemRequest>> getCurrentAppliedProblemRequest();
 
     @GET("/request/status")
-    Call<List<ProblemRequest>> getCurrentProblemRequestWithStatus(@Query("status")StatusEnum[] statusEnum);
+    Call<List<ProblemRequest>> getCurrentProblemRequestWithStatus(@Query("page")int page,@Query("status")StatusEnum[] statusEnum);
 
     @GET("/request/detail")
     Call<ProblemRequestDetail> getRequestDetail(@Query("id") int requestId);
@@ -75,4 +75,7 @@ public interface ProblemRequestService {
 
     @GET("/request/exp")
     Call<Expert> getExpertProfile(@Query("requestId") int requestId);
+
+    @GET("/request/sub")
+    Call<List<Number>> getSubableRequest();
 }

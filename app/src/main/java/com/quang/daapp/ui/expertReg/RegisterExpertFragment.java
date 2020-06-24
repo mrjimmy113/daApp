@@ -1,36 +1,28 @@
 package com.quang.daapp.ui.expertReg;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Expert;
-import com.quang.daapp.data.model.Major;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ui.viewAdapter.MajorSelectAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
@@ -39,7 +31,6 @@ import java.util.List;
 public class RegisterExpertFragment extends Fragment {
 
     private RegisterExpertViewModel viewModel;
-    private List<Major> majorsResult;
     private RecyclerView recyclerMajor;
     private MajorSelectAdapter adapter;
 
@@ -59,8 +50,7 @@ public class RegisterExpertFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this)
-                .get(RegisterExpertViewModel.class);
+        viewModel = new ViewModelProvider(this).get(RegisterExpertViewModel.class);
 
         final EditText edtEmail = view.findViewById(R.id.edtUsername);
         final EditText edtPassword = view.findViewById(R.id.edtPassword);
@@ -76,7 +66,6 @@ public class RegisterExpertFragment extends Fragment {
         viewModel.getAllMajor();
         viewModel.getAllMajorResult().observe(getViewLifecycleOwner(), majors -> {
             if(majors == null) return;
-            majorsResult = majors;
             adapter = new MajorSelectAdapter(getContext(),majors,new ArrayList<>());
             recyclerMajor.setAdapter(adapter);
             recyclerMajor.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
@@ -85,79 +74,65 @@ public class RegisterExpertFragment extends Fragment {
         final NavController navController = Navigation.findNavController(view);
 
         //Button Back
-        view.findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.popBackStack();
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> navController.popBackStack());
+
+        view.findViewById(R.id.btnExpertRegister).setOnClickListener(v -> {
+            RegisterExpertFormState state = viewModel.validateDate(edtEmail.getText().toString(),edtPassword.getText().toString(),
+                    edtConfirm.getText().toString(),edtFirstName.getText().toString(),edtFee.getText().toString(),
+                    edtBankName.getText().toString(),edtAccountNo.getText().toString(),adapter.getSelected().size());
+
+            if(!state.isDataValid()) {
+                MessageDialogFragment mesDialog = new MessageDialogFragment(getString(R.string.mes_error_validate), R.color.colorDanger, R.drawable.ic_error);
+                mesDialog.show(getParentFragmentManager(),getTag());
+                if(state.getUsernameError() != null) edtEmail.setError(getString(state.getUsernameError()));
+                if(state.getFullNameError() != null) edtFirstName.setError(getString(state.getFullNameError()));
+                if(state.getPasswordError() != null) edtPassword.setError(getString(state.getPasswordError()));
+                if(state.getPasswordConfirmError() != null) edtConfirm.setError(getString(state.getPasswordConfirmError()));
+                if(state.getFeeError() != null) edtFee.setError(getString(state.getFeeError()));
+                if(state.getBankAccount() != null) edtBankName.setError(getString(state.getBankAccount()));
+                if(state.getAccountNo() != null) edtAccountNo.setError(getString(state.getAccountNo()));
+                if(state.getMajorError() != null) txtMajorError.setText(getString(state.getMajorError()));
+                return;
             }
-        });
 
-        view.findViewById(R.id.btnExpertRegister).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RegisterExpertFormState state = viewModel.validateDate(edtEmail.getText().toString(),edtPassword.getText().toString(),
-                        edtConfirm.getText().toString(),edtFirstName.getText().toString(),edtFee.getText().toString(),
-                        edtBankName.getText().toString(),edtAccountNo.getText().toString(),adapter.getSelected().size());
+            Expert expert = new Expert();
+            expert.setEmail(edtEmail.getText().toString());
+            expert.setFullName(edtFirstName.getText().toString());
+            expert.setPassword(edtPassword.getText().toString());
+            expert.setFeePerHour(Float.parseFloat(edtFee.getText().toString()));
 
-                if(!state.isDataValid()) {
-                    MessageDialogFragment mesDialog = new MessageDialogFragment(getString(R.string.mes_error_validate), R.color.colorDanger, R.drawable.ic_error);
-                    mesDialog.show(getParentFragmentManager(),getTag());
-                    if(state.getUsernameError() != null) edtEmail.setError(getString(state.getUsernameError()));
-                    if(state.getFullNameError() != null) edtFirstName.setError(getString(state.getFullNameError()));
-                    if(state.getPasswordError() != null) edtPassword.setError(getString(state.getPasswordError()));
-                    if(state.getPasswordConfirmError() != null) edtConfirm.setError(getString(state.getPasswordConfirmError()));
-                    if(state.getFeeError() != null) edtFee.setError(getString(state.getFeeError()));
-                    if(state.getBankAccount() != null) edtBankName.setError(getString(state.getBankAccount()));
-                    if(state.getAccountNo() != null) edtAccountNo.setError(getString(state.getAccountNo()));
-                    if(state.getMajorError() != null) txtMajorError.setText(getString(state.getMajorError()));
-                    return;
+            expert.setMajor(adapter.getSelected());
+            expert.setBankName(edtBankName.getText().toString());
+            expert.setBankAccountNo(edtAccountNo.getText().toString());
+            expert.setDescription(edtDescription.getText().toString());
+
+            final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
+            loaderDialog.show(getParentFragmentManager(),loaderDialog.getTag());
+            viewModel.register(expert);
+            viewModel.getRegisterResult().observe(getViewLifecycleOwner(), number -> {
+                loaderDialog.dismiss();
+                MessageDialogFragment dialogMes = null;
+                if(number == null) {
+                    dialogMes = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
+                }else {
+                    int result = number.intValue();
+                    if(result == 201) {
+                        dialogMes = new MessageDialogFragment(getString(R.string.mes_register_success),
+                                R.color.colorSuccess, R.drawable.ic_success, () -> {
+                                    NavController navController1 = Navigation.findNavController(view);
+                                    navController1.navigate(R.id.loginFragment);
+                                });
+                    }else  if(result == 409) {
+                        dialogMes = new MessageDialogFragment(getString(R.string.mes_register_email_exist),R.color.colorDanger,R.drawable.ic_error);
+                    }else if (result == 400) {
+                        dialogMes = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
+                    }
                 }
 
-                Expert expert = new Expert();
-                expert.setEmail(edtEmail.getText().toString());
-                expert.setFullName(edtFirstName.getText().toString());
-                expert.setPassword(edtPassword.getText().toString());
-                expert.setFeePerHour(Float.parseFloat(edtFee.getText().toString()));
-
-                expert.setMajor(adapter.getSelected());
-                expert.setBankName(edtBankName.getText().toString());
-                expert.setBankAccountNo(edtAccountNo.getText().toString());
-                expert.setDescription(edtDescription.getText().toString());
-
-                final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
-                loaderDialog.show(getParentFragmentManager(),loaderDialog.getTag());
-                viewModel.register(expert);
-                viewModel.getRegisterResult().observe(getViewLifecycleOwner(), new Observer<Number>() {
-                    @Override
-                    public void onChanged(Number number) {
-                        loaderDialog.dismiss();
-                        MessageDialogFragment dialogMes = null;
-                        if(number == null) {
-                            dialogMes = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
-                        }else {
-                            int result = number.intValue();
-                            if(result == 201) {
-                                dialogMes = new MessageDialogFragment(getString(R.string.mes_register_success),
-                                        R.color.colorSuccess, R.drawable.ic_success, new MessageDialogFragment.OnMyDialogListener() {
-                                    @Override
-                                    public void OnOKListener() {
-                                        NavController navController = Navigation.findNavController(view);
-                                        navController.navigate(R.id.loginFragment);
-                                    }
-                                });
-                            }else  if(result == 409) {
-                                dialogMes = new MessageDialogFragment(getString(R.string.mes_register_email_exist),R.color.colorDanger,R.drawable.ic_error);
-                            }else if (result == 400) {
-                                dialogMes = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
-                            }
-                        }
-
-                        if(dialogMes != null) dialogMes.show(getParentFragmentManager(),dialogMes.getTag());
-                    }
-                });
+                if(dialogMes != null) dialogMes.show(getParentFragmentManager(),dialogMes.getTag());
+            });
 
 
-            }
         });
 
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,17 +32,18 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class RequestListFragment extends Fragment {
-    boolean isOpen = false;
-    TextView title;
-    ImageView ivUp;
-    ImageView ivDown;
-    TextView txtCount;
-    RecyclerView recyclerView;
-    ProblemRequestAdapter adapter;
-    List<ProblemRequest> list = new ArrayList<>();
-    NavController navController;
-    Toolbar tool_bar;
-    OnRequestListListener event;
+    private boolean isOpen = false;
+    private TextView title;
+    private ImageView ivUp;
+    private ImageView ivDown;
+    private TextView txtCount;
+    private RecyclerView recyclerView;
+    private ProblemRequestAdapter adapter;
+    private List<ProblemRequest> list = new ArrayList<>();
+    private NavController navController;
+    private Toolbar tool_bar;
+    private OnRequestListListener event;
+    private boolean ongoingRequestFlag = false;
     public RequestListFragment() {
         // Required empty public constructor
     }
@@ -68,7 +70,28 @@ public class RequestListFragment extends Fragment {
                 openClose();
             }
         });
-
+        recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                boolean canScrollUp = recyclerView.canScrollVertically(-1);
+                boolean canScrollDown = recyclerView.canScrollVertically(1);
+                if(canScrollUp && !canScrollDown) {
+                    if(!ongoingRequestFlag) {
+                        ongoingRequestFlag = true;
+                        event.OnScrollToBottom().observe(getViewLifecycleOwner(), requestList -> {
+                            ongoingRequestFlag = false;
+                            if(requestList == null) return;
+                            if(requestList.size() > 0) {
+                                adapter.addRequestList(requestList);
+                                event.OnGetRequestSuccess(true);
+                            }else {
+                                event.OnGetRequestSuccess(false);
+                            }
+                        });
+                    }
+                }
+            }
+        });
         adapter = new ProblemRequestAdapter(getView().getContext(), list, new ProblemRequestAdapter.ProblemRequestAdapterEvent() {
             @Override
             public void OnMainLayoutClick(int id) {
@@ -113,5 +136,8 @@ public class RequestListFragment extends Fragment {
 
     public interface OnRequestListListener {
         void OnRequestClickListener(int id);
+        LiveData<List<ProblemRequest>> OnScrollToBottom();
+        void OnGetRequestSuccess(boolean isSuccess);
     }
+
 }

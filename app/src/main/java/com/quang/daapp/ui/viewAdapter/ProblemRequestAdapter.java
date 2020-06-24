@@ -38,6 +38,12 @@ public class ProblemRequestAdapter extends RecyclerView.Adapter<ProblemRequestAd
         this.requestList = requestList;
     }
 
+    public void addRequestList(List<ProblemRequest> list) {
+        int lastIndex = this.requestList.size();
+        this.requestList.addAll(list);
+        notifyItemRangeInserted(lastIndex, lastIndex + this.requestList.size() - 1);
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

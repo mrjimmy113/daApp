@@ -7,6 +7,7 @@ import com.quang.daapp.stomp.MessageType;
 import com.quang.daapp.stomp.ReceiveMessage;
 import com.quang.daapp.stomp.SendMessage;
 import com.quang.daapp.stomp.StompClient;
+import com.quang.daapp.stomp.StompConnectionListener;
 import com.quang.daapp.stomp.StompFrame;
 import com.quang.daapp.stomp.StompMessageListener;
 
@@ -18,7 +19,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class WebSocketClient {
-    public static WebSocketClient instance;
+    private static WebSocketClient instance;
 
     public StompClient stompClient;
 
@@ -34,7 +35,9 @@ public class WebSocketClient {
     }
 
     public void connect(Context context) {
+        subscribes.clear();
         stompClient = new StompClient(URI.create("ws://192.168.137.1:8080/chat?token=" + AuthTokenManager.getToken(context)));
+
         boolean connected = true;
         try {
             connected = instance.stompClient.connectBlocking();
@@ -51,7 +54,7 @@ public class WebSocketClient {
     public void subscribe(int channel) {
         if(stompClient ==null) return;
         MutableLiveData<ReceiveMessage> mutableLiveData = new MutableLiveData<>();
-        subscribes.put(channel,mutableLiveData);
+        subscribes.putIfAbsent(channel,mutableLiveData);
         stompClient.subscribe("/topic/messages."  + channel, new StompMessageListener() {
 
             @Override
@@ -67,6 +70,7 @@ public class WebSocketClient {
 
     public void chat(int channel, SendMessage message) {
         if(stompClient ==null) return;
+        if(!stompClient.isStompConnected()) return;
         stompClient.send("/app/chat." + channel, NetworkClient.getInstance().getGson().toJson(message));
     }
 

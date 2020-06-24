@@ -22,14 +22,14 @@ public class HistoryViewModel extends ViewModel {
         repository = ProblemRequestRepository.getInstance();
     }
 
-    void getCompleteRequest() {
+    void getCompleteRequest(int page) {
         StatusEnum[] statusEnums = {StatusEnum.COMPLETE};
-        completeRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+        completeRequestList =  repository.getCurrentUserRequestWithStatus(page,statusEnums);
     }
 
-    void getCancelRequest() {
+    void getCancelRequest(int page) {
         StatusEnum[] statusEnums = {StatusEnum.CANCEL};
-        cancelRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+        cancelRequestList =  repository.getCurrentUserRequestWithStatus(page,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getCompleteRequestResult() {

@@ -69,10 +69,10 @@ public class ProblemRequestRepository {
         return  result;
     }
 
-    public  MutableLiveData<List<ProblemRequest>> getCurrentUserRequestWithStatus(StatusEnum[] statusEnum) {
+    public  MutableLiveData<List<ProblemRequest>> getCurrentUserRequestWithStatus(int page,StatusEnum[] statusEnum) {
         CreateService();
         final MutableLiveData<List<ProblemRequest>> result = new MutableLiveData<>();
-        service.getCurrentProblemRequestWithStatus(statusEnum).enqueue(new MyRequestCallBack<>(result));
+        service.getCurrentProblemRequestWithStatus(page,statusEnum).enqueue(new MyRequestCallBack<>(result));
         return  result;
     }
 
@@ -146,6 +146,13 @@ public class ProblemRequestRepository {
         service.getExpertProfile(requestId).enqueue(new MyRequestCallBack<>(result));
 
         return result;
+    }
+
+    public MutableLiveData<List<Number>> getSubableProfile() {
+        CreateService();
+        final MutableLiveData<List<Number>> result = new MutableLiveData<>();
+        service.getSubableRequest().enqueue(new MyRequestCallBack<>(result));
+        return  result;
     }
 
     private void CreateService() {

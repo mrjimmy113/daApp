@@ -90,7 +90,7 @@
 
 
     <string name="title_activity_expert">ExpertActivity</string>
-    <string name="field_hint_fee">Fee per hour</string>
+    <string name="field_hint_fee">Fee per hour (VND)</string>
     <string name="adapter_all">All</string>
     <string name="isExpert">isExpert</string>
     <string name="communication_menu_cancel">Cancel</string>

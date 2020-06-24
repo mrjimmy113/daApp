@@ -34,7 +34,7 @@ public class CustomerHomeViewModel extends ViewModel {
 
     void getCurrentUserNewRequest() {
         StatusEnum[] statusEnums = {StatusEnum.NEW};
-        newRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+        newRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getNewRequestList() {
@@ -43,7 +43,7 @@ public class CustomerHomeViewModel extends ViewModel {
 
     void getCurrentUserAcceptedRequest() {
         StatusEnum[] statusEnums = {StatusEnum.ACCEPTED,StatusEnum.PROCESSING};
-        acceptedRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+        acceptedRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getAcceptedRequestList() {
@@ -52,7 +52,7 @@ public class CustomerHomeViewModel extends ViewModel {
 
     void getCurrentUserTmpCancelRequest() {
         StatusEnum[] statusEnums = {StatusEnum.TMPCANCEL};
-        tmpCancelRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+        tmpCancelRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getTmpCancelRequestList() {
@@ -61,7 +61,7 @@ public class CustomerHomeViewModel extends ViewModel {
 
     void getCurrentUserTmpCompleteRequest() {
         StatusEnum[] statusEnums = {StatusEnum.TMPCOMPLETE};
-        tmpCompleteRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+        tmpCompleteRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getTmpCompleteRequestList() {

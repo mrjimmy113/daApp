@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -32,6 +33,9 @@ public class HistoryFragment extends Fragment {
 
     private RequestListFragment completeRequest;
     private RequestListFragment cancelRequest;
+
+    private int pageComplete = 0;
+    private int pageCancel = 0;
 
     public HistoryFragment() {
         // Required empty public constructor
@@ -62,28 +66,55 @@ public class HistoryFragment extends Fragment {
 
         assert completeRequest != null;
         completeRequest.setTitle("Completed request");
-        completeRequest.setEvent(id -> {
-            Bundle bundle = new Bundle();
-            bundle.putInt(getString(R.string.key_request_id), id);
-            bundle.putBoolean(getString(R.string.isExpert),isExpert);
-            if(isExpert) {
-                navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment2,bundle);
-            }else {
-                navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment,bundle);
+        completeRequest.setEvent(new RequestListFragment.OnRequestListListener() {
+            @Override
+            public void OnRequestClickListener(int id) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),isExpert);
+                if(isExpert) {
+                    navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment2,bundle);
+                }else {
+                    navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment,bundle);
+                }
+            }
+
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                viewModel.getCompleteRequest(pageComplete + 1);
+                return viewModel.getCompleteRequestResult();
+            }
+            @Override
+            public void  OnGetRequestSuccess(boolean isSuccess) {
+                if(isSuccess) pageComplete++;
             }
         });
 
         assert cancelRequest != null;
         cancelRequest.setTitle("Canceled request");
-        cancelRequest.setEvent(id -> {
-            Bundle bundle = new Bundle();
-            bundle.putInt(getString(R.string.key_request_id), id);
-            bundle.putBoolean(getString(R.string.isExpert),isExpert);
-            bundle.putInt("mode", 1);
-            if(isExpert) {
-                navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment2,bundle);
-            }else {
-                navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment,bundle);
+        cancelRequest.setEvent(new RequestListFragment.OnRequestListListener() {
+            @Override
+            public void OnRequestClickListener(int id) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),isExpert);
+                bundle.putInt("mode", 1);
+                if(isExpert) {
+                    navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment2,bundle);
+                }else {
+                    navController.navigate(R.id.action_navigation_history_to_requestFinalInforFragment,bundle);
+                }
+            }
+
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                viewModel.getCancelRequest(pageCancel + 1);
+                return viewModel.getCancelRequestResult();
+            }
+
+            @Override
+            public void  OnGetRequestSuccess(boolean isSuccess) {
+                if(isSuccess) pageCancel++;
             }
         });
 
@@ -94,13 +125,13 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.getCompleteRequest();
+        viewModel.getCompleteRequest(pageComplete);
         viewModel.getCompleteRequestResult().observe(getViewLifecycleOwner(), problemRequests -> {
             if (problemRequests == null) return;
             completeRequest.setList(problemRequests);
         });
 
-        viewModel.getCancelRequest();
+        viewModel.getCancelRequest(pageCancel);
         viewModel.getCancelRequestResult().observe(getViewLifecycleOwner(), problemRequests -> {
             if (problemRequests == null) return;
             cancelRequest.setList(problemRequests);

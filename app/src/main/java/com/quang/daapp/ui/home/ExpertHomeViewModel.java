@@ -42,7 +42,7 @@ public class ExpertHomeViewModel extends ViewModel {
 
     public void getCurrentUserProcessingRequest() {
         StatusEnum[] statusEnums = {StatusEnum.ACCEPTED,StatusEnum.PROCESSING};
-        processingRequestListResult =  repository.getCurrentUserRequestWithStatus(statusEnums);
+        processingRequestListResult =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
     }
 
     public LiveData<List<ProblemRequest>> getProcessingRequestListResult() {
@@ -51,7 +51,7 @@ public class ExpertHomeViewModel extends ViewModel {
 
     void getCurrentUserTmpCancelRequest() {
         StatusEnum[] statusEnums = {StatusEnum.TMPCANCEL};
-        tmpCancelRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+        tmpCancelRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getTmpCancelRequestList() {
@@ -60,7 +60,7 @@ public class ExpertHomeViewModel extends ViewModel {
 
     void getCurrentUserTmpCompleteRequest() {
         StatusEnum[] statusEnums = {StatusEnum.TMPCOMPLETE};
-        tmpCompleteRequestList =  repository.getCurrentUserRequestWithStatus(statusEnums);
+        tmpCompleteRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getTmpCompleteRequestList() {

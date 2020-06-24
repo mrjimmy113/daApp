@@ -140,7 +140,7 @@
                         android:textColor="@color/colorPrimaryDark"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Fee per hour"
+                        android:text="Fee per hour (VND)"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                     <EditText
