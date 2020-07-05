@@ -118,8 +118,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 if(statusEnum == StatusEnum.ACCEPTED) {
                     Estimate estimate = NetworkClient.getInstance().getGson().fromJson(message.getMessage(),Estimate.class);
                     holder.layout_estimate.setVisibility(View.VISIBLE);
-                    holder.txtHourEstimate.setText(estimate.getHour() + "");
-                    holder.txtTotalEstimate.setText(estimate.getTotal() + "");
+                    int hour =(int) estimate.getHour();
+                    int minute = (int) ((estimate.getHour() - hour) * 60) ;
+                    holder.txtHourEstimate.setText(hour + " Hour " + minute + " Minute");
+                    holder.txtTotalEstimate.setText(estimate.getTotal() + " VND");
                     holder.btnAcceptEstimate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -139,7 +141,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.layout_estimate.setVisibility(View.GONE);
                 holder.container2.setVisibility(View.GONE);
                 holder.txtHourEstimateYes.setText(estimate.getHour() + "");
-                holder.txtTotalEstimateYes.setText(estimate.getTotal() + "");
+                holder.txtTotalEstimateYes.setText(estimate.getTotal() + " VND");
                 break;
             }
         }

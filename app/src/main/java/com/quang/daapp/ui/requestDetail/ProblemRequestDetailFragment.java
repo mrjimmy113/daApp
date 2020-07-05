@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -57,7 +58,7 @@ public class ProblemRequestDetailFragment extends Fragment {
         final Integer requestId = getArguments().getInt(getString(R.string.key_request_id));
         Boolean expert = getArguments().getBoolean(getString(R.string.isExpert));
         isExpert = expert;
-        viewModel = ViewModelProviders.of(this)
+        viewModel = new ViewModelProvider(this)
                 .get(ProblemRequestDetailViewModel.class);
         final RequestDetailInforFragment infor =  new RequestDetailInforFragment();
         final RequestDetailImageFragment image = new RequestDetailImageFragment();

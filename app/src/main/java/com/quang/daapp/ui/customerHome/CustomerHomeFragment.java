@@ -11,7 +11,9 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -30,12 +32,16 @@ public class CustomerHomeFragment extends Fragment {
 
     private CustomerHomeViewModel viewModel;
     private boolean isProcessingOpen = false;
+    private int pageAccept = 0;
+    private int pageTmpCancel = 0;
+    private int pageTmpComplete = 0;
+    private int pageNew = 0;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        viewModel =
-                ViewModelProviders.of(this).get(CustomerHomeViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CustomerHomeViewModel.class);
+
 
         return inflater.inflate(R.layout.fragment_home_customer, container, false);
     }
@@ -58,6 +64,17 @@ public class CustomerHomeFragment extends Fragment {
                 bundle.putBoolean(getString(R.string.isExpert),false);
                 navController.navigate(R.id.action_navigation_home_customer_to_customerCommunicationFragment,bundle);
             }
+
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                viewModel.getCurrentUserAcceptedRequest(pageAccept + 1);
+                return viewModel.getAcceptedRequestList();
+            }
+
+            @Override
+            public void  OnGetRequestSuccess(boolean isSuccess) {
+                if(isSuccess) pageAccept++;
+            }
         });
 
         final RequestListFragment fragCancelRequest =
@@ -71,9 +88,22 @@ public class CustomerHomeFragment extends Fragment {
             public void OnRequestClickListener(int id) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
+                navController.navigate(R.id.action_navigation_home_to_problemRequestDetail,bundle);
+                /*Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),false);
                 bundle.putInt("mode",3);
-                navController.navigate(R.id.action_navigation_home_customer_to_requestFinalInforFragment,bundle);
+                navController.navigate(R.id.action_navigation_home_customer_to_requestFinalInforFragment,bundle);*/
+            }
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                viewModel.getCurrentUserAcceptedRequest(pageTmpCancel + 1);
+                return viewModel.getAcceptedRequestList();
+            }
+
+            @Override
+            public void  OnGetRequestSuccess(boolean isSuccess) {
+                if(isSuccess) pageTmpCancel++;
             }
         });
 
@@ -88,9 +118,22 @@ public class CustomerHomeFragment extends Fragment {
             public void OnRequestClickListener(int id) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
+                navController.navigate(R.id.action_navigation_home_to_problemRequestDetail,bundle);
+                /*Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),false);
                 bundle.putInt("mode",2);
-                navController.navigate(R.id.action_navigation_home_customer_to_requestFinalInforFragment,bundle);
+                navController.navigate(R.id.action_navigation_home_customer_to_requestFinalInforFragment,bundle);*/
+            }
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                viewModel.getCurrentUserAcceptedRequest(pageTmpComplete + 1);
+                return viewModel.getAcceptedRequestList();
+            }
+
+            @Override
+            public void  OnGetRequestSuccess(boolean isSuccess) {
+                if(isSuccess) pageTmpComplete++;
             }
         });
 
@@ -105,6 +148,17 @@ public class CustomerHomeFragment extends Fragment {
                 bundle.putInt(getString(R.string.key_request_id), id);
                 navController.navigate(R.id.action_navigation_home_to_problemRequestDetail,bundle);
             }
+
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                viewModel.getCurrentUserAcceptedRequest(pageNew + 1);
+                return viewModel.getAcceptedRequestList();
+            }
+
+            @Override
+            public void  OnGetRequestSuccess(boolean isSuccess) {
+                if(isSuccess) pageNew++;
+            }
         });
 
         btnNewRequest.setOnClickListener(new View.OnClickListener() {
@@ -114,8 +168,8 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
-        viewModel.getCurrentUserAcceptedRequest();
-        viewModel.getCurrentUserNewRequest();
+        viewModel.getCurrentUserAcceptedRequest(pageAccept);
+        viewModel.getCurrentUserNewRequest(pageNew);
         viewModel.getAcceptedRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
             @Override
             public void onChanged(List<ProblemRequest> problemRequests) {
@@ -140,7 +194,7 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
-        viewModel.getCurrentUserTmpCancelRequest();
+        viewModel.getCurrentUserTmpCancelRequest(pageTmpCancel);
         viewModel.getTmpCancelRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
             @Override
             public void onChanged(List<ProblemRequest> problemRequests) {
@@ -156,7 +210,7 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
-        viewModel.getCurrentUserTmpCompleteRequest();
+        viewModel.getCurrentUserTmpCompleteRequest(pageTmpComplete);
         viewModel.getTmpCompleteRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
             @Override
             public void onChanged(List<ProblemRequest> problemRequests) {

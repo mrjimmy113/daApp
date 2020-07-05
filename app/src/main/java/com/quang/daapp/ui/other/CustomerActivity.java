@@ -96,7 +96,7 @@ public class CustomerActivity extends AppCompatActivity {
         for (MutableLiveData<ReceiveMessage> m: WebSocketClient.getInstance().getSubscribes().values()) {
             m.observe(this, message -> {
                 if(message.getType() == MessageType.CALLING && (message.isExpert())) {
-                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call", new ConfirmDialogFragment.OnConfirmDialogListener() {
+                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from a partner in request: " + message.getMessage(), new ConfirmDialogFragment.OnConfirmDialogListener() {
                         @Override
                         public void OnYesListener() {
                             if (message.getType() == MessageType.CALLING) {

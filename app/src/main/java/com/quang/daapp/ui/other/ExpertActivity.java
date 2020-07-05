@@ -39,6 +39,10 @@ public class ExpertActivity extends AppCompatActivity {
 
         context = this;
         activity = this;
+        NetworkClient.getInstance().init(this,this,navController);
+        DialogManager.getInstance().init(getSupportFragmentManager());
+        CommonUltis.checkCameraPermission(this,this);
+        CommonUltis.checkPermissions(this,this);
         WebSocketClient.getInstance().connect(this);
 
         WebSocketClient.getInstance().stompClient.setStompConnectionListener(new StompConnectionListener() {
@@ -78,10 +82,8 @@ public class ExpertActivity extends AppCompatActivity {
         });
         NavigationUI.setupWithNavController(navView, navController);
 
-        NetworkClient.getInstance().init(this,this,navController);
-        DialogManager.getInstance().init(getSupportFragmentManager());
-        CommonUltis.checkCameraPermission(this,this);
-        CommonUltis.checkPermissions(this,this);
+
+
     }
     public void findSub() {
             ProblemRequestRepository.getInstance().getSubableProfile().observe(activity, new Observer<List<Number>>() {
@@ -101,7 +103,7 @@ public class ExpertActivity extends AppCompatActivity {
         for (MutableLiveData<ReceiveMessage> m: WebSocketClient.getInstance().getSubscribes().values()) {
             m.observe(this, message -> {
                 if(message.getType() == MessageType.CALLING && (!message.isExpert()) && !isVideoCalling) {
-                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from", new ConfirmDialogFragment.OnConfirmDialogListener() {
+                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from partner in " + message.getMessage(), new ConfirmDialogFragment.OnConfirmDialogListener() {
                         @Override
                         public void OnYesListener() {
                             if (message.getType() == MessageType.CALLING) {

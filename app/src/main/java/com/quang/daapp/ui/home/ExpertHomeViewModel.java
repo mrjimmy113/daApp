@@ -32,35 +32,35 @@ public class ExpertHomeViewModel extends ViewModel {
         return mText;
     }
 
-    public void getCurrentUserAppliedRequest() {
+     void getCurrentUserAppliedRequest() {
         appliedRequestListResult =  repository.getCurrentUserAppliedRequest();
     }
 
-    public LiveData<List<ProblemRequest>> getAppliedRequestListResult() {
+     LiveData<List<ProblemRequest>> getAppliedRequestListResult() {
         return appliedRequestListResult;
     }
 
-    public void getCurrentUserProcessingRequest() {
+     void getCurrentUserProcessingRequest(int page) {
         StatusEnum[] statusEnums = {StatusEnum.ACCEPTED,StatusEnum.PROCESSING};
-        processingRequestListResult =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
+        processingRequestListResult =  repository.getCurrentUserRequestWithStatus(page,statusEnums);
     }
 
-    public LiveData<List<ProblemRequest>> getProcessingRequestListResult() {
+     LiveData<List<ProblemRequest>> getProcessingRequestListResult() {
         return processingRequestListResult;
     }
 
-    void getCurrentUserTmpCancelRequest() {
+    void getCurrentUserTmpCancelRequest(int page) {
         StatusEnum[] statusEnums = {StatusEnum.TMPCANCEL};
-        tmpCancelRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
+        tmpCancelRequestList =  repository.getCurrentUserRequestWithStatus(page,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getTmpCancelRequestList() {
         return tmpCancelRequestList;
     }
 
-    void getCurrentUserTmpCompleteRequest() {
+    void getCurrentUserTmpCompleteRequest(int page) {
         StatusEnum[] statusEnums = {StatusEnum.TMPCOMPLETE};
-        tmpCompleteRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
+        tmpCompleteRequestList =  repository.getCurrentUserRequestWithStatus(page,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getTmpCompleteRequestList() {

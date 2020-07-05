@@ -112,10 +112,12 @@ public class RequestListFragment extends Fragment {
     }
 
     public void setList(List<ProblemRequest> list) {
-        this.list = list;
-        adapter.setRequestList(list);
-        txtCount.setText(list.size() + "");
-        adapter.notifyDataSetChanged();
+        if(list != null) {
+            this.list = list;
+            adapter.setRequestList(list);
+            txtCount.setText(list.size() + "");
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void openClose() {

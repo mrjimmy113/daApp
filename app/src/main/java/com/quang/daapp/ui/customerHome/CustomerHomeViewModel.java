@@ -32,36 +32,36 @@ public class CustomerHomeViewModel extends ViewModel {
         return mText;
     }
 
-    void getCurrentUserNewRequest() {
+    void getCurrentUserNewRequest(int page) {
         StatusEnum[] statusEnums = {StatusEnum.NEW};
-        newRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
+        newRequestList =  repository.getCurrentUserRequestWithStatus(page,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getNewRequestList() {
         return newRequestList;
     }
 
-    void getCurrentUserAcceptedRequest() {
+    void getCurrentUserAcceptedRequest(int page) {
         StatusEnum[] statusEnums = {StatusEnum.ACCEPTED,StatusEnum.PROCESSING};
-        acceptedRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
+        acceptedRequestList =  repository.getCurrentUserRequestWithStatus(page,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getAcceptedRequestList() {
         return acceptedRequestList;
     }
 
-    void getCurrentUserTmpCancelRequest() {
+    void getCurrentUserTmpCancelRequest(int page) {
         StatusEnum[] statusEnums = {StatusEnum.TMPCANCEL};
-        tmpCancelRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
+        tmpCancelRequestList =  repository.getCurrentUserRequestWithStatus(page,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getTmpCancelRequestList() {
         return tmpCancelRequestList;
     }
 
-    void getCurrentUserTmpCompleteRequest() {
+    void getCurrentUserTmpCompleteRequest(int page) {
         StatusEnum[] statusEnums = {StatusEnum.TMPCOMPLETE};
-        tmpCompleteRequestList =  repository.getCurrentUserRequestWithStatus(0,statusEnums);
+        tmpCompleteRequestList =  repository.getCurrentUserRequestWithStatus(page,statusEnums);
     }
 
     LiveData<List<ProblemRequest>> getTmpCompleteRequestList() {

@@ -5,6 +5,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.history.HistoryFragment">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:text="History"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 
     <fragment android:name="com.quang.daapp.ui.other.RequestListFragment"
         android:id="@+id/frag_complete_request"

@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,11 +27,14 @@ public class ExpertHomeFragment extends Fragment {
 
     private ExpertHomeViewModel viewModel;
     private boolean isProcessingOpen = false;
+    private int pageProcess = 0;
+    private int pageCancel = 0;
+    private int pageComplete = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         viewModel =
-                ViewModelProviders.of(this).get(ExpertHomeViewModel.class);
+                new ViewModelProvider(this).get(ExpertHomeViewModel.class);
 
         return inflater.inflate(R.layout.fragment_home_expert, container, false);
     }
@@ -52,6 +57,17 @@ public class ExpertHomeFragment extends Fragment {
                 bundle.putBoolean(getString(R.string.isExpert),true);
                 navController.navigate(R.id.action_navigation_home_to_communicationFragment2,bundle);
             }
+
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                viewModel.getCurrentUserProcessingRequest(pageProcess + 1);
+                return viewModel.getProcessingRequestListResult();
+            }
+
+            @Override
+            public void OnGetRequestSuccess(boolean isSuccess) {
+
+            }
         });
 
         final RequestListFragment fragNewRequest =
@@ -61,6 +77,16 @@ public class ExpertHomeFragment extends Fragment {
         fragNewRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
+
+            }
+
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                return null;
+            }
+
+            @Override
+            public void OnGetRequestSuccess(boolean isSuccess) {
 
             }
         });
@@ -76,8 +102,23 @@ public class ExpertHomeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),true);
+                navController.navigate(R.id.action_navigation_home_to_communicationFragment2,bundle);
+                /*Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),true);
                 bundle.putInt("mode",3);
-                navController.navigate(R.id.action_navigation_home_to_requestFinalInforFragment2,bundle);
+                navController.navigate(R.id.action_navigation_home_to_requestFinalInforFragment2,bundle);*/
+            }
+
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                viewModel.getCurrentUserTmpCancelRequest(pageCancel +1);
+                return viewModel.getTmpCancelRequestList();
+            }
+
+            @Override
+            public void OnGetRequestSuccess(boolean isSuccess) {
+                if(isSuccess) pageCancel++;
             }
         });
 
@@ -93,18 +134,34 @@ public class ExpertHomeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),true);
+                navController.navigate(R.id.action_navigation_home_to_communicationFragment2,bundle);
+/*                Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),true);
                 bundle.putInt("mode",2);
-                navController.navigate(R.id.action_navigation_home_to_requestFinalInforFragment2,bundle);
+                navController.navigate(R.id.action_navigation_home_to_requestFinalInforFragment2,bundle);*/
+            }
+
+            @Override
+            public LiveData<List<ProblemRequest>> OnScrollToBottom() {
+                viewModel.getCurrentUserTmpCompleteRequest(pageComplete + 1);
+                return viewModel.getTmpCompleteRequestList();
+            }
+
+            @Override
+            public void OnGetRequestSuccess(boolean isSuccess) {
+                if(isSuccess) pageComplete++;
             }
         });
 
 
 
-        viewModel.getCurrentUserProcessingRequest();
+        viewModel.getCurrentUserProcessingRequest(pageProcess);
         viewModel.getCurrentUserAppliedRequest();
         viewModel.getProcessingRequestListResult().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
             @Override
             public void onChanged(List<ProblemRequest> problemRequests) {
+                if(problemRequests == null) return;
                 fragProcessRequest.setList(problemRequests);
                 for (ProblemRequest p:
                         problemRequests) {
@@ -125,23 +182,20 @@ public class ExpertHomeFragment extends Fragment {
             }
         });
 
-        viewModel.getCurrentUserTmpCancelRequest();
-        viewModel.getTmpCancelRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
-            @Override
-            public void onChanged(List<ProblemRequest> problemRequests) {
-                if(problemRequests == null) return;
-                fragCancelRequest.setList(problemRequests);
-                for (ProblemRequest p:
-                        problemRequests) {
-                    WebSocketClient.getInstance().subscribe(p.getRequestId());
-                }
-                if(problemRequests.size() > 0) {
-                    view.findViewById(R.id.container_tmp_cancel).setVisibility(View.VISIBLE);
-                }
+        viewModel.getCurrentUserTmpCancelRequest(pageCancel);
+        viewModel.getTmpCancelRequestList().observe(getViewLifecycleOwner(), problemRequests -> {
+            if(problemRequests == null) return;
+            fragCancelRequest.setList(problemRequests);
+            for (ProblemRequest p:
+                    problemRequests) {
+                WebSocketClient.getInstance().subscribe(p.getRequestId());
+            }
+            if(problemRequests.size() > 0) {
+                view.findViewById(R.id.container_tmp_cancel).setVisibility(View.VISIBLE);
             }
         });
 
-        viewModel.getCurrentUserTmpCompleteRequest();
+        viewModel.getCurrentUserTmpCompleteRequest(pageComplete);
         viewModel.getTmpCompleteRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
             @Override
             public void onChanged(List<ProblemRequest> problemRequests) {

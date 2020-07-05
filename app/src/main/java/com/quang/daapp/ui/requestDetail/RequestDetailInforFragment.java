@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.ProblemRequestDetail;
+import com.quang.daapp.data.model.StatusEnum;
 
 import java.text.SimpleDateFormat;
 
@@ -31,6 +32,8 @@ public class RequestDetailInforFragment extends Fragment {
     private RatingBar rbRating;
     private TextView txtFeedBack;
     private ProblemRequestDetail detail;
+    private TextView tvFeedBack;
+    private TextView tvRating;
 
 
 
@@ -56,6 +59,8 @@ public class RequestDetailInforFragment extends Fragment {
         txtEndDate = view.findViewById(R.id.txtEndDate);
         rbRating = view.findViewById(R.id.rb_rating);
         txtFeedBack = view.findViewById(R.id.txtFeedBack);
+        tvFeedBack = view.findViewById(R.id.tv_feedback);
+        tvRating = view.findViewById(R.id.tv_rating);
         if(detail != null) {
             setDateOnView();
         }
@@ -80,5 +85,18 @@ public class RequestDetailInforFragment extends Fragment {
         txtEndDate.setText(dateFormat.format(detail.getDeadlineDate()));
         txtFeedBack.setText(detail.getFeedBack());
         rbRating.setRating(detail.getRating());
+        StatusEnum statusEnum = detail.getStatus();
+        if(statusEnum.equals(StatusEnum.NEW) ||
+                statusEnum.equals(StatusEnum.PROCESSING) ||
+                statusEnum.equals(StatusEnum.ACCEPTED)
+        ) {
+            rbRating.setVisibility(View.GONE);
+            txtFeedBack.setVisibility(View.GONE);
+            tvRating.setVisibility(View.GONE);
+            tvFeedBack.setVisibility(View.GONE);
+        }else {
+            rbRating.setVisibility(View.VISIBLE);
+            txtFeedBack.setVisibility(View.VISIBLE);
+        }
     }
 }

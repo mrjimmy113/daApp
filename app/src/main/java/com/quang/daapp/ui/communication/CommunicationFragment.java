@@ -1,10 +1,12 @@
 package com.quang.daapp.ui.communication;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -355,6 +357,9 @@ public class CommunicationFragment extends Fragment {
                                         if(!isExpert) {
                                             FeedBackDialogFragment feedBackDialog = new FeedBackDialogFragment(channel);
                                             feedBackDialog.show(getParentFragmentManager(),getTag());
+                                        }else {
+                                            SendMessage sendMessage = new SendMessage("", MessageType.COMPLETE);
+                                            WebSocketClient.getInstance().chat(channel,sendMessage);
                                         }
                                     }
 
@@ -383,27 +388,41 @@ public class CommunicationFragment extends Fragment {
     }
 
     private void changeStatus(StatusEnum statusEnum) {
-        txtAccept.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        txtProcess.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        txtComplete.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        txtAccept.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        txtProcess.setBackgroundColor(getResources().getColor(R.color.colorWhite));
-        txtComplete.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        Context context = getContext();
+        assert context != null;
+        int primaryDark = ContextCompat.getColor(context,R.color.colorPrimaryDark);
+        int white = ContextCompat.getColor(context,R.color.colorWhite);
+        int primary = ContextCompat.getColor(context,R.color.colorPrimary);
+        int success = ContextCompat.getColor(context,R.color.colorSuccess);
+        int danger = ContextCompat.getColor(context,R.color.colorDanger);
+        txtAccept.setTextColor(primaryDark);
+        txtProcess.setTextColor(primaryDark);
+        txtComplete.setTextColor(primaryDark);
+        txtAccept.setBackgroundColor(white);
+        txtProcess.setBackgroundColor(white);
+        txtComplete.setBackgroundColor(white);
 
         switch (statusEnum) {
             case ACCEPTED: {
-                txtAccept.setTextColor(getResources().getColor(R.color.colorWhite));
-                txtAccept.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                txtAccept.setTextColor(white);
+                txtAccept.setBackgroundColor(primary);
                 break;
             }
             case PROCESSING: {
-                txtProcess.setTextColor(getResources().getColor(R.color.colorWhite));
-                txtProcess.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                txtProcess.setTextColor(white);
+                txtProcess.setBackgroundColor(primary);
                 break;
             }
-            case COMPLETE: {
-                txtComplete.setTextColor(getResources().getColor(R.color.colorWhite));
-                txtComplete.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            case TMPCANCEL: {
+                txtComplete.setText("Cancel");
+                txtComplete.setTextColor(white);
+                txtComplete.setBackgroundColor(danger);
+                break;
+            }
+            case TMPCOMPLETE: {
+                txtComplete.setText("Complete");
+                txtComplete.setTextColor(white);
+                txtComplete.setBackgroundColor(success);
                 break;
             }
         }
@@ -422,6 +441,18 @@ public class CommunicationFragment extends Fragment {
                 case PROCESSING: {
                     popupMenu.getMenu().findItem(R.id.menu_estimate).setVisible(false);
                     popupMenu.getMenu().findItem(R.id.menu_complete).setVisible(true);
+                    break;
+                }
+                case TMPCANCEL: {
+                    popupMenu.getMenu().findItem(R.id.menu_estimate).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.menu_complete).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.menu_cancel).setVisible(true);
+                    break;
+                }
+                case TMPCOMPLETE: {
+                    popupMenu.getMenu().findItem(R.id.menu_estimate).setVisible(false);
+                    popupMenu.getMenu().findItem(R.id.menu_complete).setVisible(true);
+                    popupMenu.getMenu().findItem(R.id.menu_cancel).setVisible(false);
                     break;
                 }
 

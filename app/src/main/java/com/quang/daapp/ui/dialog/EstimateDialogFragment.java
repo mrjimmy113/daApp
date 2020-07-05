@@ -32,7 +32,7 @@ public class EstimateDialogFragment extends MyBaseDialogFragment {
     private int channel;
     private float fee;
     private Integer[] hours = {0,1,2,3,4,5,6,7,8,9,10,11,12};
-    private Integer[] minutes = {5,10,15,20,25,30,35,40,45,50,55};
+    private Integer[] minutes = {0,5,10,15,20,25,30,35,40,45,50,55};
     private float totalMoney = 0;
     private float totalHour = 0;
 
@@ -64,7 +64,7 @@ public class EstimateDialogFragment extends MyBaseDialogFragment {
 
         ArrayAdapter<Integer> adapterMinute = new ArrayAdapter<>(getContext(),android.R.layout.simple_spinner_item, minutes);
         adapterMinute.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnMinute.setAdapter(adapterHour);
+        spnMinute.setAdapter(adapterMinute);
 
         spnHour.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -121,10 +121,9 @@ public class EstimateDialogFragment extends MyBaseDialogFragment {
         int hour = (Integer) spnHour.getSelectedItem();
         int minute = (Integer) spnMinute.getSelectedItem();
         totalHour = hour + (float)minute / 60;
-        totalHour = Math.round(totalHour);
-        totalMoney = totalHour * fee;
+        totalMoney = Math.round(totalHour * fee);
         txtError.setVisibility(View.INVISIBLE);
-        txtTotal.setText(totalMoney + "");
+        txtTotal.setText(totalMoney + " VND");
 
     }
 
