@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_communicationFragment2_to_videoCallFragment2"
             app:destination="@id/videoCallFragment2" />
+        <action
+            android:id="@+id/action_communicationFragment2_to_problemRequestDetailFragment"
+            app:destination="@id/problemRequestDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/requestFinalInforFragment2"

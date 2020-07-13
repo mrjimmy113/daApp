@@ -48,7 +48,7 @@ public class ExpertHomeFragment extends Fragment {
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_process_request);
 
         assert fragProcessRequest != null;
-        fragProcessRequest.setTitle("Processing request");
+        fragProcessRequest.setTitle("Ongoing request");
         fragProcessRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
@@ -103,6 +103,10 @@ public class ExpertHomeFragment extends Fragment {
                 bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),true);
                 navController.navigate(R.id.action_navigation_home_to_communicationFragment2,bundle);
+               /* Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),true);
+                navController.navigate(R.id.action_navigation_home_to_communicationFragment2,bundle);*/
                 /*Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),true);
@@ -135,6 +139,10 @@ public class ExpertHomeFragment extends Fragment {
                 bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),true);
                 navController.navigate(R.id.action_navigation_home_to_communicationFragment2,bundle);
+                /*Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                bundle.putBoolean(getString(R.string.isExpert),true);
+                navController.navigate(R.id.action_navigation_home_to_communicationFragment2,bundle);*/
 /*                Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),true);

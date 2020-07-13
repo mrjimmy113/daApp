@@ -55,7 +55,7 @@ public class CustomerHomeFragment extends Fragment {
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_process_request);
 
         assert fragProcessRequest != null;
-        fragProcessRequest.setTitle("Accepted request");
+        fragProcessRequest.setTitle("Ongoing request");
         fragProcessRequest.setEvent(new RequestListFragment.OnRequestListListener() {
             @Override
             public void OnRequestClickListener(int id) {
@@ -88,7 +88,11 @@ public class CustomerHomeFragment extends Fragment {
             public void OnRequestClickListener(int id) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
-                navController.navigate(R.id.action_navigation_home_to_problemRequestDetail,bundle);
+                bundle.putBoolean(getString(R.string.isExpert),false);
+                navController.navigate(R.id.action_navigation_home_customer_to_customerCommunicationFragment,bundle);
+                /*Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                navController.navigate(R.id.action_navigation_home_to_problemRequestDetail,bundle);*/
                 /*Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),false);
@@ -118,7 +122,11 @@ public class CustomerHomeFragment extends Fragment {
             public void OnRequestClickListener(int id) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
-                navController.navigate(R.id.action_navigation_home_to_problemRequestDetail,bundle);
+                bundle.putBoolean(getString(R.string.isExpert),false);
+                navController.navigate(R.id.action_navigation_home_customer_to_customerCommunicationFragment,bundle);
+                /*Bundle bundle = new Bundle();
+                bundle.putInt(getString(R.string.key_request_id), id);
+                navController.navigate(R.id.action_navigation_home_to_problemRequestDetail,bundle);*/
                 /*Bundle bundle = new Bundle();
                 bundle.putInt(getString(R.string.key_request_id), id);
                 bundle.putBoolean(getString(R.string.isExpert),false);

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.model.Expert;
+import com.quang.daapp.data.model.ExpertStat;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.data.model.ProblemRequestDetail;
 import com.quang.daapp.data.model.StatusEnum;
@@ -153,6 +154,13 @@ public class ProblemRequestRepository {
         final MutableLiveData<List<Number>> result = new MutableLiveData<>();
         service.getSubableRequest().enqueue(new MyRequestCallBack<>(result));
         return  result;
+    }
+
+    public MutableLiveData<ExpertStat> getExpertStat(int expertId) {
+        CreateService();
+        final  MutableLiveData<ExpertStat> result = new MutableLiveData<>();
+        service.getExpertStat(expertId).enqueue(new MyRequestCallBack<>(result));
+        return result;
     }
 
     private void CreateService() {

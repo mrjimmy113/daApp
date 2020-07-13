@@ -12,6 +12,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class ProblemRequestDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final Integer requestId = getArguments().getInt(getString(R.string.key_request_id));
         Boolean expert = getArguments().getBoolean(getString(R.string.isExpert));
+        Boolean viewOnly = getArguments().getBoolean("viewOnly");
         isExpert = expert;
         viewModel = new ViewModelProvider(this)
                 .get(ProblemRequestDetailViewModel.class);
@@ -94,6 +96,9 @@ public class ProblemRequestDetailFragment extends Fragment {
         }else {
             btnEdit.setVisibility(View.GONE);
             btnApply.setVisibility(View.VISIBLE);
+        }
+        if(viewOnly) {
+            btnApply.setVisibility(View.GONE);
         }
         viewPager.setAdapter(adapter);
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {

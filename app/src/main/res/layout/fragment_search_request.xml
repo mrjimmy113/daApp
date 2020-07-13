@@ -68,6 +68,13 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/txtEmpty"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:text="No record found"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyc_problem_request"
             android:layout_width="match_parent"

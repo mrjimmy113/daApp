@@ -8,11 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -37,15 +39,16 @@ public class SearchRequestFragment extends Fragment {
     private ProblemRequestAdapter adapter;
     private List<ProblemRequest> problemRequestList = new ArrayList<>();
     private NavController navController;
-    Spinner spnMajor ;
-    Spinner spnCity ;
-    Spinner spnLanguage ;
-    Spinner spnTime ;
+    private Spinner spnMajor ;
+    private Spinner spnCity ;
+    private Spinner spnLanguage ;
+    private Spinner spnTime ;
+    private TextView txtEmpty;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         viewModel =
-                ViewModelProviders.of(this).get(SearchRequestViewModel.class);
+                new ViewModelProvider(this).get(SearchRequestViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search_request, container, false);
 
         return root;
@@ -63,6 +66,7 @@ public class SearchRequestFragment extends Fragment {
         final LinearLayout layoutSearchTool = view.findViewById(R.id.layout_search_tool);
         recyclerView = view.findViewById(R.id.recyc_problem_request);
         navController = Navigation.findNavController(view);
+        txtEmpty = view.findViewById(R.id.txtEmpty);
 
         adapter = new ProblemRequestAdapter(getView().getContext(), problemRequestList, new ProblemRequestAdapter.ProblemRequestAdapterEvent() {
             @Override
@@ -141,6 +145,12 @@ public class SearchRequestFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        search();
+    }
+
     private void search() {
         final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
         loaderDialog.show(getParentFragmentManager(),getTag());
@@ -153,6 +163,8 @@ public class SearchRequestFragment extends Fragment {
             @Override
             public void onChanged(List<ProblemRequest> problemRequests) {
                 if(problemRequests == null) return;
+                if(problemRequests.isEmpty()) txtEmpty.setVisibility(View.VISIBLE);
+                else txtEmpty.setVisibility(View.GONE);
                 problemRequestList = problemRequests;
                 adapter.setRequestList(problemRequestList);
                 adapter.notifyDataSetChanged();

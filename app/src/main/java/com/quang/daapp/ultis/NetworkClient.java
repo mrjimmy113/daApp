@@ -6,6 +6,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.quang.daapp.BuildConfig;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
@@ -29,11 +30,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkClient {
 
     private static NetworkClient instance;
-    public static final String BASE_URL = "http://192.168.137.1:8080";
+    public static final String BASE_URL = "http://" + BuildConfig.API_URL;
 
     private static final String IMG_URL = "/request/image?imgName=";
 
     public static NetworkClient getInstance(){
+
         if(instance == null) {
             instance = new NetworkClient();
         }

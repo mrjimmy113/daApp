@@ -41,9 +41,10 @@
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:textColor="@color/colorWhite"
-                    android:text="Problem Request Title"
+                    android:text="View request detail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
+
             </LinearLayout>
 
             <LinearLayout

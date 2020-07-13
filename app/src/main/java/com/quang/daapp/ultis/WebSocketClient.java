@@ -3,6 +3,7 @@ package com.quang.daapp.ultis;
 import android.content.Context;
 import android.util.Log;
 
+import com.quang.daapp.BuildConfig;
 import com.quang.daapp.stomp.MessageType;
 import com.quang.daapp.stomp.ReceiveMessage;
 import com.quang.daapp.stomp.SendMessage;
@@ -36,7 +37,7 @@ public class WebSocketClient {
 
     public void connect(Context context) {
         subscribes.clear();
-        stompClient = new StompClient(URI.create("ws://192.168.137.1:8080/chat?token=" + AuthTokenManager.getToken(context)));
+        stompClient = new StompClient(URI.create("ws://" + BuildConfig.API_URL + "/chat?token=" + AuthTokenManager.getToken(context)));
 
         boolean connected = true;
         try {
@@ -47,12 +48,16 @@ public class WebSocketClient {
         }
         if (!connected) {
             Log.e("CLMN","Failed to connect to the socket");
+            connect(context);
 
         }
     }
 
     public void subscribe(int channel) {
         if(stompClient ==null) return;
+        if(!stompClient.isStompConnected()) {
+            stompClient.connect();
+        }
         MutableLiveData<ReceiveMessage> mutableLiveData = new MutableLiveData<>();
         subscribes.putIfAbsent(channel,mutableLiveData);
         stompClient.subscribe("/topic/messages."  + channel, new StompMessageListener() {

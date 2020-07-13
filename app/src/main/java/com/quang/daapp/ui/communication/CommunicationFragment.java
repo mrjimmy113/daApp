@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -85,7 +86,7 @@ public class CommunicationFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         viewModel =
-                ViewModelProviders.of(this).get(CommunicationViewModel.class);
+                new ViewModelProvider(this).get(CommunicationViewModel.class);
 
 
         return inflater.inflate(R.layout.fragment_communication, container, false);
@@ -257,6 +258,19 @@ public class CommunicationFragment extends Fragment {
             adapter.setStatusEnum(detail.getStatus());
 
             txtRequestTitle.setText(problemRequestDetail.getTitle());
+            txtRequestTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(getString(R.string.key_request_id), detail.getRequestId());
+                    bundle.putBoolean("viewOnly",true);
+                    bundle.putBoolean(getString(R.string.isExpert), true);
+                    if(isExpert)
+                        navController.navigate(R.id.action_communicationFragment2_to_problemRequestDetailFragment,bundle);
+                    else
+                        navController.navigate(R.id.action_customerCommunicationFragment_to_problemRequestDetail,bundle);
+                }
+            });
             changeStatus(problemRequestDetail.getStatus());
             updateMenu(problemRequestDetail.getStatus());
         });

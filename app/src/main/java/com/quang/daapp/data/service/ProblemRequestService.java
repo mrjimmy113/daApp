@@ -2,6 +2,7 @@ package com.quang.daapp.data.service;
 
 import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.model.Expert;
+import com.quang.daapp.data.model.ExpertStat;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.data.model.ProblemRequestDetail;
 import com.quang.daapp.data.model.StatusEnum;
@@ -78,4 +79,7 @@ public interface ProblemRequestService {
 
     @GET("/request/sub")
     Call<List<Number>> getSubableRequest();
+
+    @GET("/request/expStat")
+    Call<ExpertStat> getExpertStat(@Query("expertId") int expertId);
 }

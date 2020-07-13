@@ -197,7 +197,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Address"
+                    android:text="Bank Account No"
                     android:textStyle="bold" />
 
                 <TextView
@@ -220,7 +220,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Address"
+                    android:text="Description"
                     android:textStyle="bold" />
 
                 <TextView
