@@ -19,41 +19,41 @@ import retrofit2.http.Part;
 public interface AccountService {
 
     @FormUrlEncoded
-    @POST("/account/login")
+    @POST("account/login")
     Call<String> login(@Field("email") String email, @Field("password") String password);
 
-    @POST("/account/cus")
+    @POST("account/cus")
     Call<Number> registerCustomer(@Body Customer model);
 
-    @POST("/account/exp")
+    @POST("account/exp")
     Call<Number> registerExpert(@Body Expert model);
 
     @Multipart
-    @PUT("/account/cus")
+    @PUT("account/cus")
     Call<Number> updateCustomer(@Part MultipartBody.Part file, @Part("infor") RequestBody infor);
 
     @FormUrlEncoded
-    @POST("/account/check")
+    @POST("account/check")
     Call<Boolean> check(@Header("authorization") String auth,@Field("token") String token) ;
 
-    @GET("/account/cus")
+    @GET("account/cus")
     Call<Customer> getCustomerProfile(@Header("authorization") String token);
 
-    @GET("/account/exp")
+    @GET("account/exp")
     Call<Expert> getExpertProfile();
 
     @Multipart
-    @PUT("/account/exp")
+    @PUT("account/exp")
     Call<Number> updateExpert(@Part MultipartBody.Part file, @Part("infor") RequestBody infor);
 
     @FormUrlEncoded
-    @POST("/account/changePassword")
+    @POST("account/changePassword")
     Call<Number> changePassword(@Header("authorization") String token,
                                 @Field("currentPassword") String currentPassword,
                                 @Field("newPassword") String newPassword);
 
     @FormUrlEncoded
-    @POST("/account/forgetPassword")
+    @POST("account/forgetPassword")
     Call<Number> forgetPassword(@Field("email") String email);
 
 }

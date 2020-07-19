@@ -59,6 +59,7 @@ public class RequestDetailApplicantFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final RecyclerView recyclerView = view.findViewById(R.id.recycle);
         navController = Navigation.findNavController(getParentFragment().getView());
+        txtEmpty = view.findViewById(R.id.txtEmpty);
 
         adapter = new ExpertInforAdapter(getContext(), expertList, new ExpertInforAdapter.OnExpertInforInterface() {
             @Override

@@ -148,7 +148,7 @@ public class SearchRequestFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        search();
+
     }
 
     private void search() {

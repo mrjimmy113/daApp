@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.requestDetail.RequestDetailApplicantFragment">
     <TextView
+        android:visibility="gone"
         android:id="@+id/txtEmpty"
         android:textSize="30sp"
         android:gravity="center"

@@ -122,6 +122,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textColor="@color/colorPrimaryDark"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Email"
@@ -150,6 +151,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:textColor="@color/colorPrimaryDark"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Major"
@@ -169,6 +171,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:textColor="@color/colorPrimaryDark"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Fee per hour (VND)"
@@ -188,17 +191,18 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Completed Request"
+                        android:text="Completed Request: "
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/txtCompleted"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{profile.bankName}"
                         android:textSize="20dp" />
@@ -209,23 +213,33 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Canceled Request"
+                        android:text="Canceled Request: "
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/txtCanceled"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{profile.bankAccountNo}"
                         android:textSize="20dp" />
 
 
                 </LinearLayout>
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rating: "
+                    android:textStyle="bold" />
+
 
                 <RatingBar
                     android:layout_gravity="center"

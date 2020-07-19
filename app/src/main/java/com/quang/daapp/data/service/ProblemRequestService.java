@@ -28,14 +28,14 @@ import retrofit2.http.Query;
 
 public interface ProblemRequestService {
     @Multipart
-    @POST("/request")
+    @POST("request")
     Call<Number> createNewRequest(@Part MultipartBody.Part[] files, @Part("endDate") RequestBody date,
                                   @Part("title") RequestBody title, @Part("description") RequestBody description,
                                   @Part("majorId") int id
                                   );
 
     @Multipart
-    @PUT("/request")
+    @PUT("request")
     Call<Number> updateRequest(@Part MultipartBody.Part[] files,
                                @Part("requestId") int requestId,
                                @Part("endDate") RequestBody date,
@@ -44,42 +44,42 @@ public interface ProblemRequestService {
     );
 
 
-    @GET("/request")
+    @GET("request")
     Call<List<ProblemRequest>> getCurrentProblemRequest();
 
-    @GET("/request/applied")
+    @GET("request/applied")
     Call<List<ProblemRequest>> getCurrentAppliedProblemRequest();
 
-    @GET("/request/status")
+    @GET("request/status")
     Call<List<ProblemRequest>> getCurrentProblemRequestWithStatus(@Query("page")int page,@Query("status")StatusEnum[] statusEnum);
 
-    @GET("/request/detail")
+    @GET("request/detail")
     Call<ProblemRequestDetail> getRequestDetail(@Query("id") int requestId);
 
-    @GET("/request/search")
+    @GET("request/search")
     Call<List<ProblemRequest>> expertSearch(@Query("major") int majorId, @Query("city") String city,
                                             @Query("language") String language, @Query("time") int time);
 
     @FormUrlEncoded
-    @POST("/request/apply")
+    @POST("request/apply")
     Call<Number> expertApply(@Field("requestId") int requestId);
 
-    @GET("/request/applicant")
+    @GET("request/applicant")
     Call<List<Expert>> getApplicants(@Query("requestId") int requestId);
 
     @FormUrlEncoded
-    @PUT("/request/accept")
+    @PUT("request/accept")
     Call<Number> acceptExpert(@Field("requestId") int requestId, @Field("expertId") int expertId);
 
-    @GET("/request/cus")
+    @GET("request/cus")
     Call<Customer> getCustomerProfile(@Query("requestId") int requestId);
 
-    @GET("/request/exp")
+    @GET("request/exp")
     Call<Expert> getExpertProfile(@Query("requestId") int requestId);
 
-    @GET("/request/sub")
+    @GET("request/sub")
     Call<List<Number>> getSubableRequest();
 
-    @GET("/request/expStat")
+    @GET("request/expStat")
     Call<ExpertStat> getExpertStat(@Query("expertId") int expertId);
 }

@@ -120,6 +120,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:maxLength="255"
                         android:background="@drawable/edt_text_box"
                         android:layout_marginTop="5dp"
                         android:id="@+id/edtFullName"
@@ -144,6 +145,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:maxLength="6"
                         android:id="@+id/edtFee"
                         android:background="@drawable/edt_text_box"
                         android:layout_marginTop="5dp"
@@ -199,6 +201,7 @@
                         android:layout_height="wrap_content"/>
 
                     <EditText
+                        android:maxLength="255"
                         android:paddingHorizontal="5dp"
                         android:id="@+id/edtBankName"
                         android:background="@null"
@@ -224,6 +227,7 @@
                         android:layout_height="wrap_content"/>
 
                     <EditText
+                        android:maxLength="255"
                         android:paddingHorizontal="5dp"
                         android:id="@+id/edtAccountNo"
                         android:background="@null"
@@ -246,6 +250,7 @@
                         android:textSize="18sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:maxLength="500"
                         android:layout_marginTop="5dp"
                         android:textSize="20sp"
                         android:id="@+id/edtDescription"

@@ -23,10 +23,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String","API_URL","\"192.168.137.1:8080\"")
+            buildConfigField("String","API_URL","\"192.168.137.1:8080/da/\"")
         }
         release {
-            buildConfigField("String","API_URL","\"192.168.137.1:8080\"")
+            buildConfigField("String","API_URL","\"192.168.137.1:8080/da/\"")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

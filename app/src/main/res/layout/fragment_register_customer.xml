@@ -83,6 +83,7 @@
 
 
     <EditText
+        android:maxLength="255"
         android:drawableLeft="@drawable/ic_email"
         android:drawableStart="@drawable/ic_email"
         android:drawablePadding="10dp"
@@ -95,6 +96,7 @@
         android:inputType="textEmailAddress" />
 
     <EditText
+        android:maxLength="255"
         android:drawableLeft="@drawable/ic_fullname"
         android:drawableStart="@drawable/ic_fullname"
         android:drawablePadding="10dp"
@@ -110,6 +112,7 @@
         />
 
     <EditText
+        android:maxLength="20"
         android:drawableLeft="@drawable/ic_password"
         android:drawableStart="@drawable/ic_password"
         android:drawablePadding="10dp"
@@ -140,6 +143,7 @@
         android:inputType="textPassword" />
 
         <EditText
+            android:maxLength="255"
             android:drawableLeft="@drawable/ic_address"
             android:drawableStart="@drawable/ic_address"
             android:drawablePadding="10dp"

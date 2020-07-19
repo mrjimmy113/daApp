@@ -24,6 +24,7 @@
                     android:layout_height="200dp"/>
 
                 <EditText
+                    android:maxLength="255"
                     android:drawableLeft="@drawable/ic_email"
                     android:drawablePadding="10dp"
                     android:layout_marginVertical="10dp"
@@ -36,6 +37,7 @@
                     android:drawableStart="@drawable/ic_email" />
 
                 <EditText
+                    android:maxLength="20"
                     android:drawableLeft="@drawable/ic_password"
                     android:drawablePadding="10dp"
                     android:id="@+id/password"

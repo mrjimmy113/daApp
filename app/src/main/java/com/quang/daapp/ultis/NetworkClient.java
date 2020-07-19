@@ -32,7 +32,7 @@ public class NetworkClient {
     private static NetworkClient instance;
     public static final String BASE_URL = "http://" + BuildConfig.API_URL;
 
-    private static final String IMG_URL = "/request/image?imgName=";
+    private static final String IMG_URL = "request/image?imgName=";
 
     public static NetworkClient getInstance(){
 

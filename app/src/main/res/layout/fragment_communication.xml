@@ -183,6 +183,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content">
             <EditText
+                android:maxLength="255"
                 android:id="@+id/edtMessage"
                 android:background="@drawable/edt_text_box"
                 android:textSize="20sp"

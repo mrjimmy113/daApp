@@ -37,7 +37,7 @@ public class WebSocketClient {
 
     public void connect(Context context) {
         subscribes.clear();
-        stompClient = new StompClient(URI.create("ws://" + BuildConfig.API_URL + "/chat?token=" + AuthTokenManager.getToken(context)));
+        stompClient = new StompClient(URI.create("ws://" + BuildConfig.API_URL + "chat?token=" + AuthTokenManager.getToken(context)));
 
         boolean connected = true;
         try {

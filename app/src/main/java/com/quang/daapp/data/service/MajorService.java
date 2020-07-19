@@ -9,6 +9,6 @@ import retrofit2.http.GET;
 
 public interface MajorService {
 
-    @GET("/major")
+    @GET("major")
     Call<List<Major>> getAllMajor();
 }
