@@ -84,12 +84,7 @@ public class ForgetPasswordFragment extends Fragment {
                             dialogFragment.show(getParentFragmentManager(),getTag());
                         }
 
-                        else if (number.intValue() == 400) {
-                            MessageDialogFragment dialogFragment = new MessageDialogFragment(getString(R.string.mes_error_400),
-                                    R.color.colorDanger, R.drawable.ic_error
-                            );
-                            dialogFragment.show(getParentFragmentManager(),getTag());
-                        }
+
                     }
                 });
 

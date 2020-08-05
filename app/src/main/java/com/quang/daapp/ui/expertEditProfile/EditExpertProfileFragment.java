@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
@@ -36,6 +36,7 @@ import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ultis.CommonUltis;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
@@ -95,7 +96,8 @@ public class EditExpertProfileFragment extends Fragment {
             edtBankName.setText(data.getBankName());
             edtAccountNo.setText(data.getBankAccountNo());
             edtDescription.setText(data.getDescription());
-            Glide.with(getContext()).load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
+            Picasso.get().load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
+
         }
 
 
@@ -183,9 +185,6 @@ public class EditExpertProfileFragment extends Fragment {
                                     navController.popBackStack();
                                 }
                             });
-                            mesDialog.show(getParentFragmentManager(),getTag());
-                        }else if(number.intValue() == 400) {
-                            MessageDialogFragment mesDialog = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
                             mesDialog.show(getParentFragmentManager(),getTag());
                         }
                     }

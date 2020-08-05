@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.bumptech.glide.Glide;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
@@ -26,6 +26,7 @@ import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.databinding.FragmentProfileCustomerBinding;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
 import com.quang.daapp.ultis.AuthTokenManager;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 
@@ -106,7 +107,8 @@ public class ProfileCustomerFragment extends Fragment {
                     txtDob.setText(format.format(data.getDob()));
                 }
                 if(data.getImgName() != null && !data.getImgName().trim().isEmpty()) {
-                    Glide.with(getContext()).load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
+
+                    Picasso.get().load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
                 }
 
 

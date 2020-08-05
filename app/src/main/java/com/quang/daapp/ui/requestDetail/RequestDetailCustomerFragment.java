@@ -12,10 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.ultis.NetworkClient;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -66,7 +67,8 @@ public class RequestDetailCustomerFragment extends Fragment {
     }
 
     private void setData() {
-        Glide.with(getContext()).load(NetworkClient.getImageUrl(customer.getImgName())).into(ivAvatar);
+
+        Picasso.get().load(NetworkClient.getImageUrl(customer.getImgName())).into(ivAvatar);
         txtEmail.setText(customer.getEmail());
         txtFullName.setText(customer.getFullName());
         txtAddress.setText(customer.getAddress());

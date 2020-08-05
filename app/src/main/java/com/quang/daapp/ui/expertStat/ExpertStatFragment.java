@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.ExpertStat;
@@ -27,6 +27,7 @@ import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ultis.DialogManager;
 import com.quang.daapp.ultis.NetworkClient;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,7 +82,7 @@ public class ExpertStatFragment extends Fragment {
         txtDescription = view.findViewById(R.id.txtDescription);
         txtMajor = view.findViewById(R.id.txtMajor);
 
-        Glide.with(this).load(NetworkClient.getImageUrl(detail.getImgName())).into(ivAvatar);
+        Picasso.get().load(NetworkClient.getImageUrl(detail.getImgName())).into(ivAvatar);
         txtFullname.setText(detail.getFullName());
         txtEmail.setText(detail.getEmail());
         StringBuilder majorText = new StringBuilder();

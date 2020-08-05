@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.quang.daapp.R;
+import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.data.repository.ProblemRequestRepository;
 import com.quang.daapp.stomp.MessageType;
 import com.quang.daapp.stomp.ReceiveMessage;
@@ -30,9 +31,9 @@ import androidx.navigation.ui.NavigationUI;
 public class ExpertActivity extends AppCompatActivity {
 
     private  NavController navController;
-    private boolean isVideoCalling = false;
     private Context context;
     private AppCompatActivity activity;
+    private boolean isShowCall= false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +44,7 @@ public class ExpertActivity extends AppCompatActivity {
         DialogManager.getInstance().init(getSupportFragmentManager());
         CommonUltis.checkCameraPermission(this,this);
         CommonUltis.checkPermissions(this,this);
+        CommonUltis.checkAudioPermission(this,this);
         WebSocketClient.getInstance().connect(this);
 
         WebSocketClient.getInstance().stompClient.setStompConnectionListener(new StompConnectionListener() {
@@ -51,7 +53,7 @@ public class ExpertActivity extends AppCompatActivity {
                 super.onConnected();
                 Log.e("CMN", "CONNECTED");
                 findSub();
-                startSub();
+
             }
 
             @Override
@@ -76,7 +78,7 @@ public class ExpertActivity extends AppCompatActivity {
             }else {
                 navView.setVisibility(View.GONE);
             }
-            isVideoCalling =  destination.getId() == R.id.videoCallFragment3;
+
 
 
         });
@@ -85,16 +87,28 @@ public class ExpertActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(WebSocketClient.getInstance().stompClient.isStompConnected()) {
+            findSub();
+        }
+
+    }
     public void findSub() {
             ProblemRequestRepository.getInstance().getSubableProfile().observe(activity, new Observer<List<Number>>() {
                 @Override
                 public void onChanged(List<Number> numbers) {
+                    WebSocketClient.getInstance().clear();
                     for (Number id:
                             numbers) {
                         Log.e("CMN","Sub " + id.intValue());
                         WebSocketClient.getInstance().subscribe(id.intValue());
 
                     }
+                    startSub();
                 }
             });
         }
@@ -102,13 +116,19 @@ public class ExpertActivity extends AppCompatActivity {
     public void startSub() {
         for (MutableLiveData<ReceiveMessage> m: WebSocketClient.getInstance().getSubscribes().values()) {
             m.observe(this, message -> {
-                if(message.getType() == MessageType.CALLING && (!message.isExpert()) && !isVideoCalling) {
-                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from partner in " + message.getMessage(), new ConfirmDialogFragment.OnConfirmDialogListener() {
+                if(message.getType() == MessageType.CALLING && !message.isExpert() &&
+                    navController.getCurrentDestination().getId() != R.id.videoCallFragment3
+                        && !isShowCall
+                ) {
+                    isShowCall = true;
+                    ProblemRequest problemRequest = NetworkClient.getInstance().getGson().fromJson(message.getMessage(),ProblemRequest.class);
+                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from partner in " + problemRequest.getTitle(), new ConfirmDialogFragment.OnConfirmDialogListener() {
                         @Override
                         public void OnYesListener() {
+                            isShowCall = false;
                             if (message.getType() == MessageType.CALLING) {
                                 Bundle bundle = new Bundle();
-                                bundle.putInt(getString(R.string.key_request_id), Integer.parseInt(message.getMessage()));
+                                bundle.putInt(getString(R.string.key_request_id), problemRequest.getRequestId());
                                 bundle.putBoolean(getString(R.string.isExpert), true);
                                 bundle.putBoolean("answer", true);
                                 navController.navigate(R.id.videoCallFragment2,bundle);
@@ -117,10 +137,11 @@ public class ExpertActivity extends AppCompatActivity {
 
                         @Override
                         public void OnNoListener() {
-
+                            isShowCall = false;
                         }
                     });
-                    dialogFragment.show(getSupportFragmentManager(),"");
+                    //dialogFragment.show(getSupportFragmentManager(),"");
+                    DialogManager.getInstance().showDialog(dialogFragment,true);
                 }
             });
         }

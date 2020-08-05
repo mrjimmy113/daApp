@@ -30,6 +30,12 @@ public class ExpertHomeFragment extends Fragment {
     private int pageProcess = 0;
     private int pageCancel = 0;
     private int pageComplete = 0;
+    private RequestListFragment fragProcessRequest;
+    private RequestListFragment fragNewRequest;
+    private RequestListFragment fragCompleteRequest;
+    private RequestListFragment fragCancelRequest;
+    private View containerComplete;
+    private View containerCancel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,8 +49,9 @@ public class ExpertHomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
-
-        final RequestListFragment fragProcessRequest =
+        containerComplete =  view.findViewById(R.id.container_tmp_complete);
+        containerCancel = view.findViewById(R.id.container_tmp_cancel);
+        fragProcessRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_process_request);
 
         assert fragProcessRequest != null;
@@ -70,7 +77,7 @@ public class ExpertHomeFragment extends Fragment {
             }
         });
 
-        final RequestListFragment fragNewRequest =
+        fragNewRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_new_request);
         assert fragNewRequest != null;
         fragNewRequest.setTitle("Applied request");
@@ -91,7 +98,7 @@ public class ExpertHomeFragment extends Fragment {
             }
         });
 
-        final RequestListFragment fragCancelRequest =
+         fragCancelRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_tmp_cancel_request);
 
         assert fragCancelRequest != null;
@@ -126,7 +133,7 @@ public class ExpertHomeFragment extends Fragment {
             }
         });
 
-        final RequestListFragment fragCompleteRequest =
+        fragCompleteRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_tmp_complete_request);
 
 
@@ -164,6 +171,12 @@ public class ExpertHomeFragment extends Fragment {
 
 
 
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         viewModel.getCurrentUserProcessingRequest(pageProcess);
         viewModel.getCurrentUserAppliedRequest();
         viewModel.getProcessingRequestListResult().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
@@ -175,7 +188,7 @@ public class ExpertHomeFragment extends Fragment {
                         problemRequests) {
                     WebSocketClient.getInstance().subscribe(p.getRequestId());
                 }
-                ((ExpertActivity) getActivity()).startSub();
+
                 if(problemRequests.size() > 0) {
                     fragProcessRequest.openClose();
                     isProcessingOpen = true;
@@ -199,7 +212,7 @@ public class ExpertHomeFragment extends Fragment {
                 WebSocketClient.getInstance().subscribe(p.getRequestId());
             }
             if(problemRequests.size() > 0) {
-                view.findViewById(R.id.container_tmp_cancel).setVisibility(View.VISIBLE);
+                containerCancel.setVisibility(View.VISIBLE);
             }
         });
 
@@ -214,10 +227,9 @@ public class ExpertHomeFragment extends Fragment {
                     WebSocketClient.getInstance().subscribe(p.getRequestId());
                 }
                 if(problemRequests.size() > 0) {
-                    view.findViewById(R.id.container_tmp_complete).setVisibility(View.VISIBLE);
+                    containerComplete.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
-
 }

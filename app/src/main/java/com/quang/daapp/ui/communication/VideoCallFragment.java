@@ -13,6 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.quang.daapp.R;
 import com.quang.daapp.stomp.MessageType;
@@ -81,9 +84,13 @@ public class VideoCallFragment extends Fragment {
             back();
         });
 
-        view.findViewById(R.id.btnSwitchCam).setOnClickListener(v -> {
+        ImageButton btnSwitch = view.findViewById(R.id.btnSwitchCam);
+        btnSwitch.setOnClickListener(v -> {
+            btnSwitch.setVisibility(View.INVISIBLE);
             rtcClient.switchCamera();
+
         });
+
 
         rtcClient = new RTCClient(getContext(), new PeerConnection.Observer() {
             @Override
@@ -231,7 +238,17 @@ public class VideoCallFragment extends Fragment {
 
             }
         });
-
+        rtcClient.switchCameraStatus().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                btnSwitch.setVisibility(View.VISIBLE);
+                if(aBoolean) {
+                    Toast.makeText(getActivity(), "Camera switched", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getActivity(), "Camera can`t be switched", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         if(answer) {
 
             Thread thread = new Thread(new Runnable() {

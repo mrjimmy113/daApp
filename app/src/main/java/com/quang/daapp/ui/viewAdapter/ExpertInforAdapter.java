@@ -8,10 +8,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.ultis.NetworkClient;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class ExpertInforAdapter extends RecyclerView.Adapter<ExpertInforAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final Expert expert = expertList.get(position);
         if(expert.getImgName() != null && !expert.getImgName().trim().isEmpty()) {
-            Glide.with(mContext).load(NetworkClient.getImageUrl(expert.getImgName())).into(holder.iv_avatar);
+            Picasso.get().load(NetworkClient.getImageUrl(expert.getImgName())).into(holder.iv_avatar);
         }
         holder.txtFullName.setText(expert.getFullName());
         String strMajor = "";

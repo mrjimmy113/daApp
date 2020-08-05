@@ -26,7 +26,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
@@ -35,6 +35,7 @@ import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ultis.CommonUltis;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -129,7 +130,7 @@ public class EditCustomerProfileFragment extends Fragment {
             }
 
             if(data.getImgName() != null && !data.getImgName().trim().isEmpty()) {
-                Glide.with(view).load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
+                Picasso.get().load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
             }
         }
 
@@ -210,9 +211,6 @@ public class EditCustomerProfileFragment extends Fragment {
                                     navController.navigate(R.id.navigation_profile_customer);
                                 }
                             });
-                            mesDialog.show(getParentFragmentManager(),getTag());
-                        }else if(number.intValue() == 400) {
-                            MessageDialogFragment mesDialog = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
                             mesDialog.show(getParentFragmentManager(),getTag());
                         }
                     }

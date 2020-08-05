@@ -6,9 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+
 import com.quang.daapp.R;
 import com.quang.daapp.ultis.NetworkClient;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.List;
@@ -36,7 +37,10 @@ public class ImageDetailAdapter extends RecyclerView.Adapter<ImageDetailAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(mContext).load(NetworkClient.getImageUrl(imgURL.get(position))).into(holder.imageView);
+
+
+        Picasso.get().load(NetworkClient.getImageUrl(imgURL.get(position))).into(holder.imageView);
+
     }
 
     @Override

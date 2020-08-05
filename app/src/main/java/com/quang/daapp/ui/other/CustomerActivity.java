@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.quang.daapp.R;
+import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.data.repository.ProblemRequestRepository;
 import com.quang.daapp.data.service.ProblemRequestService;
 import com.quang.daapp.stomp.MessageType;
@@ -50,16 +51,15 @@ public class CustomerActivity extends AppCompatActivity {
             @Override
             public void onConnected() {
                 super.onConnected();
-                Log.e("CMN", "CONNECTED");
-                ProblemRequestRepository.getInstance().getSubableProfile().observe(activity, new Observer<List<Number>>() {
-                    @Override
-                    public void onChanged(List<Number> numbers) {
-                        for (Number id:
-                             numbers) {
-                            WebSocketClient.getInstance().subscribe(id.intValue());
+                ProblemRequestRepository.getInstance().getSubableProfile().observe(activity, numbers -> {
 
-                        }
+                    for (Number id:
+                         numbers) {
+                        WebSocketClient.getInstance().subscribe(id.intValue());
+
                     }
+                    Log.e("CMN","SUBCONNECT");
+                    startSub();
                 });
             }
 
@@ -88,20 +88,45 @@ public class CustomerActivity extends AppCompatActivity {
 
         CommonUltis.checkCameraPermission(this,this);
         CommonUltis.checkPermissions(this,this);
+        CommonUltis.checkAudioPermission(this,this);
         NetworkClient.getInstance().init(this,this,navController);
         DialogManager.getInstance().init(getSupportFragmentManager());
         NavigationUI.setupWithNavController(navView, navController);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(WebSocketClient.getInstance().stompClient.isStompConnected()) {
+
+            ProblemRequestRepository.getInstance().getSubableProfile().observe(activity, numbers -> {
+                WebSocketClient.getInstance().clear();
+                for (Number id:
+                        numbers) {
+                    WebSocketClient.getInstance().subscribe(id.intValue());
+
+                }
+                Log.e("CMN","SUB");
+                startSub();
+            });
+        }
+
+    }
+
     public void startSub() {
         for (MutableLiveData<ReceiveMessage> m: WebSocketClient.getInstance().getSubscribes().values()) {
             m.observe(this, message -> {
-                if(message.getType() == MessageType.CALLING && (message.isExpert())) {
-                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from a partner in request: " + message.getMessage(), new ConfirmDialogFragment.OnConfirmDialogListener() {
+                if(message.getType() == MessageType.CALLING
+                        && message.isExpert()
+                        && navController.getCurrentDestination().getId() != R.id.videoCallFragment2) {
+                    ProblemRequest problemRequest = NetworkClient.getInstance().getGson().fromJson(message.getMessage(),ProblemRequest.class);
+                    ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from a partner in request: " + problemRequest.getTitle(), new ConfirmDialogFragment.OnConfirmDialogListener() {
                         @Override
                         public void OnYesListener() {
                             if (message.getType() == MessageType.CALLING) {
                                 Bundle bundle = new Bundle();
-                                bundle.putInt(getString(R.string.key_request_id), Integer.parseInt(message.getMessage()));
+                                bundle.putInt(getString(R.string.key_request_id), problemRequest.getRequestId());
                                 bundle.putBoolean(getString(R.string.isExpert), false);
                                 bundle.putBoolean("answer", true);
                                 navController.navigate(R.id.videoCallFragment3,bundle);
@@ -113,7 +138,8 @@ public class CustomerActivity extends AppCompatActivity {
 
                         }
                     });
-                    dialogFragment.show(getSupportFragmentManager(),"");
+                    //dialogFragment.show(getSupportFragmentManager(),"");
+                    DialogManager.getInstance().showDialog(dialogFragment,true);
                 }
             });
         }

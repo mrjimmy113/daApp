@@ -15,6 +15,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -80,9 +82,7 @@ public class NewRequestFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermissions();
-        }
+        viewModel = new ViewModelProvider(this).get(NewRequestViewModel.class);
         return inflater.inflate(R.layout.fragment_new_request, container, false);
     }
 
@@ -96,10 +96,6 @@ public class NewRequestFragment extends Fragment {
         cldr.add(Calendar.DATE,2);
         txtEndDate = view.findViewById(R.id.txtEndDate);
         changeDateDisplay(new Date(cldr.getTimeInMillis()));
-
-
-        viewModel = ViewModelProviders.of(this)
-                .get(NewRequestViewModel.class);
 
         final EditText edtTitle = view.findViewById(R.id.edtTitle);
         final EditText edtDescription = view.findViewById(R.id.edtDescription);
@@ -136,25 +132,7 @@ public class NewRequestFragment extends Fragment {
             }
         });
 
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                viewModel.onDataChange(edtTitle.getText().toString(),edtDescription.getText().toString(),choosenDate,totalImageLength);
-            }
-        };
-
-        edtTitle.addTextChangedListener(afterTextChangedListener);
-        edtDescription.addTextChangedListener(afterTextChangedListener);
 
         txtTotalLength = view.findViewById(R.id.txtTotalLength);
         final ImageButton btnChooseDate = view.findViewById(R.id.btnChooseDate);
@@ -165,6 +143,13 @@ public class NewRequestFragment extends Fragment {
         btnCreateReq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                NewRequestFormState formState = viewModel.validate(edtTitle.getText().toString().trim(),
+                        edtDescription.getText().toString().trim(),choosenDate,totalImageLength);
+                if(!formState.isDataValid()) {
+                    if(formState.getTitleError() != null) edtTitle.setError(getString(formState.getTitleError()));
+                    if(formState.getDescriptionError() != null) edtDescription.setError(getString(formState.getDescriptionError()));
+                    return;
+                }
                 final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
                 loaderDialog.show(getParentFragmentManager(),getTag());
                 int id = 0;

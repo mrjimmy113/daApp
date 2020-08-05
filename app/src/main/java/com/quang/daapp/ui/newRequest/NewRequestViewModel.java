@@ -48,20 +48,27 @@ public class NewRequestViewModel extends ViewModel {
         return newRequestFormState;
     }
 
-    public void onDataChange(String title, String description, Date date, long imgSize) {
+    public NewRequestFormState validate(String title, String description, Date date, long imgSize) {
         NewRequestFormState formState = new NewRequestFormState();
+        boolean isValid = true;
         if(isEmptyString(title)) {
             formState.setTitleError(R.string.invalid_requried_field);
-        }else if(isEmptyString(description)) {
-            formState.setDescriptionError(R.string.invalid_requried_field);
-        }else if(!isValidEndDate(date)) {
-            formState.setEndDateError(R.string.invalid_end_date);
-        }else if(imgSize > 5 * 1024 * 1024) {
-            formState.setImageError(R.string.invalid_img_over);
-        } else {
-            formState = new NewRequestFormState(true);
+            isValid = false;
         }
-        newRequestFormState.setValue(formState);
+        if(isEmptyString(description)) {
+            formState.setDescriptionError(R.string.invalid_requried_field);
+            isValid = false;
+        }
+        if(!isValidEndDate(date)) {
+            formState.setEndDateError(R.string.invalid_end_date);
+            isValid = false;
+        }
+        if(imgSize > 5 * 1024 * 1024) {
+            formState.setImageError(R.string.invalid_img_over);
+            isValid = false;
+        }
+        formState.setDataValid(isValid);
+        return formState;
     }
 
     private boolean isEmptyString(String string) {

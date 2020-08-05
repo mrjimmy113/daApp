@@ -54,6 +54,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return statusEnum;
     }
 
+    public void resetList() {
+        messages = new ArrayList<>();
+    }
+
     public void setStatusEnum(StatusEnum statusEnum) {
         this.statusEnum = statusEnum;
 
@@ -119,7 +123,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     Estimate estimate = NetworkClient.getInstance().getGson().fromJson(message.getMessage(),Estimate.class);
                     holder.layout_estimate.setVisibility(View.VISIBLE);
                     int hour =(int) estimate.getHour();
-                    int minute = (int) ((estimate.getHour() - hour) * 60) ;
+                    int minute = (int) Math.ceil(((estimate.getHour() - hour) * 60)) ;
                     holder.txtHourEstimate.setText(hour + " Hour " + minute + " Minute");
                     holder.txtTotalEstimate.setText(estimate.getTotal() + " VND");
                     holder.btnAcceptEstimate.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +136,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     });
                     if(isExpert) holder.iv_wait.setVisibility(View.VISIBLE);
                     else holder.btnAcceptEstimate.setVisibility(View.VISIBLE);
+                }else if(statusEnum == StatusEnum.PROCESSING) {
+                    holder.layout_estimate.setVisibility(View.GONE);
                 }
                 break;
             }
@@ -140,7 +146,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.layout_estimate_yes.setVisibility(View.VISIBLE);
                 holder.layout_estimate.setVisibility(View.GONE);
                 holder.container2.setVisibility(View.GONE);
-                holder.txtHourEstimateYes.setText(estimate.getHour() + "");
+                int hour =(int) estimate.getHour();
+                int minute = (int) Math.ceil(((estimate.getHour() - hour) * 60)) ;
+
+                holder.txtHourEstimateYes.setText(hour + " Hour " + minute + " Minute");
                 holder.txtTotalEstimateYes.setText(estimate.getTotal() + " VND");
                 break;
             }

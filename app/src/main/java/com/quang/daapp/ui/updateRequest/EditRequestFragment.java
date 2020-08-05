@@ -167,9 +167,6 @@ public class EditRequestFragment extends Fragment {
                                 }
                             });
                             dialog.show(getParentFragmentManager(),getTag());
-                        }else if(number.intValue() == 400) {
-                            MessageDialogFragment dialog = new MessageDialogFragment(getString(R.string.mes_error_400), R.color.colorDanger,R.drawable.ic_error);
-                            dialog.show(getParentFragmentManager(),getTag());
                         }
                     }
                 });

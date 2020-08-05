@@ -12,10 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.ultis.NetworkClient;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,7 +72,8 @@ public class RequestDetailExpertFragment extends Fragment {
     }
 
     private void setData() {
-        Glide.with(getContext()).load(NetworkClient.getImageUrl(expert.getImgName())).into(iv_avatar);
+
+        Picasso.get().load(NetworkClient.getImageUrl(expert.getImgName())).into(iv_avatar);
         txtEmail.setText(expert.getEmail());
         txtFullName.setText(expert.getFullName());
         StringBuilder strMajor = new StringBuilder();

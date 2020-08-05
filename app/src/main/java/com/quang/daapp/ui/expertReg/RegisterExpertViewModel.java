@@ -93,11 +93,7 @@ public class RegisterExpertViewModel extends ViewModel {
         if (username == null) {
             return false;
         }
-        if (username.contains("@")) {
-            return Patterns.EMAIL_ADDRESS.matcher(username).matches();
-        } else {
-            return !username.trim().isEmpty();
-        }
+        return Patterns.EMAIL_ADDRESS.matcher(username).matches();
     }
 
     // A placeholder password validation check
@@ -110,6 +106,7 @@ public class RegisterExpertViewModel extends ViewModel {
     }
 
     private boolean isNumber(String number) {
+        if(number == null || number.trim().isEmpty()) return false;
         return TextUtils.isDigitsOnly(number);
     }
 }

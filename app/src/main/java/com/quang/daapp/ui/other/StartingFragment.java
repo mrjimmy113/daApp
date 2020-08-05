@@ -49,9 +49,17 @@ public class StartingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final String token = AuthTokenManager.getToken(getContext());
+
         navController = Navigation.findNavController(view);
 
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final String token = AuthTokenManager.getToken(getContext());
         if(token == null || token.isEmpty()) {
             navController.navigate(R.id.loginFragment);
 
@@ -90,6 +98,5 @@ public class StartingFragment extends Fragment {
                 }
             });
         }
-
     }
 }

@@ -1,5 +1,7 @@
 package com.quang.daapp.data.repository;
 
+import android.app.ActivityManager;
+import android.content.Intent;
 import android.util.Log;
 
 import com.quang.daapp.R;
@@ -34,7 +36,9 @@ public class MyRequestCallBack<T> implements Callback<T> {
         if(t instanceof ConnectException || t instanceof SocketTimeoutException) {
             MessageDialogFragment dialogTimeOut = new MessageDialogFragment(
                     "Can not connect to server, please check your connection"
-                    , R.color.colorDanger, R.drawable.ic_error
+                    , R.color.colorDanger, R.drawable.ic_error, () -> {
+
+            }
             );
             DialogManager.getInstance().showDialog(dialogTimeOut,true);
         }

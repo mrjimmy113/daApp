@@ -17,6 +17,7 @@ public class CommonUltis {
 
     public static final int GALLERY_REQUEST_CODE = 1052;
     public static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
+    public static final int AUDIO_PERMISSION_REQUEST_CODE = 2;
 
     public static String getPathFromURI(Uri uri, Activity activity) {
         String[] filePathColumn = { MediaStore.Images.Media.DATA };
@@ -67,6 +68,18 @@ public class CommonUltis {
                             Manifest.permission.CAMERA
                     },
                     CAMERA_PERMISSION_REQUEST_CODE);
+            return  false;
+        }
+        return true;
+    }
+
+    public static boolean checkAudioPermission(Context context, Activity activity) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,
+                    new String[]{
+                            Manifest.permission.RECORD_AUDIO
+                    },
+                    AUDIO_PERMISSION_REQUEST_CODE);
             return  false;
         }
         return true;

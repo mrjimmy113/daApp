@@ -11,9 +11,12 @@ import com.quang.daapp.stomp.StompClient;
 import com.quang.daapp.stomp.StompConnectionListener;
 import com.quang.daapp.stomp.StompFrame;
 import com.quang.daapp.stomp.StompMessageListener;
+import com.quang.daapp.stomp.StompSubscription;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import androidx.lifecycle.LiveData;
@@ -25,6 +28,9 @@ public class WebSocketClient {
     public StompClient stompClient;
 
     private Map<Integer, MutableLiveData<ReceiveMessage>> subscribes = new HashMap<>();
+    private List<StompSubscription> stompSubscriptions = new ArrayList<>();
+
+
 
     public static WebSocketClient getInstance() {
 
@@ -34,9 +40,17 @@ public class WebSocketClient {
         }
         return instance;
     }
+    public void clear() {
+        subscribes.clear();
+        for (StompSubscription s:
+             stompSubscriptions) {
+            stompClient.removeSubscription(s);
+        }
+        stompSubscriptions.clear();
+    }
 
     public void connect(Context context) {
-        subscribes.clear();
+
         stompClient = new StompClient(URI.create("ws://" + BuildConfig.API_URL + "chat?token=" + AuthTokenManager.getToken(context)));
 
         boolean connected = true;
@@ -59,18 +73,23 @@ public class WebSocketClient {
             stompClient.connect();
         }
         MutableLiveData<ReceiveMessage> mutableLiveData = new MutableLiveData<>();
-        subscribes.putIfAbsent(channel,mutableLiveData);
-        stompClient.subscribe("/topic/messages."  + channel, new StompMessageListener() {
 
-            @Override
-            public void onMessage(StompFrame stompFrame) {
+        if(!subscribes.containsKey(channel)) {
+            stompSubscriptions.add( stompClient.subscribe("/topic/messages."  + channel, new StompMessageListener() {
 
-                mutableLiveData.postValue(NetworkClient.getInstance().getGson().fromJson(stompFrame.getBody(),ReceiveMessage.class));
+                @Override
+                public void onMessage(StompFrame stompFrame) {
 
-            }
+                    mutableLiveData.postValue(NetworkClient.getInstance().getGson().fromJson(stompFrame.getBody(),ReceiveMessage.class));
+
+                }
 
 
-        });
+            }));
+            subscribes.putIfAbsent(channel,mutableLiveData);
+        }
+
+
     }
 
     public void chat(int channel, SendMessage message) {

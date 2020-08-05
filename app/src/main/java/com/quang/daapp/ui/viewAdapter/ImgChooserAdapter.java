@@ -7,10 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+
 import com.quang.daapp.R;
 import com.quang.daapp.ultis.NetworkClient;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -51,7 +53,8 @@ public class ImgChooserAdapter extends RecyclerView.Adapter<ImgChooserAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        Glide.with(mContext).load(imgURL.get(position)).into(holder.imageView);
+
+        Picasso.get().load(new File(imgURL.get(position))).into(holder.imageView);
         holder.btnDelImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

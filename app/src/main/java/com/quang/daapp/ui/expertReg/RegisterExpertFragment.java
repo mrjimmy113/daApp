@@ -92,19 +92,20 @@ public class RegisterExpertFragment extends Fragment {
                 if(state.getBankAccount() != null) edtBankName.setError(getString(state.getBankAccount()));
                 if(state.getAccountNo() != null) edtAccountNo.setError(getString(state.getAccountNo()));
                 if(state.getMajorError() != null) txtMajorError.setText(getString(state.getMajorError()));
+
                 return;
             }
 
             Expert expert = new Expert();
-            expert.setEmail(edtEmail.getText().toString());
-            expert.setFullName(edtFirstName.getText().toString());
-            expert.setPassword(edtPassword.getText().toString());
-            expert.setFeePerHour(Float.parseFloat(edtFee.getText().toString()));
+            expert.setEmail(edtEmail.getText().toString().trim());
+            expert.setFullName(edtFirstName.getText().toString().trim());
+            expert.setPassword(edtPassword.getText().toString().trim());
+            expert.setFeePerHour(Float.parseFloat(edtFee.getText().toString().trim()));
 
             expert.setMajor(adapter.getSelected());
-            expert.setBankName(edtBankName.getText().toString());
-            expert.setBankAccountNo(edtAccountNo.getText().toString());
-            expert.setDescription(edtDescription.getText().toString());
+            expert.setBankName(edtBankName.getText().toString().trim());
+            expert.setBankAccountNo(edtAccountNo.getText().toString().trim());
+            expert.setDescription(edtDescription.getText().toString().trim());
 
             final LoaderDialogFragment loaderDialog = new LoaderDialogFragment();
             loaderDialog.show(getParentFragmentManager(),loaderDialog.getTag());
@@ -124,8 +125,6 @@ public class RegisterExpertFragment extends Fragment {
                                 });
                     }else  if(result == 409) {
                         dialogMes = new MessageDialogFragment(getString(R.string.mes_register_email_exist),R.color.colorDanger,R.drawable.ic_error);
-                    }else if (result == 400) {
-                        dialogMes = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
                     }
                 }
 

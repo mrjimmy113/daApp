@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
@@ -18,6 +18,7 @@ import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.databinding.FragmentProfileExpertBinding;
 import com.quang.daapp.ui.dialog.ConfirmDialogFragment;
 import com.quang.daapp.ultis.AuthTokenManager;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -109,7 +110,8 @@ public class ProfileExpertFragment extends Fragment {
                     }
                 }
                 txtMajor.setText(strMajor);
-                Glide.with(view).load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
+
+                Picasso.get().load(NetworkClient.getImageUrl(data.getImgName())).into(ivAvatar);
             }
         });
 

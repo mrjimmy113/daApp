@@ -113,17 +113,17 @@ public class RegisterCustomerFragment extends Fragment {
                     if(formState.getFullNameError() != null) edtFirstName.setError(getString(formState.getFullNameError()));
                     if(formState.getPasswordError() != null) edtPassword.setError(getString(formState.getPasswordError()));
                     if(formState.getPasswordConfirmError() != null) edtPassword.setError(getString(formState.getPasswordConfirmError()));
-
+                    if(formState.getAddressError() != null) edtAddress.setError(getString(formState.getAddressError()));
                     return;
                 }
 
                 Customer customer = new Customer();
-                customer.setEmail(edtEmail.getText().toString());
-                customer.setFullName(edtFirstName.getText().toString());
-                customer.setAddress(edtAddress.getText().toString());
-                customer.setPrimaryLanguage(spnPrimaryLanguage.getSelectedItem().toString());
-                customer.setCity(spnCity.getSelectedItem().toString());
-                customer.setPassword(edtPassword.getText().toString());
+                customer.setEmail(edtEmail.getText().toString().trim());
+                customer.setFullName(edtFirstName.getText().toString().trim());
+                customer.setAddress(edtAddress.getText().toString().trim());
+                customer.setPrimaryLanguage(spnPrimaryLanguage.getSelectedItem().toString().trim());
+                customer.setCity(spnCity.getSelectedItem().toString().trim());
+                customer.setPassword(edtPassword.getText().toString().trim());
                 customer.setDob(choosenDate);
 
                 viewModel.register(customer);
@@ -154,8 +154,6 @@ public class RegisterCustomerFragment extends Fragment {
                                     });
                                 }else  if(result == 409) {
                                     dialogMes = new MessageDialogFragment(getString(R.string.mes_register_email_exist),R.color.colorDanger,R.drawable.ic_error);
-                                }else if (result == 400) {
-                                    dialogMes = new MessageDialogFragment(getString(R.string.mes_error_400),R.color.colorDanger,R.drawable.ic_error);
                                 }
                             }
 

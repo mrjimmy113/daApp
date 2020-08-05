@@ -167,14 +167,7 @@ public class ProblemRequestDetailFragment extends Fragment {
                                         mesDialog.show(getParentFragmentManager(),getTag());
                                         break;
                                     }
-                                    case 400: {
-                                        MessageDialogFragment mesDialog = new MessageDialogFragment(
-                                                getString(R.string.mes_error_400),
-                                                R.color.colorDanger,R.drawable.ic_error
-                                        );
-                                        mesDialog.show(getParentFragmentManager(),getTag());
-                                        break;
-                                    }
+
 
                                 }
                             }

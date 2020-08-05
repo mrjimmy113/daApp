@@ -118,9 +118,6 @@ public class ChangePasswordFragment extends Fragment {
                         }else if (result == 202) {
                             MessageDialogFragment mesDialog = new MessageDialogFragment(getString(R.string.mes_change_password_fail), R.color.colorDanger,R.drawable.ic_error);
                             mesDialog.show(getParentFragmentManager(),getTag());
-                        }else if(result == 400) {
-                            MessageDialogFragment mesDialog = new MessageDialogFragment(getString(R.string.mes_error_400), R.color.colorDanger,R.drawable.ic_error);
-                            mesDialog.show(getParentFragmentManager(),getTag());
                         }
                     }
                 });

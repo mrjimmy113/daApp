@@ -36,6 +36,12 @@ public class CustomerHomeFragment extends Fragment {
     private int pageTmpCancel = 0;
     private int pageTmpComplete = 0;
     private int pageNew = 0;
+    private RequestListFragment fragCancelRequest;
+    private RequestListFragment fragCompleteRequest;
+    private  RequestListFragment fragNewRequest;
+    private RequestListFragment fragProcessRequest;
+    private View containerComplete;
+    private View containerCancel;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -51,7 +57,9 @@ public class CustomerHomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         final NavController navController = Navigation.findNavController(view);
         final Button btnNewRequest = view.findViewById(R.id.btnNewRequest);
-        final RequestListFragment fragProcessRequest =
+        containerCancel =  view.findViewById(R.id.container_tmp_cancel);
+        containerComplete = view.findViewById(R.id.container_tmp_complete);
+        fragProcessRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_process_request);
 
         assert fragProcessRequest != null;
@@ -77,7 +85,7 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
-        final RequestListFragment fragCancelRequest =
+        fragCancelRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_tmp_cancel_request);
 
 
@@ -111,7 +119,7 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
-        final RequestListFragment fragCompleteRequest =
+        fragCompleteRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_tmp_complete_request);
 
 
@@ -145,7 +153,7 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
-        final RequestListFragment fragNewRequest =
+        fragNewRequest =
                 (RequestListFragment) getChildFragmentManager().findFragmentById(R.id.frag_new_request);
         assert fragNewRequest != null;
         fragNewRequest.setTitle("New request");
@@ -176,6 +184,12 @@ public class CustomerHomeFragment extends Fragment {
             }
         });
 
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         viewModel.getCurrentUserAcceptedRequest(pageAccept);
         viewModel.getCurrentUserNewRequest(pageNew);
         viewModel.getAcceptedRequestList().observe(getViewLifecycleOwner(), new Observer<List<ProblemRequest>>() {
@@ -184,10 +198,10 @@ public class CustomerHomeFragment extends Fragment {
                 if(problemRequests == null) return;
                 fragProcessRequest.setList(problemRequests);
                 for (ProblemRequest p:
-                     problemRequests) {
+                        problemRequests) {
                     WebSocketClient.getInstance().subscribe(p.getRequestId());
                 }
-                ((CustomerActivity) getActivity()).startSub();
+
                 if(problemRequests.size() > 0) {
                     fragProcessRequest.openClose();
                     isProcessingOpen = true;
@@ -213,7 +227,7 @@ public class CustomerHomeFragment extends Fragment {
                     WebSocketClient.getInstance().subscribe(p.getRequestId());
                 }
                 if(problemRequests.size() > 0) {
-                    view.findViewById(R.id.container_tmp_cancel).setVisibility(View.VISIBLE);
+                    containerCancel.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -229,7 +243,7 @@ public class CustomerHomeFragment extends Fragment {
                     WebSocketClient.getInstance().subscribe(p.getRequestId());
                 }
                 if(problemRequests.size() > 0) {
-                    view.findViewById(R.id.container_tmp_complete).setVisibility(View.VISIBLE);
+                    containerComplete.setVisibility(View.VISIBLE);
                 }
             }
         });

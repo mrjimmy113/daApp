@@ -59,6 +59,7 @@ public class CommunicationFragment extends Fragment {
     private ProblemRequestDetail detail;
     private ImageButton btnMenu;
 
+    private TextView txtRequestTitle;
     private TextView txtAccept;
     private TextView txtProcess;
     private TextView txtComplete;
@@ -108,7 +109,7 @@ public class CommunicationFragment extends Fragment {
         final EditText edtMessage = view.findViewById(R.id.edtMessage);
         final ImageButton btnSend = view.findViewById(R.id.btnSend);
         btnMenu = view.findViewById(R.id.btnMenu);
-        final TextView txtRequestTitle = view.findViewById(R.id.txtRequestTitle);
+        txtRequestTitle = view.findViewById(R.id.txtRequestTitle);
         txtAccept = view.findViewById(R.id.txtAccept);
         txtProcess = view.findViewById(R.id.txtProcess);
         txtComplete = view.findViewById(R.id.txtComplete);
@@ -202,21 +203,7 @@ public class CommunicationFragment extends Fragment {
             return true;
         });
 
-        viewModel.getExpert(channel);
-        viewModel.getExpertResult().observe(getViewLifecycleOwner(), expert -> {
-            if(expert == null) return;
-            this.expert = expert;
-        });
 
-        viewModel.getChatMessage(channel, page);
-        viewModel.getChatMessageResult().observe(getViewLifecycleOwner(), receiveMessages -> {
-            if (receiveMessages == null) return;
-            adapter.addMessage(receiveMessages);
-            adapter.notifyDataSetChanged();
-            if (page == 0) {
-                recyclerView.scrollToPosition(0);
-            }
-        });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -250,30 +237,7 @@ public class CommunicationFragment extends Fragment {
             }
         });
 
-        viewModel.getDetail(channel);
 
-        viewModel.getDetailResult().observe(getViewLifecycleOwner(), problemRequestDetail -> {
-            if (problemRequestDetail == null) return;
-            detail = problemRequestDetail;
-            adapter.setStatusEnum(detail.getStatus());
-
-            txtRequestTitle.setText(problemRequestDetail.getTitle());
-            txtRequestTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(getString(R.string.key_request_id), detail.getRequestId());
-                    bundle.putBoolean("viewOnly",true);
-                    bundle.putBoolean(getString(R.string.isExpert), true);
-                    if(isExpert)
-                        navController.navigate(R.id.action_communicationFragment2_to_problemRequestDetailFragment,bundle);
-                    else
-                        navController.navigate(R.id.action_customerCommunicationFragment_to_problemRequestDetail,bundle);
-                }
-            });
-            changeStatus(problemRequestDetail.getStatus());
-            updateMenu(problemRequestDetail.getStatus());
-        });
 
 
         view.findViewById(R.id.btnBack).setOnClickListener(v -> {
@@ -314,7 +278,8 @@ public class CommunicationFragment extends Fragment {
                     changeStatus(StatusEnum.PROCESSING);
                     updateMenu(StatusEnum.PROCESSING);
                     adapter.addMessage(receiveMessage);
-                    adapter.notifyItemInserted(0);
+                    //adapter.notifyItemInserted(0);
+                    adapter.notifyDataSetChanged();
                     recyclerView.scrollToPosition(0);
                     break;
                 }
@@ -323,10 +288,11 @@ public class CommunicationFragment extends Fragment {
                 }
                 case CANCEL_YES: {
                     MessageDialogFragment dialogFragment = new MessageDialogFragment(
-                            getString(R.string.mes_cancel_yes), R.color.colorDanger, R.drawable.ic_warning,
+                            "Request has been canceled", R.color.colorDanger, R.drawable.ic_warning,
                             this::back
                     );
                     dialogFragment.show(getParentFragmentManager(), getTag());
+                    break;
                 }
                 case CANCEL: {
                     if (receiveMessage.isExpert() == isExpert) {
@@ -395,10 +361,62 @@ public class CommunicationFragment extends Fragment {
                     dialogFragment.show(getParentFragmentManager(), getTag());
                     break;
                 }
+                case NONE: {
+                    MessageDialogFragment dialogFragment = new MessageDialogFragment(
+                            "You can not perform this action", R.color.colorWarning, R.drawable.ic_warning,
+                            this::back
+                    );
+                    dialogFragment.show(getParentFragmentManager(), getTag());
+                }
             }
 
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        viewModel.getExpert(channel);
+        viewModel.getExpertResult().observe(getViewLifecycleOwner(), expert -> {
+            if(expert == null) return;
+            this.expert = expert;
+        });
+        adapter.resetList();
+        viewModel.getChatMessage(channel, page);
+        viewModel.getChatMessageResult().observe(getViewLifecycleOwner(), receiveMessages -> {
+            if (receiveMessages == null) return;
+            adapter.addMessage(receiveMessages);
+            adapter.notifyDataSetChanged();
+            if (page == 0) {
+                recyclerView.scrollToPosition(0);
+            }
+        });
+        viewModel.getDetail(channel);
+
+        viewModel.getDetailResult().observe(getViewLifecycleOwner(), problemRequestDetail -> {
+            if (problemRequestDetail == null) return;
+            detail = problemRequestDetail;
+            adapter.setStatusEnum(detail.getStatus());
+
+            txtRequestTitle.setText(problemRequestDetail.getTitle());
+            txtRequestTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(getString(R.string.key_request_id), detail.getRequestId());
+                    bundle.putBoolean("viewOnly",true);
+                    bundle.putBoolean(getString(R.string.isExpert), true);
+                    if(isExpert)
+                        navController.navigate(R.id.action_communicationFragment2_to_problemRequestDetailFragment,bundle);
+                    else
+                        navController.navigate(R.id.action_customerCommunicationFragment_to_problemRequestDetail,bundle);
+                }
+            });
+            changeStatus(problemRequestDetail.getStatus());
+            updateMenu(problemRequestDetail.getStatus());
+        });
     }
 
     private void changeStatus(StatusEnum statusEnum) {

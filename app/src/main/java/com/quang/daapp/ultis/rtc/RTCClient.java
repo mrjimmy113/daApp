@@ -2,6 +2,7 @@ package com.quang.daapp.ultis.rtc;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.LinearLayout;
 
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
@@ -27,11 +28,15 @@ import org.webrtc.VideoTrack;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 public class RTCClient {
 
     private final String LOCAL_TRACK_ID = "local_track";
     private final String LOCAL_STREAM_ID = "local_stream";
 
+    private MutableLiveData<Boolean> changeCamera = new MutableLiveData<>();
 
     private Context context;
     private PeerConnectionFactory peerConnectionFactory;
@@ -148,15 +153,19 @@ public class RTCClient {
         cameraVideoCapturer.switchCamera(new CameraVideoCapturer.CameraSwitchHandler() {
             @Override
             public void onCameraSwitchDone(boolean b) {
-
+                changeCamera.postValue(true);
             }
 
             @Override
             public void onCameraSwitchError(String s) {
-
+                changeCamera.postValue(false);
             }
         });
 
+    }
+
+    public LiveData<Boolean> switchCameraStatus() {
+        return changeCamera;
     }
 
     public void call(SdpObserver observer) {
