@@ -67,8 +67,6 @@ public class StartingFragment extends Fragment {
             NetworkClient.getInstance().getRetrofitInstance().create(AccountService.class).check(token,token).enqueue(new Callback<Boolean>() {
                 @Override
                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                    Log.e("CL",NetworkClient.BASE_URL);
-                    Log.e("Status", response.code() + "");
                     if(response.code() == 200) {
 
                         if(response.body()) {

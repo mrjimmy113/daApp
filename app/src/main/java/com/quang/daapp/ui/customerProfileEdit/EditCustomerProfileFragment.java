@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -31,6 +32,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
+import com.quang.daapp.ultis.DialogManager;
 import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
@@ -75,7 +77,7 @@ public class EditCustomerProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this)
+        viewModel = new ViewModelProvider(this)
                 .get(EditCustomerProfileViewModel.class);
 
 
@@ -238,6 +240,9 @@ public class EditCustomerProfileFragment extends Fragment {
         if(file.length() < 5 * 1024 * 1024) {
             choosenAvatar = uri;
             ivAvatar.setImageURI(uri);
+        }else {
+            MessageDialogFragment messageDialogFragment = new MessageDialogFragment("File size limit is 5MB", R.color.colorWarning,R.drawable.ic_warning);
+            DialogManager.getInstance().showDialog(messageDialogFragment,false);
         }
     }
 
@@ -248,11 +253,16 @@ public class EditCustomerProfileFragment extends Fragment {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        cldr.set(Calendar.YEAR, year);
-                        cldr.set(Calendar.MONTH, month);
-                        cldr.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        Date d = new Date(cldr.getTimeInMillis());
-                        changeDateDisplay(d);
+                        if(year - (Calendar.getInstance().get(Calendar.YEAR)) >= 0) {
+                            cldr.set(Calendar.YEAR, year);
+                            cldr.set(Calendar.MONTH, month);
+                            cldr.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                            Date d = new Date(cldr.getTimeInMillis());
+                            changeDateDisplay(d);
+                        }else {
+                            MessageDialogFragment messageDialogFragment = new MessageDialogFragment("You must be at least 18", R.color.colorWarning,R.drawable.ic_warning);
+                            DialogManager.getInstance().showDialog(messageDialogFragment,false);
+                        }
                     }
                 }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
         picker.show();

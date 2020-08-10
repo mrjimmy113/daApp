@@ -117,7 +117,7 @@ public class ExpertActivity extends AppCompatActivity {
         for (MutableLiveData<ReceiveMessage> m: WebSocketClient.getInstance().getSubscribes().values()) {
             m.observe(this, message -> {
                 if(message.getType() == MessageType.CALLING && !message.isExpert() &&
-                    navController.getCurrentDestination().getId() != R.id.videoCallFragment3
+                    navController.getCurrentDestination().getId() != R.id.videoCallFragment2
                         && !isShowCall
                 ) {
                     isShowCall = true;

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 
@@ -13,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.Expert;
+import com.quang.daapp.data.model.ExpertStat;
 import com.quang.daapp.data.model.Major;
 import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.databinding.FragmentProfileExpertBinding;
@@ -35,6 +37,9 @@ public class ProfileExpertFragment extends Fragment {
     FragmentProfileExpertBinding binding;
     Expert data;
     ImageView ivAvatar;
+    RatingBar ratingBar;
+    TextView txtCompleted;
+    TextView txtCanceled;
 
     private ProfileExpertViewModel viewModel;
     NavController navigation;
@@ -55,6 +60,9 @@ public class ProfileExpertFragment extends Fragment {
         final Button btnChangePassword = view.findViewById(R.id.btnChangePassword);
         final TextView txtMajor = view.findViewById(R.id.txtMajor);
         ivAvatar = view.findViewById(R.id.iv_avatar);
+        ratingBar = view.findViewById(R.id.rb_rating);
+        txtCompleted = view.findViewById(R.id.txtCompleted);
+        txtCanceled = view.findViewById(R.id.txtCanceled);
         navigation = Navigation.findNavController(view);
         view.findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,11 +102,22 @@ public class ProfileExpertFragment extends Fragment {
             }
         });
 
+
         viewModel.getProfile();
         viewModel.getProfileResult().observe(getViewLifecycleOwner(), new Observer<Expert>() {
             @Override
             public void onChanged(Expert expert) {
                 if(expert == null) return;
+                viewModel.getExpertStat(expert.getId());
+                viewModel.getExpertStatResult().observe(getViewLifecycleOwner(), new Observer<ExpertStat>() {
+                    @Override
+                    public void onChanged(ExpertStat expertStat) {
+                        if(expertStat == null) return;
+                        txtCompleted.setText(expertStat.getCompleteCount() +"");
+                        txtCanceled.setText(expertStat.getCancelCount() +"");
+                        ratingBar.setRating(expertStat.getRating());
+                    }
+                });
 
                 binding.setProfile(expert);
                 data = expert;

@@ -1,9 +1,11 @@
 package com.quang.daapp.ultis;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.quang.daapp.BuildConfig;
+import com.quang.daapp.R;
 import com.quang.daapp.stomp.MessageType;
 import com.quang.daapp.stomp.ReceiveMessage;
 import com.quang.daapp.stomp.SendMessage;
@@ -12,6 +14,8 @@ import com.quang.daapp.stomp.StompConnectionListener;
 import com.quang.daapp.stomp.StompFrame;
 import com.quang.daapp.stomp.StompMessageListener;
 import com.quang.daapp.stomp.StompSubscription;
+import com.quang.daapp.ui.dialog.MessageDialogFragment;
+import com.quang.daapp.ui.other.UnAuthActivity;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -61,8 +65,16 @@ public class WebSocketClient {
 
         }
         if (!connected) {
-            Log.e("CLMN","Failed to connect to the socket");
-            connect(context);
+            MessageDialogFragment dialogTimeOut = new MessageDialogFragment(
+                    "Can not connect to server, please check your connection"
+                    , R.color.colorDanger, R.drawable.ic_error, () -> {
+                Intent intent = new Intent(context, UnAuthActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
+            }
+            );
+            DialogManager.getInstance().showDialog(dialogTimeOut,true);
+
 
         }
     }

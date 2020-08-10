@@ -119,7 +119,7 @@ public class CustomerActivity extends AppCompatActivity {
             m.observe(this, message -> {
                 if(message.getType() == MessageType.CALLING
                         && message.isExpert()
-                        && navController.getCurrentDestination().getId() != R.id.videoCallFragment2) {
+                        && navController.getCurrentDestination().getId() != R.id.videoCallFragment3) {
                     ProblemRequest problemRequest = NetworkClient.getInstance().getGson().fromJson(message.getMessage(),ProblemRequest.class);
                     ConfirmDialogFragment dialogFragment = new ConfirmDialogFragment("Would like to answer a call from a partner in request: " + problemRequest.getTitle(), new ConfirmDialogFragment.OnConfirmDialogListener() {
                         @Override

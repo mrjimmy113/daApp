@@ -10,12 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,7 @@ import com.quang.daapp.R;
 import com.quang.daapp.data.model.Expert;
 import com.quang.daapp.data.model.Major;
 import com.quang.daapp.ui.viewAdapter.MajorSelectAdapter;
+import com.quang.daapp.ultis.DialogManager;
 import com.quang.daapp.ultis.NetworkClient;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
@@ -66,7 +69,7 @@ public class EditExpertProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        viewModel = ViewModelProviders.of(this).get(EditExpertProfileViewModel.class);
+        viewModel = new ViewModelProvider(this).get(EditExpertProfileViewModel.class);
         return inflater.inflate(R.layout.fragment_edit_expert_profile, container, false);
     }
 
@@ -75,7 +78,6 @@ public class EditExpertProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ivAvatar = view.findViewById(R.id.iv_avatar);
         final EditText edtFullName = view.findViewById(R.id.edtFullName);
-        final Spinner spnMajor = view.findViewById(R.id.spn_major);
         final EditText edtFee = view.findViewById(R.id.edtFee);
         final EditText edtBankName = view.findViewById(R.id.edtBankName);
         final EditText edtAccountNo = view.findViewById(R.id.edtAccountNo);
@@ -200,5 +202,28 @@ public class EditExpertProfileFragment extends Fragment {
 
     private void pickFromGallery(){
         startActivityForResult(CommonUltis.getPickFromGalleryIntent(), CommonUltis.GALLERY_REQUEST_CODE);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // Result code is RESULT_OK only if the user selects an Image
+        if (resultCode == Activity.RESULT_OK)
+            switch (requestCode){
+                case CommonUltis.GALLERY_REQUEST_CODE:
+                    setAvatar(data.getData());
+                    break;
+            }
+    }
+
+
+    private void setAvatar(Uri uri) {
+        Log.e("CLMN","SET");
+        File file = new File(CommonUltis.getPathFromURI(uri,getActivity()));
+        if(file.length() < 5 * 1024 * 1024) {
+            choosenAvatar = uri;
+            ivAvatar.setImageURI(uri);
+        }else {
+            MessageDialogFragment messageDialogFragment = new MessageDialogFragment("File size limit is 5MB", R.color.colorWarning,R.drawable.ic_warning);
+            DialogManager.getInstance().showDialog(messageDialogFragment,false);
+        }
     }
 }

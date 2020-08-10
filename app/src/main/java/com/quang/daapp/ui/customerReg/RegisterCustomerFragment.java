@@ -26,6 +26,7 @@ import com.quang.daapp.R;
 import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.ui.dialog.LoaderDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
+import com.quang.daapp.ultis.DialogManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -70,6 +71,7 @@ public class RegisterCustomerFragment extends Fragment {
         final ImageView btnChooseDate = view.findViewById(R.id.btnChooseDate);
         txtEndDate = view.findViewById(R.id.txtEndDate);
         Calendar cldr = Calendar.getInstance();
+        cldr.add(Calendar.YEAR,-18);
         changeDateDisplay(new Date(cldr.getTimeInMillis()));
         ArrayAdapter<CharSequence> adapterCity = ArrayAdapter.createFromResource(getContext(),
                 R.array.city_arrays, android.R.layout.simple_spinner_item);
@@ -177,11 +179,17 @@ public class RegisterCustomerFragment extends Fragment {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        cldr.set(Calendar.YEAR, year);
-                        cldr.set(Calendar.MONTH, month);
-                        cldr.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        Date d = new Date(cldr.getTimeInMillis());
-                        changeDateDisplay(d);
+                        if(year - (Calendar.getInstance().get(Calendar.YEAR)) >= 0) {
+                            cldr.set(Calendar.YEAR, year);
+                            cldr.set(Calendar.MONTH, month);
+                            cldr.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                            Date d = new Date(cldr.getTimeInMillis());
+                            changeDateDisplay(d);
+                        }else {
+                            MessageDialogFragment messageDialogFragment = new MessageDialogFragment("You must be at least 18", R.color.colorWarning,R.drawable.ic_warning);
+                            DialogManager.getInstance().showDialog(messageDialogFragment,false);
+                        }
+
                     }
                 }, cldr.get(Calendar.YEAR), cldr.get(Calendar.MONTH), cldr.get(Calendar.DAY_OF_MONTH));
         picker.show();
