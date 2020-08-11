@@ -49,12 +49,16 @@ public class CommonUltis {
                 != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(context,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
+                        != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(activity,
                     new String[]{
                             Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.RECORD_AUDIO
                     },
                     GALLERY_REQUEST_CODE);
 
@@ -65,9 +69,9 @@ public class CommonUltis {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity,
                     new String[]{
-                            Manifest.permission.CAMERA
-                    },
-                    CAMERA_PERMISSION_REQUEST_CODE);
+                            Manifest.permission.CAMERA,
+                    },CAMERA_PERMISSION_REQUEST_CODE
+                    );
             return  false;
         }
         return true;

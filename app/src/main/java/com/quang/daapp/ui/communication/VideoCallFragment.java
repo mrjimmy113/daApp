@@ -1,5 +1,7 @@
 package com.quang.daapp.ui.communication;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -72,6 +74,9 @@ public class VideoCallFragment extends Fragment {
         bundle.putBoolean("answer", false);
         localView=  view.findViewById(R.id.localRenderer);
         remoteView = view.findViewById(R.id.renderer);
+        AudioManager audioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setSpeakerphoneOn(true);
+        audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
 
 
         navController = Navigation.findNavController(view);

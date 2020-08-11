@@ -138,8 +138,11 @@ public class RTCClient {
 
         MediaConstraints mediaConstraints = new MediaConstraints();
         mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("mediaConstraints", "true"));
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googNoiseSuppression", "true"));
+        mediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("googEchoCancellation", "true"));
         AudioSource audioSource = peerConnectionFactory.createAudioSource(mediaConstraints);
-        AudioTrack audioTrack = peerConnectionFactory.createAudioTrack("101",audioSource);
+        AudioTrack audioTrack = peerConnectionFactory.createAudioTrack(LOCAL_TRACK_ID,audioSource);
+
 
         MediaStream localStream = peerConnectionFactory.createLocalMediaStream(LOCAL_STREAM_ID);
         localStream.addTrack(localVideoTrack);

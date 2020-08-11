@@ -33,7 +33,7 @@ public class MyRequestCallBack<T> implements Callback<T> {
     @Override
     public void onFailure(@NonNull Call<T> call, Throwable t) {
         mutableLiveData.postValue(null);
-        if(t instanceof ConnectException || t instanceof SocketTimeoutException) {
+      /*  if(t instanceof ConnectException || t instanceof SocketTimeoutException) {
             MessageDialogFragment dialogTimeOut = new MessageDialogFragment(
                     "Can not connect to server, please check your connection"
                     , R.color.colorDanger, R.drawable.ic_error, () -> {
@@ -41,7 +41,7 @@ public class MyRequestCallBack<T> implements Callback<T> {
             }
             );
             DialogManager.getInstance().showDialog(dialogTimeOut,true);
-        }
+        }*/
 
     }
 }

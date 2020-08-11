@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 
 
 import com.quang.daapp.R;
+import com.quang.daapp.data.model.Customer;
 import com.quang.daapp.data.model.ProblemRequest;
 import com.quang.daapp.ui.other.CustomerActivity;
 import com.quang.daapp.ui.other.ExpertActivity;
@@ -247,5 +248,6 @@ public class CustomerHomeFragment extends Fragment {
                 }
             }
         });
+        ((CustomerActivity)getActivity()).findSub();
     }
 }

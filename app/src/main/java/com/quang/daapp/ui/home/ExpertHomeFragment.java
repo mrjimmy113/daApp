@@ -17,6 +17,7 @@ import androidx.navigation.Navigation;
 
 import com.quang.daapp.R;
 import com.quang.daapp.data.model.ProblemRequest;
+import com.quang.daapp.ui.other.CustomerActivity;
 import com.quang.daapp.ui.other.ExpertActivity;
 import com.quang.daapp.ui.other.RequestListFragment;
 import com.quang.daapp.ultis.WebSocketClient;
@@ -231,5 +232,6 @@ public class ExpertHomeFragment extends Fragment {
                 }
             }
         });
+        ((ExpertActivity)getActivity()).findSub();
     }
 }

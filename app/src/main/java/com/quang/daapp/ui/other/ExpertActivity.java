@@ -42,9 +42,6 @@ public class ExpertActivity extends AppCompatActivity {
         activity = this;
         NetworkClient.getInstance().init(this,this,navController);
         DialogManager.getInstance().init(getSupportFragmentManager());
-        CommonUltis.checkCameraPermission(this,this);
-        CommonUltis.checkPermissions(this,this);
-        CommonUltis.checkAudioPermission(this,this);
         WebSocketClient.getInstance().connect(this);
 
         WebSocketClient.getInstance().stompClient.setStompConnectionListener(new StompConnectionListener() {
@@ -102,6 +99,7 @@ public class ExpertActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(List<Number> numbers) {
                     WebSocketClient.getInstance().clear();
+                    if(numbers == null) return;
                     for (Number id:
                             numbers) {
                         Log.e("CMN","Sub " + id.intValue());

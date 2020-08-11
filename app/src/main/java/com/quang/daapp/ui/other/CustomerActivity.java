@@ -86,9 +86,6 @@ public class CustomerActivity extends AppCompatActivity {
             isVideoCalling =  destination.getId() == R.id.videoCallFragment2;
         });
 
-        CommonUltis.checkCameraPermission(this,this);
-        CommonUltis.checkPermissions(this,this);
-        CommonUltis.checkAudioPermission(this,this);
         NetworkClient.getInstance().init(this,this,navController);
         DialogManager.getInstance().init(getSupportFragmentManager());
         NavigationUI.setupWithNavController(navView, navController);
@@ -97,11 +94,16 @@ public class CustomerActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        findSub();
 
+
+    }
+    public void findSub() {
         if(WebSocketClient.getInstance().stompClient.isStompConnected()) {
 
             ProblemRequestRepository.getInstance().getSubableProfile().observe(activity, numbers -> {
                 WebSocketClient.getInstance().clear();
+                if(numbers == null) return;
                 for (Number id:
                         numbers) {
                     WebSocketClient.getInstance().subscribe(id.intValue());
@@ -111,7 +113,6 @@ public class CustomerActivity extends AppCompatActivity {
                 startSub();
             });
         }
-
     }
 
     public void startSub() {
