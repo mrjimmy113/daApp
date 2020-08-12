@@ -73,7 +73,7 @@ public class RequestFinalInforFragment extends Fragment {
         RequestDetailExpertFragment expertFrag = null;
         RequestDetailCustomerFragment customerFrag = null;
 
-        final ImageButton btnSubmit = view.findViewById(R.id.btnSubmit);
+
 
         navController = Navigation.findNavController(view);
         final ImageButton btnBack = view.findViewById(R.id.btnBack);
@@ -143,32 +143,10 @@ public class RequestFinalInforFragment extends Fragment {
         });
 
 
-        btnSubmit.setOnClickListener(v -> {
-            ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment(
-                    getString(R.string.mes_complete_confirm),
-                    new ConfirmDialogFragment.OnConfirmDialogListener() {
-                        @Override
-                        public void OnYesListener() {
-                            if(isExpert) {
-                                SendMessage sendMessage = new SendMessage("", MessageType.COMPLETE);
-                                WebSocketClient.getInstance().chat(requestId,sendMessage);
-                            }else {
-                                FeedBackDialogFragment feedBackDialogFragment = new FeedBackDialogFragment(requestId) ;
-                                feedBackDialogFragment.show(getParentFragmentManager(),getTag());
-                            }
-                        }
 
-                        @Override
-                        public void OnNoListener() {
-
-                        }
-                    }
-            );
-            confirmDialogFragment.show(getParentFragmentManager(),getTag());
-        });
 
         if(mode == 1) {
-            btnSubmit.setVisibility(View.GONE);
+
         } else if(mode == 2) {
             WebSocketClient.getInstance().getSubscribeChannelData(requestId).observe(getViewLifecycleOwner(), completeMessageObserver());
 

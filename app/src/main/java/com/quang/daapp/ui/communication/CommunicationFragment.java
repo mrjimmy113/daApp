@@ -39,6 +39,7 @@ import com.quang.daapp.ui.dialog.FeedBackDialogFragment;
 import com.quang.daapp.ui.dialog.MessageDialogFragment;
 import com.quang.daapp.ui.viewAdapter.MessageAdapter;
 import com.quang.daapp.ultis.CommonUltis;
+import com.quang.daapp.ultis.DialogManager;
 import com.quang.daapp.ultis.WebSocketClient;
 
 import java.util.ArrayList;
@@ -362,11 +363,13 @@ public class CommunicationFragment extends Fragment {
                     break;
                 }
                 case NONE: {
-                    MessageDialogFragment dialogFragment = new MessageDialogFragment(
-                            "You can not perform this action", R.color.colorWarning, R.drawable.ic_warning,
-                            this::back
-                    );
-                    dialogFragment.show(getParentFragmentManager(), getTag());
+                    if(receiveMessage.isExpert() == isExpert) {
+                        MessageDialogFragment dialogFragment = new MessageDialogFragment(
+                                "You can not perform this action", R.color.colorWarning, R.drawable.ic_warning,
+                                this::back
+                        );
+                        dialogFragment.show(getParentFragmentManager(), getTag());
+                    }
                 }
             }
 
@@ -398,8 +401,19 @@ public class CommunicationFragment extends Fragment {
         viewModel.getDetailResult().observe(getViewLifecycleOwner(), problemRequestDetail -> {
             if (problemRequestDetail == null) return;
             detail = problemRequestDetail;
+            if(detail.getStatus() == StatusEnum.COMPLETE) {
+                MessageDialogFragment messageDialogFragment = new MessageDialogFragment("This request has already completed",
+                        R.color.colorSuccess, R.drawable.ic_success,
+                        new MessageDialogFragment.OnMyDialogListener() {
+                            @Override
+                            public void OnOKListener() {
+                                back();
+                            }
+                        });
+                DialogManager.getInstance().showDialog(messageDialogFragment,false);
+            }
             adapter.setStatusEnum(detail.getStatus());
-
+            adapter.notifyDataSetChanged();
             txtRequestTitle.setText(problemRequestDetail.getTitle());
             txtRequestTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
