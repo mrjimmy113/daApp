@@ -253,7 +253,7 @@ public class EditCustomerProfileFragment extends Fragment {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        if(year - (Calendar.getInstance().get(Calendar.YEAR)) >= 0) {
+                        if((Calendar.getInstance().get(Calendar.YEAR)) - year >= 18) {
                             cldr.set(Calendar.YEAR, year);
                             cldr.set(Calendar.MONTH, month);
                             cldr.set(Calendar.DAY_OF_MONTH, dayOfMonth);

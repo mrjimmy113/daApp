@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -179,7 +180,9 @@ public class RegisterCustomerFragment extends Fragment {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        if(year - (Calendar.getInstance().get(Calendar.YEAR)) >= 0) {
+                        int ageRange = (Calendar.getInstance().get(Calendar.YEAR)) - year;
+                        Log.e("CLMN",ageRange + " - " + year + " - " + (Calendar.getInstance().get(Calendar.YEAR)));
+                        if(ageRange >= 18) {
                             cldr.set(Calendar.YEAR, year);
                             cldr.set(Calendar.MONTH, month);
                             cldr.set(Calendar.DAY_OF_MONTH, dayOfMonth);
