@@ -54,7 +54,12 @@ public class ImgChooserAdapter extends RecyclerView.Adapter<ImgChooserAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
-        Picasso.get().load(new File(imgURL.get(position))).into(holder.imageView);
+
+        if(imgURL.get(position).contains(NetworkClient.BASE_URL)) {
+            Picasso.get().load(imgURL.get(position)).into(holder.imageView);
+        }else {
+            Picasso.get().load(new File(imgURL.get(position))).into(holder.imageView);
+        }
         holder.btnDelImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

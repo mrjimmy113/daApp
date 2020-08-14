@@ -40,6 +40,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -77,9 +78,7 @@ public class EditRequestFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            CommonUltis.checkPermissions(getContext(),getActivity());
-        }
+        viewModel = new ViewModelProvider(this).get(EditRequestViewModel.class);
         return inflater.inflate(R.layout.fragment_new_request, container, false);
     }
 
@@ -100,8 +99,7 @@ public class EditRequestFragment extends Fragment {
         changeDateDisplay(new Date(detail.getDeadlineDate().getTime()));
 
 
-        viewModel = ViewModelProviders.of(this)
-                .get(EditRequestViewModel.class);
+
 
         final EditText edtTitle = view.findViewById(R.id.edtTitle);
         final EditText edtDescription = view.findViewById(R.id.edtDescription);

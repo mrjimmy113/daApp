@@ -71,6 +71,9 @@ public class RegisterExpertViewModel extends ViewModel {
         if(!isNumber(fee)) {
             newState.setFeeError(R.string.invalid_fee);
             isValid = false;
+        }else if(Float.parseFloat(fee) > 500000) {
+            newState.setFeeError(R.string.invalid_fee_max);
+            isValid = false;
         }
         if(bankName.trim().isEmpty()) {
             newState.setBankAccount(R.string.invalid_bank_name);

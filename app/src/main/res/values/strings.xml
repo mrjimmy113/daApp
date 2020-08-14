@@ -20,6 +20,7 @@
     <string name="invalid_end_date">End date must be at least 2 days from now</string>
     <string name="invalid_img_over">Total image upload is 5 MB</string>
     <string name="invalid_fee">Fee per hour must be number</string>
+    <string name="invalid_fee_max">Fee per hour is max at 500.000</string>
     <string name="invalid_bank_name">Please fill in your bank name</string>
     <string name="invalid_account_no">Please fill in your account no</string>
     <string name="login_failed">"Login failed"</string>
