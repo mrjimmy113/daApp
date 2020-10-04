@@ -1,5 +1,7 @@
 Project Name: Online computer repairing support applications (Fix It)
+
 Short Description
+
 Our application provides computer experts and customers that have a broken computer with two main benefits. The first is a communication platform to help these 2 groups easily connect to each other. The second is a tool to make the activity of describing errors and instructing repair more convenient
 
 Full Description can be found via this link: https://docs.google.com/presentation/d/14tvsH6Jw34LzwA5ujinlJw73JUqObvr01U3GvEkfM3M/edit?usp=sharing
